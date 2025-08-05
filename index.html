@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RE-READZ - Sell Your Pre-loved Books</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-brand">
+                <h1 class="logo">RE-READZ</h1>
+            </div>
+            
+            <div class="nav-menu">
+                <div class="nav-item dropdown">
+                    <button class="nav-link dropdown-toggle">
+                        <i class="fas fa-bars"></i>
+                        Genres
+                    </button>
+                    <div class="dropdown-menu">
+                        <a href="#" class="dropdown-item">Fiction</a>
+                        <a href="#" class="dropdown-item">Non-Fiction</a>
+                        <a href="#" class="dropdown-item">Science Fiction</a>
+                        <a href="#" class="dropdown-item">Mystery</a>
+                        <a href="#" class="dropdown-item">Romance</a>
+                        <a href="#" class="dropdown-item">Biography</a>
+                    </div>
+                </div>
+                
+                <div class="nav-item">
+                    <a href="#" class="nav-link">
+                        <i class="fas fa-heart"></i>
+                        <span class="nav-text">Wishlist</span>
+                    </a>
+                </div>
+                
+                <div class="nav-item">
+                    <a href="#" class="nav-link">
+                        <i class="fas fa-user"></i>
+                        <span class="nav-text">Login</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="container">
+            <div class="hero-content">
+                <h1 class="hero-title">Sell your pre-loved books</h1>
+                <p class="hero-subtitle">Give your books a second life and earn money while helping others discover great reads.</p>
+                
+                <div class="search-section">
+                    <div class="search-container">
+                        <input type="text" class="search-input" placeholder="Search for books">
+                        <button class="search-btn">
+                            <i class="fas fa-search"></i>
+                        </button>
+                    </div>
+                    <button class="cta-btn">Sell Your Book</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Filters Section -->
+    <section class="filters">
+        <div class="container">
+            <div class="filters-container">
+                <div class="filter-group">
+                    <button class="filter-btn dropdown-toggle">
+                        <i class="fas fa-book"></i>
+                        Genre
+                        <i class="fas fa-chevron-down"></i>
+                    </button>
+                    <div class="filter-dropdown">
+                        <a href="#" class="filter-option">All Genres</a>
+                        <a href="#" class="filter-option">Fiction</a>
+                        <a href="#" class="filter-option">Non-Fiction</a>
+                        <a href="#" class="filter-option">Science Fiction</a>
+                    </div>
+                </div>
+
+                <div class="filter-group">
+                    <button class="filter-btn dropdown-toggle">
+                        <i class="fas fa-file-alt"></i>
+                        Format
+                        <i class="fas fa-chevron-down"></i>
+                    </button>
+                    <div class="filter-dropdown">
+                        <a href="#" class="filter-option">All Formats</a>
+                        <a href="#" class="filter-option">Paperback</a>
+                        <a href="#" class="filter-option">Hardcover</a>
+                        <a href="#" class="filter-option">E-book</a>
+                    </div>
+                </div>
+
+                <div class="filter-group">
+                    <button class="filter-btn dropdown-toggle">
+                        <i class="fas fa-star"></i>
+                        Condition
+                        <i class="fas fa-chevron-down"></i>
+                    </button>
+                    <div class="filter-dropdown">
+                        <a href="#" class="filter-option">All Conditions</a>
+                        <a href="#" class="filter-option">Like New</a>
+                        <a href="#" class="filter-option">Very Good</a>
+                        <a href="#" class="filter-option">Good</a>
+                    </div>
+                </div>
+
+                <div class="filter-group">
+                    <button class="filter-btn dropdown-toggle">
+                        <i class="fas fa-dollar-sign"></i>
+                        Price
+                        <i class="fas fa-chevron-down"></i>
+                    </button>
+                    <div class="filter-dropdown">
+                        <a href="#" class="filter-option">All Prices</a>
+                        <a href="#" class="filter-option">Under $10</a>
+                        <a href="#" class="filter-option">$10 - $25</a>
+                        <a href="#" class="filter-option">Over $25</a>
+                    </div>
+                </div>
+
+                <div class="filter-group">
+                    <button class="filter-btn dropdown-toggle">
+                        <i class="fas fa-sort"></i>
+                        Sort
+                        <i class="fas fa-chevron-down"></i>
+                    </button>
+                    <div class="filter-dropdown">
+                        <a href="#" class="filter-option">Newest</a>
+                        <a href="#" class="filter-option">Price: Low to High</a>
+                        <a href="#" class="filter-option">Price: High to Low</a>
+                        <a href="#" class="filter-option">Popular</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Books Section -->
+    <section class="books-section">
+        <div class="container">
+            <h2 class="section-title">New Arrivals</h2>
+            
+            <div class="books-grid">
+                <!-- Book Card 1 -->
+                <div class="book-card">
+                    <div class="book-image">
+                        <img src="https://via.placeholder.com/200x300/4A5568/FFFFFF?text=Book+Cover" alt="Book Cover">
+                        <button class="wishlist-btn">
+                            <i class="far fa-heart"></i>
+                        </button>
+                    </div>
+                    <div class="book-info">
+                        <h3 class="book-title">The Great Gatsby</h3>
+                        <p class="book-author">F. Scott Fitzgerald</p>
+                        <div class="book-meta">
+                            <span class="condition-badge good">Good</span>
+                            <span class="book-price">$12.99</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Book Card 2 -->
+                <div class="book-card">
+                    <div class="book-image">
+                        <img src="https://via.placeholder.com/200x300/4A5568/FFFFFF?text=Book+Cover" alt="Book Cover">
+                        <button class="wishlist-btn">
+                            <i class="far fa-heart"></i>
+                        </button>
+                    </div>
+                    <div class="book-info">
+                        <h3 class="book-title">To Kill a Mockingbird</h3>
+                        <p class="book-author">Harper Lee</p>
+                        <div class="book-meta">
+                            <span class="condition-badge very-good">Very Good</span>
+                            <span class="book-price">$15.50</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Book Card 3 -->
+                <div class="book-card">
+                    <div class="book-image">
+                        <img src="https://via.placeholder.com/200x300/4A5568/FFFFFF?text=Book+Cover" alt="Book Cover">
+                        <button class="wishlist-btn">
+                            <i class="far fa-heart"></i>
+                        </button>
+                    </div>
+                    <div class="book-info">
+                        <h3 class="book-title">1984</h3>
+                        <p class="book-author">George Orwell</p>
+                        <div class="book-meta">
+                            <span class="condition-badge like-new">Like New</span>
+                            <span class="book-price">$18.75</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Book Card 4 -->
+                <div class="book-card">
+                    <div class="book-image">
+                        <img src="https://via.placeholder.com/200x300/4A5568/FFFFFF?text=Book+Cover" alt="Book Cover">
+                        <button class="wishlist-btn">
+                            <i class="far fa-heart"></i>
+                        </button>
+                    </div>
+                    <div class="book-info">
+                        <h3 class="book-title">Pride and Prejudice</h3>
+                        <p class="book-author">Jane Austen</p>
+                        <div class="book-meta">
+                            <span class="condition-badge good">Good</span>
+                            <span class="book-price">$9.99</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Book Card 5 -->
+                <div class="book-card">
+                    <div class="book-image">
+                        <img src="https://via.placeholder.com/200x300/4A5568/FFFFFF?text=Book+Cover" alt="Book Cover">
+                        <button class="wishlist-btn">
+                            <i class="far fa-heart"></i>
+                        </button>
+                    </div>
+                    <div class="book-info">
+                        <h3 class="book-title">The Hobbit</h3>
+                        <p class="book-author">J.R.R. Tolkien</p>
+                        <div class="book-meta">
+                            <span class="condition-badge very-good">Very Good</span>
+                            <span class="book-price">$22.00</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Book Card 6 -->
+                <div class="book-card">
+                    <div class="book-image">
+                        <img src="https://via.placeholder.com/200x300/4A5568/FFFFFF?text=Book+Cover" alt="Book Cover">
+                        <button class="wishlist-btn">
+                            <i class="far fa-heart"></i>
+                        </button>
+                    </div>
+                    <div class="book-info">
+                        <h3 class="book-title">The Catcher in the Rye</h3>
+                        <p class="book-author">J.D. Salinger</p>
+                        <div class="book-meta">
+                            <span class="condition-badge good">Good</span>
+                            <span class="book-price">$11.25</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Floating Action Button for Mobile -->
+    <div class="fab">
+        <button class="fab-btn">
+            <i class="fas fa-plus"></i>
+            <span>Sell Book</span>
+        </button>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
