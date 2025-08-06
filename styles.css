@@ -576,12 +576,59 @@ body {
 }
 
 @media (max-width: 767px) {
+    .mobile-menu-toggle {
+        display: block;
+    }
+    
     .nav-menu {
+        position: fixed;
+        top: 100%;
+        left: 0;
+        right: 0;
+        background: #FFFFFF;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        padding: 20px;
+        transform: translateY(-100%);
+        opacity: 0;
+        visibility: hidden;
+        transition: all 0.3s ease;
+        flex-direction: column;
         gap: 16px;
+        z-index: 999;
+    }
+    
+    .nav-menu.active {
+        transform: translateY(0);
+        opacity: 1;
+        visibility: visible;
+    }
+    
+    .nav-item {
+        width: 100%;
     }
     
     .nav-link {
-        padding: 8px 12px;
+        width: 100%;
+        justify-content: flex-start;
+        padding: 16px;
+        border-radius: 8px;
+        min-height: 44px;
+        display: flex;
+        align-items: center;
+    }
+    
+    .nav-text {
+        display: inline;
+    }
+    
+    .dropdown-menu {
+        position: static;
+        box-shadow: none;
+        background: #F7FAFC;
+        margin-top: 8px;
+        border-radius: 8px;
+        max-width: none;
+        transform: none;
     }
     
     .hero {
@@ -604,6 +651,10 @@ body {
     .cta-btn {
         font-size: 14px;
         padding: 14px 24px;
+        min-height: 44px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
     }
     
     .filters-container {
@@ -625,6 +676,10 @@ body {
         font-size: 12px;
         white-space: nowrap;
         flex-shrink: 0;
+        min-height: 44px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
     }
     
     .books-grid {
@@ -687,17 +742,6 @@ body {
     .nav-container {
         padding: 0 16px;
     }
-    
-    /* Improve touch targets */
-    .nav-link,
-    .filter-btn,
-    .search-btn,
-    .cta-btn {
-        min-height: 44px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-    }
 }
 
 /* Focus styles for accessibility */
@@ -759,3 +803,101 @@ a:focus {
     0% { transform: rotate(0deg); }
     100% { transform: rotate(360deg); }
 }
+
+/* Mobile menu toggle */
+.mobile-menu-toggle {
+    display: none;
+    background: none;
+    border: none;
+    font-size: 20px;
+    color: #4A5568;
+    cursor: pointer;
+    padding: 8px;
+    border-radius: 8px;
+    transition: all 0.2s ease;
+}
+
+.mobile-menu-toggle:hover {
+    background: #F7FAFC;
+    color: #2D3748;
+}
+
+.mobile-menu-toggle.active {
+    background: #EDF2F7;
+    color: #2D3748;
+}
+
+/* Additional mobile improvements */
+@media (max-width: 767px) {
+    /* Prevent text selection on buttons */
+    button, .book-card {
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
+        -webkit-tap-highlight-color: transparent;
+    }
+    
+    /* Improve button touch targets */
+    .search-btn, .cta-btn, .filter-btn {
+        min-height: 48px;
+        min-width: 48px;
+    }
+    
+    /* Better spacing for mobile */
+    .hero-content {
+        padding: 0 16px;
+    }
+    
+    .search-section {
+        flex-direction: column;
+        gap: 16px;
+    }
+    
+    .search-container {
+        width: 100%;
+    }
+    
+    /* Improve book card touch interaction */
+    .book-card {
+        cursor: pointer;
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+    
+    .book-card:active {
+        transform: scale(0.98);
+    }
+    
+    /* Better dropdown positioning on mobile */
+    .filter-dropdown {
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        max-width: 280px;
+        width: 90%;
+        max-height: 60vh;
+        overflow-y: auto;
+        z-index: 10000;
+    }
+    
+    /* Improve scroll performance */
+    .books-grid {
+        -webkit-overflow-scrolling: touch;
+        scroll-behavior: smooth;
+    }
+    
+    /* Better loading spinner for mobile */
+    .loading-spinner {
+        padding: 40px 20px;
+        font-size: 16px;
+    }
+    
+    /* Improve error message display */
+    .error-message, .no-results {
+        padding: 40px 20px;
+        text-align: center;
+        font-size: 16px;
+    }
+}
+
