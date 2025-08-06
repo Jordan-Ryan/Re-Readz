@@ -14,7 +14,14 @@ document.addEventListener('DOMContentLoaded', function() {
 
 // Open Library API configuration (Free, no API key required)
 const BOOKS_API_BASE_URL = 'https://openlibrary.org';
-const DEFAULT_SEARCH_TERMS = ['fiction', 'bestseller', 'classic', 'popular'];
+const DEFAULT_SEARCH_TERMS = [
+    'subject:Fiction', 
+    'subject:Romance', 
+    'subject:Mystery', 
+    'subject:Science fiction',
+    'subject:Biography',
+    'subject:History'
+];
 
 // Global variables for pagination
 let currentPage = 1;
@@ -54,7 +61,7 @@ async function loadBooks(searchTerm = null, page = 1, append = false) {
             books = await getPopularBooks();
             totalBooksFound = books.length;
             currentSearchTerm = null;
-            sectionTitle.textContent = 'Popular Books';
+            sectionTitle.textContent = 'Featured Books';
         }
         
         if (append) {
@@ -128,10 +135,10 @@ async function searchBooks(query, page = 1, filters = {}) {
 async function getPopularBooks() {
     const books = [];
     
-    // Search for popular books using different terms
+    // Search for popular books using different subjects
     for (const term of DEFAULT_SEARCH_TERMS) {
         try {
-            const response = await fetch(`${BOOKS_API_BASE_URL}/search.json?q=${encodeURIComponent(term)}&limit=3`);
+            const response = await fetch(`${BOOKS_API_BASE_URL}/search.json?q=${encodeURIComponent(term)}&limit=4&sort=date`);
             const data = await response.json();
             
             if (data.docs) {
@@ -142,10 +149,10 @@ async function getPopularBooks() {
         }
     }
     
-    // Remove duplicates and limit to 12 books
+    // Remove duplicates and limit to 20 books
     const uniqueBooks = books.filter((book, index, self) => 
         index === self.findIndex(b => b.key === book.key)
-    ).slice(0, 12);
+    ).slice(0, 20);
     
     return uniqueBooks;
 }
