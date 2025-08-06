@@ -762,10 +762,8 @@ body {
         -webkit-box-direction: normal;
     }
     
-    .logo {
+    .nav-brand {
         order: 1;
-        font-size: 24px;
-        margin-bottom: 0;
         -webkit-box-ordinal-group: 1;
         display: flex;
         align-items: center;
@@ -774,12 +772,15 @@ body {
         min-height: 44px;
     }
     
+    .logo {
+        font-size: 24px;
+        margin-bottom: 0;
+    }
+    
     .mobile-menu-toggle {
         display: block !important;
-        order: 2;
         z-index: 1000;
         position: static;
-        -webkit-box-ordinal-group: 2;
         -webkit-transform: translateZ(0);
         transform: translateZ(0);
         margin-left: auto;
