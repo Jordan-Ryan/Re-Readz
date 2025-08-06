@@ -22,6 +22,12 @@ let isLoading = false;
 let hasMoreResults = true;
 let currentSearchTerm = null;
 let totalBooksFound = 0;
+let currentFilters = {
+    subject: '',
+    language: '',
+    year: '',
+    sort: 'relevance'
+};
 
 // Load books from API
 async function loadBooks(searchTerm = null, page = 1, append = false) {
@@ -38,7 +44,7 @@ async function loadBooks(searchTerm = null, page = 1, append = false) {
         
         if (searchTerm) {
             // Search for specific books
-            const searchResult = await searchBooks(searchTerm, page);
+            const searchResult = await searchBooks(searchTerm, page, currentFilters);
             books = searchResult.books;
             totalBooksFound = searchResult.total;
             currentSearchTerm = searchTerm;
@@ -69,12 +75,43 @@ async function loadBooks(searchTerm = null, page = 1, append = false) {
     }
 }
 
-// Search books using Open Library API with pagination
-async function searchBooks(query, page = 1) {
+// Search books using Open Library API with pagination and filters
+async function searchBooks(query, page = 1, filters = {}) {
     const limit = 20;
     const offset = (page - 1) * limit;
     
-    const response = await fetch(`${BOOKS_API_BASE_URL}/search.json?q=${encodeURIComponent(query)}&limit=${limit}&offset=${offset}`);
+    // Build query with filters
+    let searchQuery = query;
+    
+    // Add subject filter
+    if (filters.subject) {
+        searchQuery += ` subject:${filters.subject}`;
+    }
+    
+    // Add language filter
+    if (filters.language) {
+        searchQuery += ` language:${filters.language}`;
+    }
+    
+    // Add year filter
+    if (filters.year) {
+        const [startYear, endYear] = filters.year.split('-');
+        if (endYear) {
+            searchQuery += ` first_publish_year:[${startYear} TO ${endYear}]`;
+        } else {
+            searchQuery += ` first_publish_year:${startYear}`;
+        }
+    }
+    
+    // Build URL with sort parameter
+    let url = `${BOOKS_API_BASE_URL}/search.json?q=${encodeURIComponent(searchQuery)}&limit=${limit}&offset=${offset}`;
+    
+    // Add sort parameter
+    if (filters.sort && filters.sort !== 'relevance') {
+        url += `&sort=${filters.sort}`;
+    }
+    
+    const response = await fetch(url);
     const data = await response.json();
     
     if (!data.docs) {
@@ -120,7 +157,7 @@ function formatBookData(item) {
         title: item.title || 'Unknown Title',
         author: item.author_name ? item.author_name.join(', ') : 'Unknown Author',
         description: item.description || 'No description available.',
-        coverImage: item.cover_i ? `https://covers.openlibrary.org/b/id/${item.cover_i}-M.jpg` : 'https://via.placeholder.com/128x200/4A5568/FFFFFF?text=No+Cover',
+        coverImage: item.cover_i ? `https://covers.openlibrary.org/b/id/${item.cover_i}-M.jpg` : 'https://via.placeholder.com/128x200/4A5568/FFFFFF?text=No+Book+Cover+Available',
         publishedDate: item.first_publish_year,
         pageCount: item.number_of_pages_median,
         categories: item.subject || [],
@@ -176,7 +213,7 @@ function createBookCard(book) {
     return `
         <div class="book-card" data-book-id="${book.id}">
             <div class="book-image">
-                <img src="${book.coverImage}" alt="${book.title}" onerror="this.src='https://via.placeholder.com/128x200/4A5568/FFFFFF?text=No+Cover'">
+                <img src="${book.coverImage}" alt="${book.title}" onerror="this.src='https://via.placeholder.com/128x200/4A5568/FFFFFF?text=No+Book+Cover+Available'">
                 <button class="wishlist-btn">
                     <i class="far fa-heart"></i>
                 </button>
@@ -302,8 +339,27 @@ function initializeFilters() {
                 // Add active state to button
                 button.classList.add('active');
                 
-                // Apply filter (in real app, this would filter the current results)
-                console.log(`Filter applied: ${buttonText}`);
+                // Get filter type and value from data attributes
+                const filterType = this.getAttribute('data-filter');
+                const filterValue = this.getAttribute('data-value');
+                
+                // Update current filters
+                if (filterType && filterValue !== undefined) {
+                    currentFilters[filterType] = filterValue;
+                }
+                
+                // Apply filter to current search
+                if (currentSearchTerm) {
+                    // Reset pagination for new filter
+                    currentPage = 1;
+                    hasMoreResults = true;
+                    isLoading = false;
+                    
+                    // Reload books with new filters
+                    loadBooks(currentSearchTerm, 1);
+                }
+                
+                console.log(`Filter applied: ${filterType} = ${filterValue}`);
             });
         });
     });
@@ -399,6 +455,34 @@ function performSearch() {
         currentPage = 1;
         hasMoreResults = true;
         isLoading = false;
+        
+        // Reset filters for new search
+        currentFilters = {
+            subject: '',
+            language: '',
+            year: '',
+            sort: 'relevance'
+        };
+        
+        // Reset filter buttons
+        const filterButtons = document.querySelectorAll('.filter-btn');
+        filterButtons.forEach(button => {
+            button.classList.remove('active');
+            // Reset button text to original
+            const filterGroup = button.closest('.filter-group');
+            const defaultOption = filterGroup.querySelector('.filter-option[data-value=""]');
+            if (defaultOption) {
+                const icon = button.querySelector('i:first-child');
+                const chevron = button.querySelector('.fa-chevron-down');
+                const textNodes = Array.from(button.childNodes).filter(node => 
+                    node.nodeType === Node.TEXT_NODE
+                );
+                textNodes.forEach(node => node.remove());
+                const textSpan = document.createElement('span');
+                textSpan.textContent = defaultOption.textContent;
+                button.insertBefore(textSpan, chevron);
+            }
+        });
         
         // Add loading state
         const searchBtn = document.querySelector('.search-btn');
@@ -618,7 +702,7 @@ async function loadMoreBooks() {
     
     try {
         if (currentSearchTerm) {
-            const searchResult = await searchBooks(currentSearchTerm, currentPage);
+            const searchResult = await searchBooks(currentSearchTerm, currentPage, currentFilters);
             const newBooks = searchResult.books;
             
             if (newBooks.length > 0) {
