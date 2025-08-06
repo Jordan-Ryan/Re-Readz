@@ -767,18 +767,22 @@ body {
         font-size: 24px;
         margin-bottom: 0;
         -webkit-box-ordinal-group: 1;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        width: 100%;
+        min-height: 44px;
     }
     
     .mobile-menu-toggle {
         display: block !important;
         order: 2;
         z-index: 1000;
-        position: absolute;
-        top: 20px;
-        right: 20px;
+        position: static;
         -webkit-box-ordinal-group: 2;
         -webkit-transform: translateZ(0);
         transform: translateZ(0);
+        margin-left: auto;
     }
     
     .nav-search {
