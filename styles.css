@@ -778,7 +778,7 @@ body {
         font-weight: 700;
     }
     
-    .mobile-menu-toggle {
+    .nav-brand .mobile-menu-toggle {
         display: block !important;
         z-index: 1000;
         position: static;
@@ -795,7 +795,7 @@ body {
         transition: background-color 0.3s ease;
     }
     
-    .mobile-menu-toggle:hover {
+    .nav-brand .mobile-menu-toggle:hover {
         background-color: rgba(0, 0, 0, 0.1);
     }
     
