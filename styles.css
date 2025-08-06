@@ -779,18 +779,19 @@ body {
         width: 100%;
         z-index: 1000;
         overflow: visible;
+        /* Ensure proper positioning context for dropdowns */
+        position: relative;
     }
     
-    .filter-dropdown {
-        max-width: 180px;
-        left: 50%;
-        transform: translateX(-50%) translateY(-10px);
-        z-index: 10002;
+    /* Ensure filter groups have proper positioning context */
+    .filter-group {
+        position: relative;
+        z-index: 10001;
+        /* Prevent dropdown from being clipped */
+        overflow: visible;
     }
     
-    .filter-group.active .filter-dropdown {
-        transform: translateX(-50%) translateY(0);
-    }
+
     
     .nav-container {
         padding: 0 16px;
@@ -923,15 +924,62 @@ a:focus {
     
     /* Better dropdown positioning on mobile */
     .filter-dropdown {
-        position: fixed;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        max-width: 280px;
-        width: 90%;
-        max-height: 60vh;
+        position: absolute;
+        top: 100%;
+        left: 0;
+        right: 0;
+        max-width: 200px;
+        width: auto;
+        max-height: 300px;
         overflow-y: auto;
         z-index: 10000;
+        margin-top: 8px;
+        /* Ensure dropdown stays within screen bounds */
+        transform: translateY(-10px);
+        transition: all 0.2s ease;
+    }
+    
+    .filter-group.active .filter-dropdown {
+        transform: translateY(0);
+    }
+    
+    /* Ensure dropdown doesn't overflow on small screens */
+    @media (max-width: 480px) {
+        .filter-dropdown {
+            max-width: 180px;
+            left: 50%;
+            transform: translateX(-50%) translateY(-10px);
+        }
+        
+        .filter-group.active .filter-dropdown {
+            transform: translateX(-50%) translateY(0);
+        }
+        
+        /* Prevent horizontal overflow */
+        .filter-dropdown {
+            overflow-x: hidden;
+            word-wrap: break-word;
+        }
+        
+        /* Ensure filter options don't overflow */
+        .filter-option {
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            max-width: 100%;
+        }
+    }
+    
+    /* Additional mobile improvements for very small screens */
+    @media (max-width: 360px) {
+        .filter-dropdown {
+            max-width: 160px;
+        }
+        
+        .filter-option {
+            padding: 10px 12px;
+            font-size: 13px;
+        }
     }
     
     /* Improve scroll performance */
