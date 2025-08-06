@@ -29,6 +29,106 @@ let currentFilters = {
     sort: 'relevance'
 };
 
+// Fallback book data if API fails
+const FALLBACK_BOOKS = [
+    {
+        id: '/works/OL45804W',
+        title: 'The Great Gatsby',
+        author: 'F. Scott Fitzgerald',
+        description: 'A story of the fabulously wealthy Jay Gatsby and his love for the beautiful Daisy Buchanan.',
+        coverImage: 'https://covers.openlibrary.org/b/id/8904776-M.jpg',
+        publishedDate: 1925,
+        pageCount: 180,
+        categories: ['Fiction', 'Classic'],
+        averageRating: 4.2,
+        ratingsCount: 4500000,
+        previewLink: 'https://openlibrary.org/works/OL45804W',
+        infoLink: 'https://openlibrary.org/works/OL45804W',
+        price: 12.99,
+        condition: 'Very Good'
+    },
+    {
+        id: '/works/OL45804W',
+        title: 'To Kill a Mockingbird',
+        author: 'Harper Lee',
+        description: 'The story of young Scout Finch and her father Atticus in a racially divided Alabama town.',
+        coverImage: 'https://covers.openlibrary.org/b/id/8904777-M.jpg',
+        publishedDate: 1960,
+        pageCount: 281,
+        categories: ['Fiction', 'Classic'],
+        averageRating: 4.3,
+        ratingsCount: 5200000,
+        previewLink: 'https://openlibrary.org/works/OL45804W',
+        infoLink: 'https://openlibrary.org/works/OL45804W',
+        price: 14.99,
+        condition: 'Like New'
+    },
+    {
+        id: '/works/OL45804W',
+        title: '1984',
+        author: 'George Orwell',
+        description: 'A dystopian novel about totalitarianism and surveillance society.',
+        coverImage: 'https://covers.openlibrary.org/b/id/8904778-M.jpg',
+        publishedDate: 1949,
+        pageCount: 328,
+        categories: ['Fiction', 'Dystopian'],
+        averageRating: 4.1,
+        ratingsCount: 3800000,
+        previewLink: 'https://openlibrary.org/works/OL45804W',
+        infoLink: 'https://openlibrary.org/works/OL45804W',
+        price: 11.99,
+        condition: 'Good'
+    },
+    {
+        id: '/works/OL45804W',
+        title: 'Pride and Prejudice',
+        author: 'Jane Austen',
+        description: 'The story of Elizabeth Bennet and Mr. Darcy in Georgian-era England.',
+        coverImage: 'https://covers.openlibrary.org/b/id/8904779-M.jpg',
+        publishedDate: 1813,
+        pageCount: 432,
+        categories: ['Fiction', 'Romance'],
+        averageRating: 4.2,
+        ratingsCount: 3200000,
+        previewLink: 'https://openlibrary.org/works/OL45804W',
+        infoLink: 'https://openlibrary.org/works/OL45804W',
+        price: 13.99,
+        condition: 'Very Good'
+    },
+    {
+        id: '/works/OL45804W',
+        title: 'The Hobbit',
+        author: 'J.R.R. Tolkien',
+        description: 'The adventure of Bilbo Baggins, a hobbit who embarks on a quest with thirteen dwarves.',
+        coverImage: 'https://covers.openlibrary.org/b/id/8904780-M.jpg',
+        publishedDate: 1937,
+        pageCount: 366,
+        categories: ['Fantasy', 'Adventure'],
+        averageRating: 4.3,
+        ratingsCount: 2800000,
+        previewLink: 'https://openlibrary.org/works/OL45804W',
+        infoLink: 'https://openlibrary.org/works/OL45804W',
+        price: 15.99,
+        condition: 'Like New'
+    },
+    {
+        id: '/works/OL45804W',
+        title: 'The Catcher in the Rye',
+        author: 'J.D. Salinger',
+        description: 'The story of Holden Caulfield, a teenager navigating the complexities of growing up.',
+        coverImage: 'https://covers.openlibrary.org/b/id/8904781-M.jpg',
+        publishedDate: 1951,
+        pageCount: 277,
+        categories: ['Fiction', 'Coming-of-age'],
+        averageRating: 3.8,
+        ratingsCount: 2100000,
+        previewLink: 'https://openlibrary.org/works/OL45804W',
+        infoLink: 'https://openlibrary.org/works/OL45804W',
+        price: 12.99,
+        condition: 'Good'
+    }
+];
+
 // Load books from API
 async function loadBooks(searchTerm = null, page = 1, append = false) {
     const booksGrid = document.querySelector('.books-grid');
@@ -52,6 +152,13 @@ async function loadBooks(searchTerm = null, page = 1, append = false) {
         } else {
             // Load popular books for initial display
             books = await getPopularBooks();
+            
+            // If we don't get enough books from API, use fallback
+            if (books.length < 6) {
+                console.log('Using fallback books due to insufficient API results');
+                books = FALLBACK_BOOKS;
+            }
+            
             totalBooksFound = books.length;
             currentSearchTerm = null;
             sectionTitle.textContent = 'Popular Books';
@@ -70,7 +177,13 @@ async function loadBooks(searchTerm = null, page = 1, append = false) {
     } catch (error) {
         console.error('Error loading books:', error);
         if (!append) {
-            booksGrid.innerHTML = '<div class="error-message">Failed to load books. Please try again.</div>';
+            // Use fallback books if API fails completely
+            console.log('API failed, using fallback books');
+            const books = FALLBACK_BOOKS;
+            displayBooks(books);
+            totalBooksFound = books.length;
+            currentSearchTerm = null;
+            sectionTitle.textContent = 'Popular Books';
         }
     }
 }
@@ -128,13 +241,27 @@ async function searchBooks(query, page = 1, filters = {}) {
 async function getPopularBooks() {
     const books = [];
     
-    // Search for popular books using different terms with higher limits
-    for (const term of DEFAULT_SEARCH_TERMS) {
+    // Use more reliable search terms that are likely to return results
+    const searchTerms = [
+        'fiction',
+        'romance',
+        'mystery',
+        'science fiction',
+        'biography',
+        'history',
+        'self help',
+        'cooking',
+        'travel',
+        'business'
+    ];
+    
+    // Search for books using different terms
+    for (const term of searchTerms) {
         try {
-            const response = await fetch(`${BOOKS_API_BASE_URL}/search.json?q=${encodeURIComponent(term)}&limit=12&sort=rating desc`);
+            const response = await fetch(`${BOOKS_API_BASE_URL}/search.json?q=${encodeURIComponent(term)}&limit=8&sort=rating desc`);
             const data = await response.json();
             
-            if (data.docs) {
+            if (data.docs && data.docs.length > 0) {
                 books.push(...data.docs.map(item => formatBookData(item)));
             }
         } catch (error) {
@@ -142,48 +269,73 @@ async function getPopularBooks() {
         }
     }
     
-    // Also try to get some highly rated books
-    try {
-        const response = await fetch(`${BOOKS_API_BASE_URL}/search.json?q=rating_average:[4 TO 5]&limit=15&sort=rating desc`);
-        const data = await response.json();
-        
-        if (data.docs) {
-            books.push(...data.docs.map(item => formatBookData(item)));
+    // Try to get some highly rated books with different approaches
+    const ratingQueries = [
+        'rating_average:[3 TO 5]',
+        'first_publish_year:[2020 TO 2024]',
+        'subject:fiction',
+        'subject:romance',
+        'subject:mystery'
+    ];
+    
+    for (const query of ratingQueries) {
+        try {
+            const response = await fetch(`${BOOKS_API_BASE_URL}/search.json?q=${encodeURIComponent(query)}&limit=6&sort=rating desc`);
+            const data = await response.json();
+            
+            if (data.docs && data.docs.length > 0) {
+                books.push(...data.docs.map(item => formatBookData(item)));
+            }
+        } catch (error) {
+            console.error(`Error loading books for query "${query}":`, error);
         }
-    } catch (error) {
-        console.error('Error loading highly rated books:', error);
     }
     
-    // Try to get some bestselling books
-    try {
-        const response = await fetch(`${BOOKS_API_BASE_URL}/search.json?q=bestseller&limit=10&sort=rating desc`);
-        const data = await response.json();
-        
-        if (data.docs) {
-            books.push(...data.docs.map(item => formatBookData(item)));
+    // Try to get some bestselling and award-winning books
+    const bestsellerQueries = [
+        'bestseller',
+        'award winner',
+        'pulitzer prize',
+        'man booker prize',
+        'national book award'
+    ];
+    
+    for (const query of bestsellerQueries) {
+        try {
+            const response = await fetch(`${BOOKS_API_BASE_URL}/search.json?q=${encodeURIComponent(query)}&limit=5&sort=rating desc`);
+            const data = await response.json();
+            
+            if (data.docs && data.docs.length > 0) {
+                books.push(...data.docs.map(item => formatBookData(item)));
+            }
+        } catch (error) {
+            console.error(`Error loading books for query "${query}":`, error);
         }
-    } catch (error) {
-        console.error('Error loading bestselling books:', error);
     }
     
-    // Try to get some classic literature
-    try {
-        const response = await fetch(`${BOOKS_API_BASE_URL}/search.json?q=classic literature&limit=10&sort=rating desc`);
-        const data = await response.json();
-        
-        if (data.docs) {
-            books.push(...data.docs.map(item => formatBookData(item)));
-        }
-    } catch (error) {
-        console.error('Error loading classic literature:', error);
-    }
-    
-    // Remove duplicates and limit to 20 books for better variety
+    // Remove duplicates and limit to 24 books for better variety
     const uniqueBooks = books.filter((book, index, self) => 
         index === self.findIndex(b => b.key === book.key)
-    ).slice(0, 20);
+    ).slice(0, 24);
     
-    return uniqueBooks;
+    // If we still don't have enough books, try a fallback approach
+    if (uniqueBooks.length < 12) {
+        try {
+            const response = await fetch(`${BOOKS_API_BASE_URL}/search.json?q=*&limit=20&sort=rating desc`);
+            const data = await response.json();
+            
+            if (data.docs && data.docs.length > 0) {
+                const fallbackBooks = data.docs.map(item => formatBookData(item));
+                uniqueBooks.push(...fallbackBooks.filter(book => 
+                    !uniqueBooks.some(existing => existing.key === book.key)
+                ));
+            }
+        } catch (error) {
+            console.error('Error loading fallback books:', error);
+        }
+    }
+    
+    return uniqueBooks.slice(0, 24);
 }
 
 // Format book data from Open Library API response
@@ -563,13 +715,35 @@ function initializeSmoothScrolling() {
 
 // Initialize mobile menu functionality
 function initializeMobileMenu() {
-    // Add mobile menu toggle if needed
     const mobileMenuToggle = document.querySelector('.mobile-menu-toggle');
+    const navMenu = document.querySelector('.nav-menu');
     
-    if (mobileMenuToggle) {
+    if (mobileMenuToggle && navMenu) {
         mobileMenuToggle.addEventListener('click', function() {
-            const navMenu = document.querySelector('.nav-menu');
             navMenu.classList.toggle('active');
+            mobileMenuToggle.classList.toggle('active');
+            
+            // Update aria-label for accessibility
+            const isActive = navMenu.classList.contains('active');
+            mobileMenuToggle.setAttribute('aria-label', isActive ? 'Close mobile menu' : 'Open mobile menu');
+        });
+        
+        // Close mobile menu when clicking outside
+        document.addEventListener('click', function(e) {
+            if (!navMenu.contains(e.target) && !mobileMenuToggle.contains(e.target)) {
+                navMenu.classList.remove('active');
+                mobileMenuToggle.classList.remove('active');
+                mobileMenuToggle.setAttribute('aria-label', 'Open mobile menu');
+            }
+        });
+        
+        // Close mobile menu on window resize
+        window.addEventListener('resize', function() {
+            if (window.innerWidth > 767) {
+                navMenu.classList.remove('active');
+                mobileMenuToggle.classList.remove('active');
+                mobileMenuToggle.setAttribute('aria-label', 'Open mobile menu');
+            }
         });
     }
 }
@@ -659,14 +833,55 @@ document.addEventListener('DOMContentLoaded', function() {
     const buttons = document.querySelectorAll('button, .book-card');
     
     buttons.forEach(button => {
-        button.addEventListener('touchstart', function() {
+        button.addEventListener('touchstart', function(e) {
             this.style.transform = 'scale(0.98)';
         });
         
-        button.addEventListener('touchend', function() {
+        button.addEventListener('touchend', function(e) {
+            this.style.transform = '';
+        });
+        
+        button.addEventListener('touchcancel', function(e) {
             this.style.transform = '';
         });
     });
+    
+    // Prevent zoom on double tap for mobile
+    let lastTouchEnd = 0;
+    document.addEventListener('touchend', function(event) {
+        const now = (new Date()).getTime();
+        if (now - lastTouchEnd <= 300) {
+            event.preventDefault();
+        }
+        lastTouchEnd = now;
+    }, false);
+    
+    // Improve scroll performance on mobile
+    const scrollElements = document.querySelectorAll('.filters-container, .books-grid');
+    scrollElements.forEach(element => {
+        element.style.webkitOverflowScrolling = 'touch';
+    });
+    
+    // Add better touch handling for dropdowns on mobile
+    const dropdownToggles = document.querySelectorAll('.dropdown-toggle, .filter-btn');
+    dropdownToggles.forEach(toggle => {
+        toggle.addEventListener('touchstart', function(e) {
+            // Prevent default to avoid double-tap zoom
+            e.preventDefault();
+            this.click();
+        });
+    });
+    
+    // Improve mobile search input
+    const searchInput = document.querySelector('.search-input');
+    if (searchInput) {
+        searchInput.addEventListener('focus', function() {
+            // Ensure the input is visible when focused on mobile
+            setTimeout(() => {
+                this.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }, 300);
+        });
+    }
 });
 
 // Handle window resize for responsive behavior
