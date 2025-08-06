@@ -29,105 +29,7 @@ let currentFilters = {
     sort: 'relevance'
 };
 
-// Fallback book data if API fails
-const FALLBACK_BOOKS = [
-    {
-        id: '/works/OL45804W',
-        title: 'The Great Gatsby',
-        author: 'F. Scott Fitzgerald',
-        description: 'A story of the fabulously wealthy Jay Gatsby and his love for the beautiful Daisy Buchanan.',
-        coverImage: 'https://covers.openlibrary.org/b/id/8904776-M.jpg',
-        publishedDate: 1925,
-        pageCount: 180,
-        categories: ['Fiction', 'Classic'],
-        averageRating: 4.2,
-        ratingsCount: 4500000,
-        previewLink: 'https://openlibrary.org/works/OL45804W',
-        infoLink: 'https://openlibrary.org/works/OL45804W',
-        price: 12.99,
-        condition: 'Very Good'
-    },
-    {
-        id: '/works/OL45804W',
-        title: 'To Kill a Mockingbird',
-        author: 'Harper Lee',
-        description: 'The story of young Scout Finch and her father Atticus in a racially divided Alabama town.',
-        coverImage: 'https://covers.openlibrary.org/b/id/8904777-M.jpg',
-        publishedDate: 1960,
-        pageCount: 281,
-        categories: ['Fiction', 'Classic'],
-        averageRating: 4.3,
-        ratingsCount: 5200000,
-        previewLink: 'https://openlibrary.org/works/OL45804W',
-        infoLink: 'https://openlibrary.org/works/OL45804W',
-        price: 14.99,
-        condition: 'Like New'
-    },
-    {
-        id: '/works/OL45804W',
-        title: '1984',
-        author: 'George Orwell',
-        description: 'A dystopian novel about totalitarianism and surveillance society.',
-        coverImage: 'https://covers.openlibrary.org/b/id/8904778-M.jpg',
-        publishedDate: 1949,
-        pageCount: 328,
-        categories: ['Fiction', 'Dystopian'],
-        averageRating: 4.1,
-        ratingsCount: 3800000,
-        previewLink: 'https://openlibrary.org/works/OL45804W',
-        infoLink: 'https://openlibrary.org/works/OL45804W',
-        price: 11.99,
-        condition: 'Good'
-    },
-    {
-        id: '/works/OL45804W',
-        title: 'Pride and Prejudice',
-        author: 'Jane Austen',
-        description: 'The story of Elizabeth Bennet and Mr. Darcy in Georgian-era England.',
-        coverImage: 'https://covers.openlibrary.org/b/id/8904779-M.jpg',
-        publishedDate: 1813,
-        pageCount: 432,
-        categories: ['Fiction', 'Romance'],
-        averageRating: 4.2,
-        ratingsCount: 3200000,
-        previewLink: 'https://openlibrary.org/works/OL45804W',
-        infoLink: 'https://openlibrary.org/works/OL45804W',
-        price: 13.99,
-        condition: 'Very Good'
-    },
-    {
-        id: '/works/OL45804W',
-        title: 'The Hobbit',
-        author: 'J.R.R. Tolkien',
-        description: 'The adventure of Bilbo Baggins, a hobbit who embarks on a quest with thirteen dwarves.',
-        coverImage: 'https://covers.openlibrary.org/b/id/8904780-M.jpg',
-        publishedDate: 1937,
-        pageCount: 366,
-        categories: ['Fantasy', 'Adventure'],
-        averageRating: 4.3,
-        ratingsCount: 2800000,
-        previewLink: 'https://openlibrary.org/works/OL45804W',
-        infoLink: 'https://openlibrary.org/works/OL45804W',
-        price: 15.99,
-        condition: 'Like New'
-    },
-    {
-        id: '/works/OL45804W',
-        title: 'The Catcher in the Rye',
-        author: 'J.D. Salinger',
-        description: 'The story of Holden Caulfield, a teenager navigating the complexities of growing up.',
-        coverImage: 'https://covers.openlibrary.org/b/id/8904781-M.jpg',
-        publishedDate: 1951,
-        pageCount: 277,
-        categories: ['Fiction', 'Coming-of-age'],
-        averageRating: 3.8,
-        ratingsCount: 2100000,
-        previewLink: 'https://openlibrary.org/works/OL45804W',
-        infoLink: 'https://openlibrary.org/works/OL45804W',
-        price: 12.99,
-        condition: 'Good'
-    }
-];
+// No fallback books - rely on API only
 
 // Load books from API
 async function loadBooks(searchTerm = null, page = 1, append = false) {
@@ -153,12 +55,6 @@ async function loadBooks(searchTerm = null, page = 1, append = false) {
             // Load popular books for initial display
             books = await getPopularBooks();
             
-            // If we don't get enough books from API, use fallback
-            if (books.length < 6) {
-                console.log('Using fallback books due to insufficient API results');
-                books = FALLBACK_BOOKS;
-            }
-            
             totalBooksFound = books.length;
             currentSearchTerm = null;
             sectionTitle.textContent = 'Popular Books';
@@ -177,11 +73,10 @@ async function loadBooks(searchTerm = null, page = 1, append = false) {
     } catch (error) {
         console.error('Error loading books:', error);
         if (!append) {
-            // Use fallback books if API fails completely
-            console.log('API failed, using fallback books');
-            const books = FALLBACK_BOOKS;
-            displayBooks(books);
-            totalBooksFound = books.length;
+            // Show error message if API fails completely
+            console.log('API failed, showing error message');
+            booksGrid.innerHTML = '<div class="no-results">Unable to load books. Please check your internet connection and try again.</div>';
+            totalBooksFound = 0;
             currentSearchTerm = null;
             sectionTitle.textContent = 'Popular Books';
         }
