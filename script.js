@@ -14,7 +14,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
 // Open Library API configuration (Free, no API key required)
 const BOOKS_API_BASE_URL = 'https://openlibrary.org';
-const DEFAULT_SEARCH_TERMS = ['fiction', 'bestseller', 'classic', 'popular'];
+const DEFAULT_SEARCH_TERMS = ['bestseller', 'popular', 'award winner', 'classic literature', 'new york times bestseller', 'pulitzer prize'];
 
 // Global variables for pagination
 let currentPage = 1;
@@ -23,7 +23,7 @@ let hasMoreResults = true;
 let currentSearchTerm = null;
 let totalBooksFound = 0;
 let currentFilters = {
-    subject: '',
+    genre: '',
     language: '',
     year: '',
     sort: 'relevance'
@@ -83,9 +83,9 @@ async function searchBooks(query, page = 1, filters = {}) {
     // Build query with filters
     let searchQuery = query;
     
-    // Add subject filter
-    if (filters.subject) {
-        searchQuery += ` subject:${filters.subject}`;
+    // Add genre filter
+    if (filters.genre) {
+        searchQuery += ` subject:${filters.genre}`;
     }
     
     // Add language filter
@@ -128,10 +128,10 @@ async function searchBooks(query, page = 1, filters = {}) {
 async function getPopularBooks() {
     const books = [];
     
-    // Search for popular books using different terms
+    // Search for popular books using different terms with higher limits
     for (const term of DEFAULT_SEARCH_TERMS) {
         try {
-            const response = await fetch(`${BOOKS_API_BASE_URL}/search.json?q=${encodeURIComponent(term)}&limit=3`);
+            const response = await fetch(`${BOOKS_API_BASE_URL}/search.json?q=${encodeURIComponent(term)}&limit=8&sort=rating desc`);
             const data = await response.json();
             
             if (data.docs) {
@@ -142,10 +142,22 @@ async function getPopularBooks() {
         }
     }
     
-    // Remove duplicates and limit to 12 books
+    // Also try to get some highly rated books
+    try {
+        const response = await fetch(`${BOOKS_API_BASE_URL}/search.json?q=rating_average:[4 TO 5]&limit=10&sort=rating desc`);
+        const data = await response.json();
+        
+        if (data.docs) {
+            books.push(...data.docs.map(item => formatBookData(item)));
+        }
+    } catch (error) {
+        console.error('Error loading highly rated books:', error);
+    }
+    
+    // Remove duplicates and limit to 20 books for better variety
     const uniqueBooks = books.filter((book, index, self) => 
         index === self.findIndex(b => b.key === book.key)
-    ).slice(0, 12);
+    ).slice(0, 20);
     
     return uniqueBooks;
 }
@@ -458,7 +470,7 @@ function performSearch() {
         
         // Reset filters for new search
         currentFilters = {
-            subject: '',
+            genre: '',
             language: '',
             year: '',
             sort: 'relevance'
