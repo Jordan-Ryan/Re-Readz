@@ -645,3 +645,34 @@ a:focus {
 .filter-group.active .filter-btn .fa-chevron-down {
     transform: rotate(180deg);
 }
+
+/* Scroll sentinel for infinite scroll */
+.scroll-sentinel {
+    height: 20px;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 20px 0;
+}
+
+.scroll-sentinel::after {
+    content: '';
+    width: 40px;
+    height: 40px;
+    border: 3px solid #E2E8F0;
+    border-top: 3px solid #4299E1;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.scroll-sentinel.loading::after {
+    opacity: 1;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
