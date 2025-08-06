@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <link rel="icon" type="image/x-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📚</text></svg>">
-    <title>RE-READZ - Sell Your Pre-loved Books</title>
+    <title>Book Details - RE-READZ</title>
     <link rel="stylesheet" href="styles.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
@@ -43,7 +43,7 @@
                 </div>
             </div>
             
-            <!-- Mobile menu toggle -->
+            <!-- Mobile Menu Toggle -->
             <button class="mobile-menu-toggle" aria-label="Toggle mobile menu">
                 <i class="fas fa-bars"></i>
             </button>
@@ -62,7 +62,7 @@
                         <div class="sub-dropdown">
                             <button class="dropdown-item sub-dropdown-toggle">
                                 <i class="fas fa-book"></i>
-                                Genre
+                                <span>Genre</span>
                                 <i class="fas fa-chevron-right"></i>
                             </button>
                             <div class="sub-dropdown-menu">
@@ -82,7 +82,7 @@
                         <div class="sub-dropdown">
                             <button class="dropdown-item sub-dropdown-toggle">
                                 <i class="fas fa-language"></i>
-                                Language
+                                <span>Language</span>
                                 <i class="fas fa-chevron-right"></i>
                             </button>
                             <div class="sub-dropdown-menu">
@@ -99,7 +99,7 @@
                         <div class="sub-dropdown">
                             <button class="dropdown-item sub-dropdown-toggle">
                                 <i class="fas fa-calendar"></i>
-                                Year
+                                <span>Year</span>
                                 <i class="fas fa-chevron-right"></i>
                             </button>
                             <div class="sub-dropdown-menu">
@@ -115,6 +115,7 @@
                     </div>
                 </div>
                 
+                <!-- Wishlist -->
                 <div class="nav-item">
                     <a href="#" class="nav-link">
                         <i class="fas fa-heart"></i>
@@ -122,6 +123,7 @@
                     </a>
                 </div>
                 
+                <!-- Login -->
                 <div class="nav-item">
                     <a href="#" class="nav-link">
                         <i class="fas fa-user"></i>
@@ -132,53 +134,181 @@
         </div>
     </nav>
 
-    <!-- Hero Banner -->
-    <section class="hero-banner">
+    <!-- Breadcrumb Navigation -->
+    <div class="breadcrumb-container">
         <div class="container">
-            <div class="hero-content">
-                <h1 class="hero-title">Sell your pre-loved books</h1>
-                <p class="hero-subtitle">Give your books a second life and earn money while helping others discover great reads.</p>
-            </div>
+            <nav class="breadcrumb">
+                <a href="index.html" class="breadcrumb-item">
+                    <i class="fas fa-home"></i>
+                    <span>Home</span>
+                </a>
+                <i class="fas fa-chevron-right breadcrumb-separator"></i>
+                <span class="breadcrumb-item active">Book Details</span>
+            </nav>
         </div>
-    </section>
+    </div>
 
-    <!-- Books Section -->
-    <section class="books-section">
+    <!-- Book Details Section -->
+    <section class="book-details-section">
         <div class="container">
-            <div class="section-header">
-                <h2 class="section-title">Popular Books</h2>
-                <div class="sort-filter">
-                    <button class="sort-btn dropdown-toggle">
-                        <i class="fas fa-sort"></i>
-                        <span class="sort-text">Sort by</span>
-                        <i class="fas fa-chevron-down"></i>
-                    </button>
-                    <div class="sort-dropdown">
-                        <a href="#" class="sort-option" data-sort="relevance">Relevance</a>
-                        <a href="#" class="sort-option" data-sort="rating">Highest Rated</a>
-                        <a href="#" class="sort-option" data-sort="rating_asc">Lowest Rated</a>
-                        <a href="#" class="sort-option" data-sort="title">Title A-Z</a>
-                        <a href="#" class="sort-option" data-sort="author">Author A-Z</a>
-                        <a href="#" class="sort-option" data-sort="date">Newest First</a>
-                        <a href="#" class="sort-option" data-sort="date_asc">Oldest First</a>
+            <div class="book-details-grid">
+                <!-- Book Image and Quick Actions -->
+                <div class="book-image-section">
+                    <div class="book-image-container">
+                        <img id="book-cover" src="" alt="Book Cover" class="book-cover">
+                        <button class="wishlist-btn" id="wishlist-btn">
+                            <i class="far fa-heart"></i>
+                        </button>
+                    </div>
+                    
+                    <!-- Quick Info Cards -->
+                    <div class="quick-info-cards">
+                        <div class="info-card">
+                            <i class="fas fa-calendar-alt"></i>
+                            <div class="info-content">
+                                <span class="info-label">Published</span>
+                                <span class="info-value" id="publish-date">-</span>
+                            </div>
+                        </div>
+                        
+                        <div class="info-card">
+                            <i class="fas fa-language"></i>
+                            <div class="info-content">
+                                <span class="info-label">Language</span>
+                                <span class="info-value" id="language">-</span>
+                            </div>
+                        </div>
+                        
+                        <div class="info-card">
+                            <i class="fas fa-book-open"></i>
+                            <div class="info-content">
+                                <span class="info-label">Pages</span>
+                                <span class="info-value" id="pages">-</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Book Information -->
+                <div class="book-info-section">
+                    <div class="book-header">
+                        <h1 class="book-title" id="book-title">Loading...</h1>
+                        <p class="book-author" id="book-author">by Loading...</p>
+                        
+                        <!-- Rating Section -->
+                        <div class="book-rating-section">
+                            <div class="rating-stars" id="rating-stars">
+                                <!-- Stars will be populated by JavaScript -->
+                            </div>
+                            <div class="rating-info">
+                                <span class="rating-score" id="rating-score">-</span>
+                                <span class="rating-count" id="rating-count">-</span>
+                            </div>
+                        </div>
+                        
+                        <!-- Price and Condition -->
+                        <div class="book-pricing">
+                            <div class="price-section">
+                                <span class="price-label">Price</span>
+                                <span class="price-value" id="price">$0.00</span>
+                            </div>
+                            <div class="condition-section">
+                                <span class="condition-label">Condition</span>
+                                <span class="condition-badge" id="condition">-</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Action Buttons -->
+                    <div class="action-buttons">
+                        <button class="btn btn-primary" id="buy-btn">
+                            <i class="fas fa-shopping-cart"></i>
+                            <span>Buy Now</span>
+                        </button>
+                        <button class="btn btn-secondary" id="contact-seller-btn">
+                            <i class="fas fa-envelope"></i>
+                            <span>Contact Seller</span>
+                        </button>
+                    </div>
+                    
+                    <!-- Book Description -->
+                    <div class="book-description">
+                        <h3 class="section-subtitle">About this book</h3>
+                        <div class="description-content" id="description">
+                            <p class="loading-text">Loading description...</p>
+                        </div>
+                    </div>
+                    
+                    <!-- Book Details -->
+                    <div class="book-details">
+                        <!-- Genres/Subjects -->
+                        <div class="detail-section" id="genres-section">
+                            <h3 class="section-subtitle">Genres & Subjects</h3>
+                            <div class="tags-container" id="genres-container">
+                                <span class="loading-text">Loading genres...</span>
+                            </div>
+                        </div>
+                        
+                        <!-- Places -->
+                        <div class="detail-section" id="places-section">
+                            <h3 class="section-subtitle">Places</h3>
+                            <div class="tags-container" id="places-container">
+                                <span class="loading-text">Loading places...</span>
+                            </div>
+                        </div>
+                        
+                        <!-- People -->
+                        <div class="detail-section" id="people-section">
+                            <h3 class="section-subtitle">People</h3>
+                            <div class="tags-container" id="people-container">
+                                <span class="loading-text">Loading people...</span>
+                            </div>
+                        </div>
+                        
+                        <!-- Time Period -->
+                        <div class="detail-section" id="time-section">
+                            <h3 class="section-subtitle">Time Period</h3>
+                            <div class="tags-container" id="time-container">
+                                <span class="loading-text">Loading time period...</span>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
+        </div>
+    </section>
+
+    <!-- Reviews Section -->
+    <section class="reviews-section">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">Reviews</h2>
+                <div class="reviews-filter">
+                    <button class="filter-btn active" data-filter="all">All Reviews</button>
+                    <button class="filter-btn" data-filter="positive">Positive</button>
+                    <button class="filter-btn" data-filter="negative">Negative</button>
+                </div>
+            </div>
             
-            <div class="books-grid">
-                <!-- Books will be loaded dynamically from API -->
+            <div class="reviews-container" id="reviews-container">
+                <div class="loading-spinner">
+                    <i class="fas fa-spinner fa-spin"></i>
+                    <span>Loading reviews...</span>
+                </div>
             </div>
         </div>
     </section>
 
-    <!-- Floating Action Button for Mobile -->
+
+
+    <!-- Floating Action Button -->
     <div class="fab">
         <button class="fab-btn">
             <i class="fas fa-plus"></i>
-            <span>Sell Book</span>
         </button>
     </div>
 
     <script src="script.js"></script>
+    <script src="book-details.js"></script>
 </body>
-</html>
+</html> 
