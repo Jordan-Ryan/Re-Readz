@@ -6,6 +6,7 @@ document.addEventListener('DOMContentLoaded', function() {
     initializeFilters();
     initializeSmoothScrolling();
     initializeMobileMenu();
+    initializeInfiniteScroll();
     
     // Load initial books
     loadBooks();
@@ -15,44 +16,75 @@ document.addEventListener('DOMContentLoaded', function() {
 const BOOKS_API_BASE_URL = 'https://openlibrary.org';
 const DEFAULT_SEARCH_TERMS = ['fiction', 'bestseller', 'classic', 'popular'];
 
+// Global variables for pagination
+let currentPage = 1;
+let isLoading = false;
+let hasMoreResults = true;
+let currentSearchTerm = null;
+let totalBooksFound = 0;
+
 // Load books from API
-async function loadBooks(searchTerm = null) {
+async function loadBooks(searchTerm = null, page = 1, append = false) {
     const booksGrid = document.querySelector('.books-grid');
     const sectionTitle = document.querySelector('.section-title');
     
     // Show loading state
-    booksGrid.innerHTML = '<div class="loading-spinner"><i class="fas fa-spinner fa-spin"></i> Loading books...</div>';
+    if (!append) {
+        booksGrid.innerHTML = '<div class="loading-spinner"><i class="fas fa-spinner fa-spin"></i> Loading books...</div>';
+    }
     
     try {
         let books = [];
         
         if (searchTerm) {
             // Search for specific books
-            books = await searchBooks(searchTerm);
-            sectionTitle.textContent = `Search Results for "${searchTerm}"`;
+            const searchResult = await searchBooks(searchTerm, page);
+            books = searchResult.books;
+            totalBooksFound = searchResult.total;
+            currentSearchTerm = searchTerm;
+            sectionTitle.textContent = `Search Results for "${searchTerm}" (${totalBooksFound} books found)`;
         } else {
             // Load popular books for initial display
             books = await getPopularBooks();
+            totalBooksFound = books.length;
+            currentSearchTerm = null;
             sectionTitle.textContent = 'Popular Books';
         }
         
-        displayBooks(books);
+        if (append) {
+            appendBooks(books);
+        } else {
+            displayBooks(books);
+        }
+        
+        // Update pagination state
+        currentPage = page;
+        hasMoreResults = books.length > 0;
+        
     } catch (error) {
         console.error('Error loading books:', error);
-        booksGrid.innerHTML = '<div class="error-message">Failed to load books. Please try again.</div>';
+        if (!append) {
+            booksGrid.innerHTML = '<div class="error-message">Failed to load books. Please try again.</div>';
+        }
     }
 }
 
-// Search books using Open Library API
-async function searchBooks(query) {
-    const response = await fetch(`${BOOKS_API_BASE_URL}/search.json?q=${encodeURIComponent(query)}&limit=12`);
+// Search books using Open Library API with pagination
+async function searchBooks(query, page = 1) {
+    const limit = 12;
+    const offset = (page - 1) * limit;
+    
+    const response = await fetch(`${BOOKS_API_BASE_URL}/search.json?q=${encodeURIComponent(query)}&limit=${limit}&offset=${offset}`);
     const data = await response.json();
     
     if (!data.docs) {
-        return [];
+        return { books: [], total: 0 };
     }
     
-    return data.docs.map(item => formatBookData(item));
+    const books = data.docs.map(item => formatBookData(item));
+    const total = data.numFound || 0;
+    
+    return { books, total };
 }
 
 // Get popular books for initial display
@@ -125,6 +157,11 @@ function displayBooks(books) {
     
     booksGrid.innerHTML = books.map(book => createBookCard(book)).join('');
     
+    // Add sentinel element for infinite scroll
+    if (window.scrollSentinel) {
+        booksGrid.appendChild(window.scrollSentinel);
+    }
+    
     // Re-initialize wishlist buttons for new cards
     initializeWishlistButtons();
     
@@ -154,6 +191,31 @@ function createBookCard(book) {
             </div>
         </div>
     `;
+}
+
+// Append books to the existing grid
+function appendBooks(books) {
+    const booksGrid = document.querySelector('.books-grid');
+    
+    // Remove existing sentinel if present
+    const existingSentinel = booksGrid.querySelector('.scroll-sentinel');
+    if (existingSentinel) {
+        existingSentinel.remove();
+    }
+    
+    const newBooksHtml = books.map(book => createBookCard(book)).join('');
+    booksGrid.innerHTML += newBooksHtml;
+    
+    // Add sentinel element back for infinite scroll
+    if (window.scrollSentinel) {
+        booksGrid.appendChild(window.scrollSentinel);
+    }
+    
+    // Re-initialize wishlist buttons for new cards
+    initializeWishlistButtons();
+    
+    // Initialize animations for new cards
+    initializeAnimations();
 }
 
 // Initialize all dropdown functionality
@@ -333,6 +395,11 @@ function performSearch() {
     const query = searchInput.value.trim();
     
     if (query) {
+        // Reset pagination state for new search
+        currentPage = 1;
+        hasMoreResults = true;
+        isLoading = false;
+        
         // Add loading state
         const searchBtn = document.querySelector('.search-btn');
         const originalContent = searchBtn.innerHTML;
@@ -340,12 +407,15 @@ function performSearch() {
         searchBtn.classList.add('loading');
         
         // Perform search
-        loadBooks(query).finally(() => {
+        loadBooks(query, 1).finally(() => {
             searchBtn.innerHTML = originalContent;
             searchBtn.classList.remove('loading');
         });
     } else {
         // If no query, load popular books
+        currentPage = 1;
+        hasMoreResults = false; // Popular books don't have pagination
+        isLoading = false;
         loadBooks();
     }
 }
@@ -498,3 +568,77 @@ document.addEventListener('keydown', function(e) {
         });
     }
 });
+
+// Initialize infinite scroll functionality
+function initializeInfiniteScroll() {
+    // Create a sentinel element for infinite scroll
+    const sentinel = document.createElement('div');
+    sentinel.className = 'scroll-sentinel';
+    sentinel.style.height = '20px';
+    sentinel.style.width = '100%';
+    
+    const observerOptions = {
+        root: null, // Use viewport
+        rootMargin: '100px', // Trigger when 100px from the bottom
+        threshold: 0.1
+    };
+
+    const observer = new IntersectionObserver(function(entries) {
+        if (isLoading || !hasMoreResults) {
+            return;
+        }
+
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                loadMoreBooks();
+            }
+        });
+    }, observerOptions);
+
+    observer.observe(sentinel);
+    
+    // Store the observer and sentinel globally
+    window.scrollObserver = observer;
+    window.scrollSentinel = sentinel;
+}
+
+// Load more books function
+async function loadMoreBooks() {
+    if (isLoading || !hasMoreResults) {
+        return;
+    }
+    
+    isLoading = true;
+    currentPage++;
+    
+    // Show loading state on sentinel
+    if (window.scrollSentinel) {
+        window.scrollSentinel.classList.add('loading');
+    }
+    
+    try {
+        if (currentSearchTerm) {
+            const searchResult = await searchBooks(currentSearchTerm, currentPage);
+            const newBooks = searchResult.books;
+            
+            if (newBooks.length > 0) {
+                appendBooks(newBooks);
+                hasMoreResults = newBooks.length === 12; // Assuming 12 books per page
+            } else {
+                hasMoreResults = false;
+            }
+        } else {
+            // For popular books, we don't have pagination, so disable infinite scroll
+            hasMoreResults = false;
+        }
+    } catch (error) {
+        console.error('Error loading more books:', error);
+        hasMoreResults = false;
+    } finally {
+        isLoading = false;
+        // Hide loading state on sentinel
+        if (window.scrollSentinel) {
+            window.scrollSentinel.classList.remove('loading');
+        }
+    }
+}
