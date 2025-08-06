@@ -278,14 +278,38 @@ async function getPopularBooks() {
     return uniqueBooks.slice(0, 24);
 }
 
+// Create a custom fallback image for books without covers
+function createFallbackCoverImage(title, author) {
+    const encodedTitle = encodeURIComponent(title || 'Unknown Title');
+    const encodedAuthor = encodeURIComponent(author || 'Unknown Author');
+    
+    // Create a more professional SVG fallback
+    const svg = `
+        <svg width="128" height="200" xmlns="http://www.w3.org/2000/svg">
+            <rect width="128" height="200" fill="#4A5568"/>
+            <rect x="8" y="8" width="112" height="184" fill="#2D3748" stroke="#718096" stroke-width="1"/>
+            <text x="64" y="60" font-family="Arial, sans-serif" font-size="10" fill="#E2E8F0" text-anchor="middle" font-weight="bold">BOOK</text>
+            <text x="64" y="80" font-family="Arial, sans-serif" font-size="8" fill="#A0AEC0" text-anchor="middle">COVER</text>
+            <text x="64" y="120" font-family="Arial, sans-serif" font-size="6" fill="#718096" text-anchor="middle">No Cover</text>
+            <text x="64" y="135" font-family="Arial, sans-serif" font-size="6" fill="#718096" text-anchor="middle">Available</text>
+            <rect x="20" y="150" width="88" height="2" fill="#718096"/>
+            <rect x="20" y="160" width="88" height="2" fill="#718096"/>
+            <rect x="20" y="170" width="88" height="2" fill="#718096"/>
+        </svg>
+    `;
+    
+    return `data:image/svg+xml;base64,${btoa(svg)}`;
+}
+
 // Format book data from Open Library API response
 function formatBookData(item) {
     return {
+        key: item.key,
         id: item.key,
         title: item.title || 'Unknown Title',
         author: item.author_name ? item.author_name.join(', ') : 'Unknown Author',
         description: item.description || 'No description available.',
-        coverImage: item.cover_i ? `https://covers.openlibrary.org/b/id/${item.cover_i}-M.jpg` : 'https://via.placeholder.com/128x200/4A5568/FFFFFF?text=No+Book+Cover+Available',
+        coverImage: item.cover_i ? `https://covers.openlibrary.org/b/id/${item.cover_i}-M.jpg` : createFallbackCoverImage(item.title, item.author_name ? item.author_name.join(', ') : 'Unknown Author'),
         publishedDate: item.first_publish_year,
         pageCount: item.number_of_pages_median,
         categories: item.subject || [],
@@ -345,7 +369,7 @@ function createBookCard(book) {
     return `
         <div class="book-card" data-book-id="${book.id}">
             <div class="book-image">
-                <img src="${book.coverImage}" alt="${book.title}" onerror="this.src='https://via.placeholder.com/128x200/4A5568/FFFFFF?text=No+Book+Cover+Available'">
+                <img src="${book.coverImage}" alt="${book.title}" onerror="this.src='${createFallbackCoverImage(book.title, book.author)}'">
                 <button class="wishlist-btn">
                     <i class="far fa-heart"></i>
                 </button>
