@@ -507,6 +507,21 @@ body {
     font-weight: 400;
 }
 
+.rating-quality {
+    font-size: 10px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    padding: 2px 6px;
+    border-radius: 8px;
+    margin-left: 4px;
+}
+
+.rating-quality:not(:empty) {
+    background: #C6F6D5;
+    color: #22543D;
+}
+
 .book-meta {
     display: flex;
     justify-content: space-between;
