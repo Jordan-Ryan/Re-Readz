@@ -775,6 +775,7 @@ body {
     .logo {
         font-size: 24px;
         margin-bottom: 0;
+        font-weight: 700;
     }
     
     .mobile-menu-toggle {
@@ -784,6 +785,18 @@ body {
         -webkit-transform: translateZ(0);
         transform: translateZ(0);
         margin-left: auto;
+        font-size: 24px;
+        background: none;
+        border: none;
+        color: inherit;
+        cursor: pointer;
+        padding: 8px;
+        border-radius: 4px;
+        transition: background-color 0.3s ease;
+    }
+    
+    .mobile-menu-toggle:hover {
+        background-color: rgba(0, 0, 0, 0.1);
     }
     
     .nav-search {
