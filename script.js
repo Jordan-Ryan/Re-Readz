@@ -136,75 +136,120 @@ async function searchBooks(query, page = 1, filters = {}) {
 async function getPopularBooks() {
     const books = [];
     
-    // Use more reliable search terms that are likely to return results
-    const searchTerms = [
-        'fiction',
-        'romance',
-        'mystery',
-        'science fiction',
-        'biography',
-        'history',
-        'self help',
-        'cooking',
-        'travel',
-        'business'
-    ];
-    
-    // Search for books using different terms
-    for (const term of searchTerms) {
-        try {
-            const response = await fetch(`${BOOKS_API_BASE_URL}/search.json?q=${encodeURIComponent(term)}&limit=8&sort=rating desc`);
-            const data = await response.json();
+    // First, try to get trending books from Open Library
+    try {
+        const trendingResponse = await fetch(`${BOOKS_API_BASE_URL}/trending.json`);
+        const trendingData = await trendingResponse.json();
+        
+        if (trendingData && trendingData.length > 0) {
+            console.log('Using trending books from Open Library API');
+            // Take the first 12 trending books
+            const trendingBooks = trendingData.slice(0, 12);
             
-            if (data.docs && data.docs.length > 0) {
-                books.push(...data.docs.map(item => formatBookData(item)));
+            // Format trending books
+            for (const book of trendingBooks) {
+                const formattedBook = formatBookData(book);
+                // Try to get detailed rating data for trending books
+                if (book.key) {
+                    try {
+                        const ratingResponse = await fetch(`${BOOKS_API_BASE_URL}${book.key}/ratings.json`);
+                        const ratingData = await ratingResponse.json();
+                        if (ratingData && ratingData.summary) {
+                            formattedBook.averageRating = ratingData.summary.average;
+                            formattedBook.ratingsCount = ratingData.summary.count;
+                        }
+                    } catch (error) {
+                        console.log(`Could not fetch detailed ratings for ${book.title}`);
+                    }
+                }
+                books.push(formattedBook);
             }
-        } catch (error) {
-            console.error(`Error loading books for term "${term}":`, error);
         }
+    } catch (error) {
+        console.error('Error loading trending books:', error);
     }
     
-    // Try to get some highly rated books with different approaches
-    const ratingQueries = [
-        'rating_average:[3 TO 5]',
-        'first_publish_year:[2020 TO 2024]',
-        'subject:fiction',
-        'subject:romance',
-        'subject:mystery'
-    ];
-    
-    for (const query of ratingQueries) {
-        try {
-            const response = await fetch(`${BOOKS_API_BASE_URL}/search.json?q=${encodeURIComponent(query)}&limit=6&sort=rating desc`);
-            const data = await response.json();
+    // If we don't have enough trending books, supplement with search results
+    if (books.length < 12) {
+        // Use more reliable search terms that are likely to return results
+        const searchTerms = [
+            'fiction',
+            'romance',
+            'mystery',
+            'science fiction',
+            'biography',
+            'history',
+            'self help',
+            'cooking',
+            'travel',
+            'business'
+        ];
+        
+        // Search for books using different terms
+        for (const term of searchTerms) {
+            if (books.length >= 24) break; // Don't exceed 24 books
             
-            if (data.docs && data.docs.length > 0) {
-                books.push(...data.docs.map(item => formatBookData(item)));
+            try {
+                const response = await fetch(`${BOOKS_API_BASE_URL}/search.json?q=${encodeURIComponent(term)}&limit=8&sort=rating desc`);
+                const data = await response.json();
+                
+                if (data.docs && data.docs.length > 0) {
+                    const newBooks = data.docs.map(item => formatBookData(item));
+                    books.push(...newBooks);
+                }
+            } catch (error) {
+                console.error(`Error loading books for term "${term}":`, error);
             }
-        } catch (error) {
-            console.error(`Error loading books for query "${query}":`, error);
         }
-    }
-    
-    // Try to get some bestselling and award-winning books
-    const bestsellerQueries = [
-        'bestseller',
-        'award winner',
-        'pulitzer prize',
-        'man booker prize',
-        'national book award'
-    ];
-    
-    for (const query of bestsellerQueries) {
-        try {
-            const response = await fetch(`${BOOKS_API_BASE_URL}/search.json?q=${encodeURIComponent(query)}&limit=5&sort=rating desc`);
-            const data = await response.json();
+        
+        // Try to get some highly rated books with different approaches
+        const ratingQueries = [
+            'rating_average:[3 TO 5]',
+            'first_publish_year:[2020 TO 2024]',
+            'subject:fiction',
+            'subject:romance',
+            'subject:mystery'
+        ];
+        
+        for (const query of ratingQueries) {
+            if (books.length >= 24) break;
             
-            if (data.docs && data.docs.length > 0) {
-                books.push(...data.docs.map(item => formatBookData(item)));
+            try {
+                const response = await fetch(`${BOOKS_API_BASE_URL}/search.json?q=${encodeURIComponent(query)}&limit=6&sort=rating desc`);
+                const data = await response.json();
+                
+                if (data.docs && data.docs.length > 0) {
+                    const newBooks = data.docs.map(item => formatBookData(item));
+                    books.push(...newBooks);
+                }
+            } catch (error) {
+                console.error(`Error loading books for query "${query}":`, error);
             }
-        } catch (error) {
-            console.error(`Error loading books for query "${query}":`, error);
+        }
+        
+        // Try to get some bestselling and award-winning books
+        const bestsellerQueries = [
+            'bestseller',
+            'award winner',
+            'pulitzer prize',
+            'man booker prize',
+            'national book award'
+        ];
+        
+        for (const query of bestsellerQueries) {
+            if (books.length >= 24) break;
+            
+            try {
+                const response = await fetch(`${BOOKS_API_BASE_URL}/search.json?q=${encodeURIComponent(query)}&limit=5&sort=rating desc`);
+                const data = await response.json();
+                
+                if (data.docs && data.docs.length > 0) {
+                    const newBooks = data.docs.map(item => formatBookData(item));
+                    books.push(...newBooks);
+                }
+            } catch (error) {
+                console.error(`Error loading books for query "${query}":`, error);
+            }
         }
     }
     
@@ -293,6 +338,10 @@ function displayBooks(books) {
 function createBookCard(book) {
     const conditionClass = book.condition.toLowerCase().replace(' ', '-');
     
+    // Create rating stars HTML
+    const ratingStars = book.averageRating ? createRatingStars(book.averageRating) : '';
+    const ratingText = book.averageRating ? `${book.averageRating.toFixed(1)} (${book.ratingsCount || 0} reviews)` : '';
+    
     return `
         <div class="book-card" data-book-id="${book.id}">
             <div class="book-image">
@@ -304,6 +353,7 @@ function createBookCard(book) {
             <div class="book-info">
                 <h3 class="book-title">${book.title}</h3>
                 <p class="book-author">${book.author}</p>
+                ${ratingStars ? `<div class="book-rating">${ratingStars}<span class="rating-text">${ratingText}</span></div>` : ''}
                 <div class="book-meta">
                     <span class="condition-badge ${conditionClass}">${book.condition}</span>
                     <span class="book-price">$${book.price}</span>
@@ -311,6 +361,32 @@ function createBookCard(book) {
             </div>
         </div>
     `;
+}
+
+// Create rating stars HTML
+function createRatingStars(rating) {
+    const fullStars = Math.floor(rating);
+    const hasHalfStar = rating % 1 >= 0.5;
+    const emptyStars = 5 - fullStars - (hasHalfStar ? 1 : 0);
+    
+    let starsHTML = '';
+    
+    // Full stars
+    for (let i = 0; i < fullStars; i++) {
+        starsHTML += '<i class="fas fa-star"></i>';
+    }
+    
+    // Half star
+    if (hasHalfStar) {
+        starsHTML += '<i class="fas fa-star-half-alt"></i>';
+    }
+    
+    // Empty stars
+    for (let i = 0; i < emptyStars; i++) {
+        starsHTML += '<i class="far fa-star"></i>';
+    }
+    
+    return starsHTML;
 }
 
 // Append books to the existing grid
