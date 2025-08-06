@@ -414,6 +414,13 @@ body {
     padding: 8px;
 }
 
+/* Style for fallback book cover images */
+.book-image img[src*="data:image/svg+xml"] {
+    background: linear-gradient(135deg, #4A5568 0%, #2D3748 100%);
+    border: 1px solid #718096;
+    padding: 0;
+}
+
 .book-card:hover .book-image img {
     transform: scale(1.05);
 }
@@ -465,12 +472,39 @@ body {
 .book-author {
     font-size: 14px;
     color: #718096;
-    margin-bottom: 16px;
+    margin-bottom: 12px;
     font-weight: 400;
     display: -webkit-box;
     -webkit-line-clamp: 1;
     -webkit-box-orient: vertical;
     overflow: hidden;
+}
+
+.book-rating {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 12px;
+}
+
+.book-rating i {
+    font-size: 14px;
+    color: #F6AD55;
+}
+
+.book-rating .fas.fa-star,
+.book-rating .fas.fa-star-half-alt {
+    color: #F6AD55;
+}
+
+.book-rating .far.fa-star {
+    color: #E2E8F0;
+}
+
+.rating-text {
+    font-size: 12px;
+    color: #718096;
+    font-weight: 400;
 }
 
 .book-meta {
