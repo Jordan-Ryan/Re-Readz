@@ -6,7 +6,158 @@ document.addEventListener('DOMContentLoaded', function() {
     initializeFilters();
     initializeSmoothScrolling();
     initializeMobileMenu();
+    
+    // Load initial books
+    loadBooks();
 });
+
+// Google Books API configuration
+const BOOKS_API_BASE_URL = 'https://www.googleapis.com/books/v1/volumes';
+const DEFAULT_SEARCH_TERMS = ['fiction', 'bestseller', 'classic', 'popular'];
+
+// Load books from API
+async function loadBooks(searchTerm = null) {
+    const booksGrid = document.querySelector('.books-grid');
+    const sectionTitle = document.querySelector('.section-title');
+    
+    // Show loading state
+    booksGrid.innerHTML = '<div class="loading-spinner"><i class="fas fa-spinner fa-spin"></i> Loading books...</div>';
+    
+    try {
+        let books = [];
+        
+        if (searchTerm) {
+            // Search for specific books
+            books = await searchBooks(searchTerm);
+            sectionTitle.textContent = `Search Results for "${searchTerm}"`;
+        } else {
+            // Load popular books for initial display
+            books = await getPopularBooks();
+            sectionTitle.textContent = 'Popular Books';
+        }
+        
+        displayBooks(books);
+    } catch (error) {
+        console.error('Error loading books:', error);
+        booksGrid.innerHTML = '<div class="error-message">Failed to load books. Please try again.</div>';
+    }
+}
+
+// Search books using Google Books API
+async function searchBooks(query) {
+    const response = await fetch(`${BOOKS_API_BASE_URL}?q=${encodeURIComponent(query)}&maxResults=12&printType=books`);
+    const data = await response.json();
+    
+    if (!data.items) {
+        return [];
+    }
+    
+    return data.items.map(item => formatBookData(item));
+}
+
+// Get popular books for initial display
+async function getPopularBooks() {
+    const books = [];
+    
+    // Search for popular books using different terms
+    for (const term of DEFAULT_SEARCH_TERMS) {
+        try {
+            const response = await fetch(`${BOOKS_API_BASE_URL}?q=${encodeURIComponent(term)}&maxResults=3&orderBy=relevance&printType=books`);
+            const data = await response.json();
+            
+            if (data.items) {
+                books.push(...data.items.map(item => formatBookData(item)));
+            }
+        } catch (error) {
+            console.error(`Error loading books for term "${term}":`, error);
+        }
+    }
+    
+    // Remove duplicates and limit to 12 books
+    const uniqueBooks = books.filter((book, index, self) => 
+        index === self.findIndex(b => b.id === book.id)
+    ).slice(0, 12);
+    
+    return uniqueBooks;
+}
+
+// Format book data from API response
+function formatBookData(item) {
+    const volumeInfo = item.volumeInfo;
+    const saleInfo = item.saleInfo;
+    
+    return {
+        id: item.id,
+        title: volumeInfo.title || 'Unknown Title',
+        author: volumeInfo.authors ? volumeInfo.authors.join(', ') : 'Unknown Author',
+        description: volumeInfo.description || 'No description available.',
+        coverImage: volumeInfo.imageLinks?.thumbnail || 'https://via.placeholder.com/128x200/4A5568/FFFFFF?text=No+Cover',
+        publishedDate: volumeInfo.publishedDate,
+        pageCount: volumeInfo.pageCount,
+        categories: volumeInfo.categories || [],
+        averageRating: volumeInfo.averageRating,
+        ratingsCount: volumeInfo.ratingsCount,
+        previewLink: volumeInfo.previewLink,
+        infoLink: volumeInfo.infoLink,
+        // Generate random price and condition for demo purposes
+        price: generateRandomPrice(),
+        condition: generateRandomCondition()
+    };
+}
+
+// Generate random price for demo
+function generateRandomPrice() {
+    const prices = [9.99, 12.99, 15.50, 18.75, 22.00, 11.25, 14.99, 19.99, 16.50, 13.75];
+    return prices[Math.floor(Math.random() * prices.length)];
+}
+
+// Generate random condition for demo
+function generateRandomCondition() {
+    const conditions = ['Like New', 'Very Good', 'Good'];
+    return conditions[Math.floor(Math.random() * conditions.length)];
+}
+
+// Display books in the grid
+function displayBooks(books) {
+    const booksGrid = document.querySelector('.books-grid');
+    
+    if (books.length === 0) {
+        booksGrid.innerHTML = '<div class="no-results">No books found. Try a different search term.</div>';
+        return;
+    }
+    
+    booksGrid.innerHTML = books.map(book => createBookCard(book)).join('');
+    
+    // Re-initialize wishlist buttons for new cards
+    initializeWishlistButtons();
+    
+    // Initialize animations for new cards
+    initializeAnimations();
+}
+
+// Create book card HTML
+function createBookCard(book) {
+    const conditionClass = book.condition.toLowerCase().replace(' ', '-');
+    
+    return `
+        <div class="book-card" data-book-id="${book.id}">
+            <div class="book-image">
+                <img src="${book.coverImage}" alt="${book.title}" onerror="this.src='https://via.placeholder.com/128x200/4A5568/FFFFFF?text=No+Cover'">
+                <button class="wishlist-btn">
+                    <i class="far fa-heart"></i>
+                </button>
+            </div>
+            <div class="book-info">
+                <h3 class="book-title">${book.title}</h3>
+                <p class="book-author">${book.author}</p>
+                <div class="book-meta">
+                    <span class="condition-badge ${conditionClass}">${book.condition}</span>
+                    <span class="book-price">$${book.price}</span>
+                </div>
+            </div>
+        </div>
+    `;
+}
 
 // Initialize all dropdown functionality
 function initializeDropdowns() {
@@ -92,7 +243,7 @@ function initializeFilters() {
                 // Add active state to button
                 button.classList.add('active');
                 
-                // Simulate filtering (in real app, this would trigger API call)
+                // Apply filter (in real app, this would filter the current results)
                 console.log(`Filter applied: ${buttonText}`);
             });
         });
@@ -170,13 +321,13 @@ function initializeSearch() {
     });
     
     // Real-time search suggestions (optional)
-    searchInput.addEventListener('input', function() {
+    searchInput.addEventListener('input', debounce(function() {
         const query = this.value.trim();
         if (query.length >= 2) {
-            // In a real app, this would call an API for suggestions
+            // Could implement search suggestions here
             console.log('Searching for:', query);
         }
-    });
+    }, 300));
 }
 
 // Perform search function
@@ -191,15 +342,14 @@ function performSearch() {
         searchBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
         searchBtn.classList.add('loading');
         
-        // Simulate API call
-        setTimeout(() => {
+        // Perform search
+        loadBooks(query).finally(() => {
             searchBtn.innerHTML = originalContent;
             searchBtn.classList.remove('loading');
-            console.log('Search performed for:', query);
-            
-            // In a real app, this would update the book grid with results
-            // showSearchResults(results);
-        }, 1000);
+        });
+    } else {
+        // If no query, load popular books
+        loadBooks();
     }
 }
 
@@ -277,7 +427,7 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 });
 
-// Intersection Observer for animations (optional)
+// Intersection Observer for animations
 function initializeAnimations() {
     const observerOptions = {
         threshold: 0.1,
@@ -302,9 +452,6 @@ function initializeAnimations() {
         observer.observe(card);
     });
 }
-
-// Initialize animations when DOM is loaded
-document.addEventListener('DOMContentLoaded', initializeAnimations);
 
 // Utility function to debounce search input
 function debounce(func, wait) {

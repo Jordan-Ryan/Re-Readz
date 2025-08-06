@@ -198,12 +198,14 @@ body {
 }
 
 .search-btn {
-    padding: 16px 20px;
+    padding: 16px 24px;
     background: #38A169;
+    color: #FFFFFF;
     border: none;
-    color: white;
+    border-radius: 0 50px 50px 0;
     cursor: pointer;
-    transition: background 0.2s ease;
+    transition: all 0.2s ease;
+    font-size: 16px;
 }
 
 .search-btn:hover {
@@ -212,21 +214,21 @@ body {
 
 .cta-btn {
     padding: 16px 32px;
-    background: #38A169;
-    color: white;
+    background: #2D3748;
+    color: #FFFFFF;
     border: none;
     border-radius: 50px;
     font-size: 16px;
     font-weight: 600;
     cursor: pointer;
     transition: all 0.2s ease;
-    box-shadow: 0 4px 15px rgba(56, 161, 105, 0.3);
+    text-decoration: none;
+    display: inline-block;
 }
 
 .cta-btn:hover {
-    background: #2F855A;
+    background: #1A202C;
     transform: translateY(-2px);
-    box-shadow: 0 6px 20px rgba(56, 161, 105, 0.4);
 }
 
 @media (min-width: 768px) {
@@ -240,17 +242,16 @@ body {
     }
 }
 
-/* Filters Section */
 .filters {
-    padding: 40px 0;
+    padding: 32px 0;
     background: #FFFFFF;
     border-bottom: 1px solid #E2E8F0;
 }
 
 .filters-container {
     display: flex;
+    gap: 16px;
     flex-wrap: wrap;
-    gap: 12px;
     justify-content: center;
 }
 
@@ -265,13 +266,12 @@ body {
     padding: 12px 16px;
     background: #F7FAFC;
     border: 1px solid #E2E8F0;
-    border-radius: 25px;
+    border-radius: 12px;
     color: #4A5568;
     font-size: 14px;
     font-weight: 500;
     cursor: pointer;
     transition: all 0.2s ease;
-    white-space: nowrap;
 }
 
 .filter-btn:hover {
@@ -281,7 +281,7 @@ body {
 
 .filter-btn.active {
     background: #38A169;
-    color: white;
+    color: #FFFFFF;
     border-color: #38A169;
 }
 
@@ -292,7 +292,7 @@ body {
     background: #FFFFFF;
     border-radius: 12px;
     box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
-    min-width: 180px;
+    min-width: 150px;
     opacity: 0;
     visibility: hidden;
     transform: translateY(-10px);
@@ -329,33 +329,33 @@ body {
     border-radius: 0 0 12px 12px;
 }
 
-/* Books Section */
 .books-section {
     padding: 60px 0;
 }
 
 .section-title {
-    font-size: 28px;
+    font-size: 32px;
     font-weight: 700;
     color: #2D3748;
+    text-align: center;
     margin-bottom: 40px;
-    text-align: left;
+    letter-spacing: -0.5px;
 }
 
 .books-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
     gap: 24px;
+    margin-top: 40px;
 }
 
 @media (min-width: 768px) {
     .books-grid {
-        grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+        grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
         gap: 32px;
     }
 }
 
-/* Book Cards */
 .book-card {
     background: #FFFFFF;
     border-radius: 16px;
@@ -373,15 +373,21 @@ body {
 .book-image {
     position: relative;
     width: 100%;
-    height: 300px;
+    height: 320px;
     overflow: hidden;
+    background: #F7FAFC;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .book-image img {
     width: 100%;
     height: 100%;
-    object-fit: cover;
+    object-fit: contain;
     transition: transform 0.3s ease;
+    background: #FFFFFF;
+    padding: 8px;
 }
 
 .book-card:hover .book-image img {
@@ -426,6 +432,10 @@ body {
     color: #2D3748;
     margin-bottom: 8px;
     line-height: 1.3;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
 }
 
 .book-author {
@@ -433,6 +443,10 @@ body {
     color: #718096;
     margin-bottom: 16px;
     font-weight: 400;
+    display: -webkit-box;
+    -webkit-line-clamp: 1;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
 }
 
 .book-meta {
@@ -471,6 +485,36 @@ body {
     color: #38A169;
 }
 
+/* Loading and Error States */
+.loading-spinner {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 60px 20px;
+    color: #718096;
+    font-size: 16px;
+    gap: 12px;
+}
+
+.loading-spinner i {
+    font-size: 20px;
+    color: #38A169;
+}
+
+.error-message {
+    text-align: center;
+    padding: 60px 20px;
+    color: #E53E3E;
+    font-size: 16px;
+}
+
+.no-results {
+    text-align: center;
+    padding: 60px 20px;
+    color: #718096;
+    font-size: 16px;
+}
+
 /* Floating Action Button */
 .fab {
     position: fixed;
@@ -485,7 +529,7 @@ body {
     gap: 8px;
     padding: 16px 24px;
     background: #38A169;
-    color: white;
+    color: #FFFFFF;
     border: none;
     border-radius: 50px;
     font-size: 16px;
@@ -507,15 +551,13 @@ body {
     }
 }
 
-/* Responsive Design */
 @media (max-width: 767px) {
     .nav-menu {
         gap: 16px;
     }
     
     .nav-link {
-        padding: 10px 12px;
-        font-size: 13px;
+        padding: 8px 12px;
     }
     
     .hero {
@@ -532,34 +574,30 @@ body {
     
     .search-input,
     .search-btn {
-        padding: 14px 16px;
-    }
-    
-    .cta-btn {
-        padding: 14px 24px;
         font-size: 14px;
     }
     
+    .cta-btn {
+        font-size: 14px;
+        padding: 14px 24px;
+    }
+    
     .filters-container {
-        justify-content: flex-start;
-        overflow-x: auto;
-        padding-bottom: 8px;
-        -webkit-overflow-scrolling: touch;
+        gap: 12px;
     }
     
     .filter-btn {
-        padding: 10px 14px;
-        font-size: 13px;
-        white-space: nowrap;
+        padding: 10px 12px;
+        font-size: 12px;
     }
     
     .books-grid {
-        grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-        gap: 20px;
+        grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+        gap: 16px;
     }
     
     .book-image {
-        height: 250px;
+        height: 240px;
     }
     
     .book-info {
@@ -571,7 +609,7 @@ body {
     }
     
     .book-author {
-        font-size: 13px;
+        font-size: 12px;
     }
     
     .book-price {
@@ -579,12 +617,11 @@ body {
     }
 }
 
-/* Smooth scrolling */
+/* Focus styles for accessibility */
 html {
     scroll-behavior: smooth;
 }
 
-/* Focus styles for accessibility */
 button:focus,
 input:focus,
 a:focus {
@@ -592,13 +629,11 @@ a:focus {
     outline-offset: 2px;
 }
 
-/* Loading states */
+/* Loading state for search button */
 .loading {
-    opacity: 0.6;
     pointer-events: none;
 }
 
-/* Animation for dropdown chevron */
 .dropdown-toggle .fa-chevron-down {
     transition: transform 0.2s ease;
 }
