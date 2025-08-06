@@ -789,6 +789,8 @@ body {
         flex: none;
         -webkit-box-ordinal-group: 3;
         -webkit-box-flex: 0;
+        min-width: 100%;
+        flex-shrink: 0;
     }
     
     .nav-menu {
@@ -801,6 +803,9 @@ body {
         border-radius: 25px;
         -webkit-transform: translateZ(0);
         transform: translateZ(0);
+        width: 100%;
+        min-width: 100%;
+        flex-shrink: 0;
     }
     
     .nav-search .search-input {
@@ -1208,7 +1213,10 @@ a:focus {
         }
         
         .nav-search {
-            max-width: 100px;
+            max-width: 100%;
+            width: 100%;
+            min-width: 100%;
+            flex-shrink: 0;
         }
         
         .nav-container {
