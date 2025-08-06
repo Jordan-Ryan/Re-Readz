@@ -81,18 +81,7 @@ function updateBookDetails(bookData, ratings, editionData, authorData) {
     const authorName = authorData ? authorData.name : (bookData.authors?.[0]?.name || 'Unknown Author');
     document.getElementById('book-author').textContent = `by ${authorName}`;
     
-    // Update publish date - hide if unknown
-    const publishDate = document.getElementById('publish-date');
-    const publishDateCard = publishDate.closest('.info-card');
-    if (editionData && editionData.publish_date) {
-        publishDate.textContent = editionData.publish_date;
-        publishDateCard.style.display = 'flex';
-    } else if (bookData.first_publish_date) {
-        publishDate.textContent = bookData.first_publish_date;
-        publishDateCard.style.display = 'flex';
-    } else {
-        publishDateCard.style.display = 'none';
-    }
+    // Publish date is now handled in the book card release date
     
     // Update language - hide if unknown
     const language = document.getElementById('language');
@@ -131,28 +120,36 @@ function updateBookDetails(bookData, ratings, editionData, authorData) {
     }
     
     // Update rating - hide if no ratings
-    const ratingSection = document.querySelector('.book-rating-section');
+    const bookRating = document.getElementById('book-rating');
     if (ratings && ratings.summary && ratings.summary.average > 0) {
-        const ratingScore = document.getElementById('rating-score');
-        const ratingCount = document.getElementById('rating-count');
-        const ratingStars = document.getElementById('rating-stars');
-        
         const averageRating = ratings.summary.average || 0;
         const totalRatings = ratings.summary.count || 0;
         
-        ratingScore.textContent = averageRating.toFixed(1);
-        ratingCount.textContent = `${totalRatings} reviews`;
-        ratingStars.innerHTML = createRatingStars(averageRating);
-        ratingSection.style.display = 'flex';
+        const ratingStars = createRatingStars(averageRating);
+        const ratingText = `${averageRating.toFixed(1)} (${totalRatings} reviews)`;
+        
+        bookRating.innerHTML = `
+            ${ratingStars}
+            <span class="rating-text">${ratingText}</span>
+        `;
+        bookRating.style.display = 'flex';
     } else {
-        ratingSection.style.display = 'none';
+        bookRating.style.display = 'none';
     }
     
-    // Remove pricing section entirely (no real pricing data)
-    const pricingSection = document.querySelector('.book-pricing');
-    if (pricingSection) {
-        pricingSection.style.display = 'none';
+    // Update release date
+    const releaseDate = document.getElementById('release-date');
+    if (editionData && editionData.publish_date) {
+        releaseDate.textContent = editionData.publish_date;
+    } else if (bookData.first_publish_date) {
+        releaseDate.textContent = bookData.first_publish_date;
+    } else {
+        releaseDate.textContent = 'Unknown';
     }
+    
+    // Update price (mock data since we don't have real pricing)
+    const bookPrice = document.getElementById('book-price');
+    bookPrice.textContent = '$12.99'; // Mock price
     
     // Update description - hide if no description
     const description = document.getElementById('description');

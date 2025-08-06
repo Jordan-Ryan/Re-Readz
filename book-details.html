@@ -151,126 +151,102 @@
     <!-- Book Details Section -->
     <section class="book-details-section">
         <div class="container">
-            <div class="book-details-grid">
-                <!-- Book Image and Quick Actions -->
-                <div class="book-image-section">
-                    <div class="book-image-container">
-                        <img id="book-cover" src="" alt="Book Cover" class="book-cover">
-                        <button class="wishlist-btn" id="wishlist-btn">
-                            <i class="far fa-heart"></i>
-                        </button>
+            <!-- Book Card (Same as Search Grid) -->
+            <div class="book-card details-book-card" id="details-book-card">
+                <div class="book-image">
+                    <img id="book-cover" src="" alt="Book Cover">
+                    <button class="wishlist-btn" id="wishlist-btn">
+                        <i class="far fa-heart"></i>
+                    </button>
+                </div>
+                <div class="book-info">
+                    <h2 class="book-title" id="book-title">Loading...</h2>
+                    <p class="book-author" id="book-author">by Loading...</p>
+                    <div class="book-rating" id="book-rating">
+                        <!-- Rating stars will be populated by JavaScript -->
+                    </div>
+                    <div class="book-meta">
+                        <div class="book-release-date">
+                            <i class="fas fa-calendar-alt"></i>
+                            <span id="release-date">-</span>
+                        </div>
+                        <div class="book-price" id="book-price">$0.00</div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Additional Details -->
+            <div class="book-details-content">
+                <!-- Quick Info Cards -->
+                <div class="quick-info-cards">
+                    <div class="info-card">
+                        <i class="fas fa-language"></i>
+                        <div class="info-content">
+                            <span class="info-label">Language</span>
+                            <span class="info-value" id="language">-</span>
+                        </div>
                     </div>
                     
-                    <!-- Quick Info Cards -->
-                    <div class="quick-info-cards">
-                        <div class="info-card">
-                            <i class="fas fa-calendar-alt"></i>
-                            <div class="info-content">
-                                <span class="info-label">Published</span>
-                                <span class="info-value" id="publish-date">-</span>
-                            </div>
-                        </div>
-                        
-                        <div class="info-card">
-                            <i class="fas fa-language"></i>
-                            <div class="info-content">
-                                <span class="info-label">Language</span>
-                                <span class="info-value" id="language">-</span>
-                            </div>
-                        </div>
-                        
-                        <div class="info-card">
-                            <i class="fas fa-book-open"></i>
-                            <div class="info-content">
-                                <span class="info-label">Pages</span>
-                                <span class="info-value" id="pages">-</span>
-                            </div>
+                    <div class="info-card">
+                        <i class="fas fa-book-open"></i>
+                        <div class="info-content">
+                            <span class="info-label">Pages</span>
+                            <span class="info-value" id="pages">-</span>
                         </div>
                     </div>
                 </div>
                 
-                <!-- Book Information -->
-                <div class="book-info-section">
-                    <div class="book-header">
-                        <h1 class="book-title" id="book-title">Loading...</h1>
-                        <p class="book-author" id="book-author">by Loading...</p>
-                        
-                        <!-- Rating Section -->
-                        <div class="book-rating-section">
-                            <div class="rating-stars" id="rating-stars">
-                                <!-- Stars will be populated by JavaScript -->
-                            </div>
-                            <div class="rating-info">
-                                <span class="rating-score" id="rating-score">-</span>
-                                <span class="rating-count" id="rating-count">-</span>
-                            </div>
-                        </div>
-                        
-                        <!-- Price and Condition -->
-                        <div class="book-pricing">
-                            <div class="price-section">
-                                <span class="price-label">Price</span>
-                                <span class="price-value" id="price">$0.00</span>
-                            </div>
-                            <div class="condition-section">
-                                <span class="condition-label">Condition</span>
-                                <span class="condition-badge" id="condition">-</span>
-                            </div>
+                <!-- Action Buttons -->
+                <div class="action-buttons">
+                    <button class="btn btn-primary" id="buy-btn">
+                        <i class="fas fa-shopping-cart"></i>
+                        <span>Buy Now</span>
+                    </button>
+                    <button class="btn btn-secondary" id="contact-seller-btn">
+                        <i class="fas fa-envelope"></i>
+                        <span>Contact Seller</span>
+                    </button>
+                </div>
+                
+                <!-- Book Description -->
+                <div class="book-description">
+                    <h3 class="section-subtitle">About this book</h3>
+                    <div class="description-content" id="description">
+                        <p class="loading-text">Loading description...</p>
+                    </div>
+                </div>
+                
+                <!-- Book Details -->
+                <div class="book-details">
+                    <!-- Genres/Subjects -->
+                    <div class="detail-section" id="genres-section">
+                        <h3 class="section-subtitle">Genres & Subjects</h3>
+                        <div class="tags-container" id="genres-container">
+                            <span class="loading-text">Loading genres...</span>
                         </div>
                     </div>
                     
-                    <!-- Action Buttons -->
-                    <div class="action-buttons">
-                        <button class="btn btn-primary" id="buy-btn">
-                            <i class="fas fa-shopping-cart"></i>
-                            <span>Buy Now</span>
-                        </button>
-                        <button class="btn btn-secondary" id="contact-seller-btn">
-                            <i class="fas fa-envelope"></i>
-                            <span>Contact Seller</span>
-                        </button>
-                    </div>
-                    
-                    <!-- Book Description -->
-                    <div class="book-description">
-                        <h3 class="section-subtitle">About this book</h3>
-                        <div class="description-content" id="description">
-                            <p class="loading-text">Loading description...</p>
+                    <!-- Places -->
+                    <div class="detail-section" id="places-section">
+                        <h3 class="section-subtitle">Places</h3>
+                        <div class="tags-container" id="places-container">
+                            <span class="loading-text">Loading places...</span>
                         </div>
                     </div>
                     
-                    <!-- Book Details -->
-                    <div class="book-details">
-                        <!-- Genres/Subjects -->
-                        <div class="detail-section" id="genres-section">
-                            <h3 class="section-subtitle">Genres & Subjects</h3>
-                            <div class="tags-container" id="genres-container">
-                                <span class="loading-text">Loading genres...</span>
-                            </div>
+                    <!-- People -->
+                    <div class="detail-section" id="people-section">
+                        <h3 class="section-subtitle">People</h3>
+                        <div class="tags-container" id="people-container">
+                            <span class="loading-text">Loading people...</span>
                         </div>
-                        
-                        <!-- Places -->
-                        <div class="detail-section" id="places-section">
-                            <h3 class="section-subtitle">Places</h3>
-                            <div class="tags-container" id="places-container">
-                                <span class="loading-text">Loading places...</span>
-                            </div>
-                        </div>
-                        
-                        <!-- People -->
-                        <div class="detail-section" id="people-section">
-                            <h3 class="section-subtitle">People</h3>
-                            <div class="tags-container" id="people-container">
-                                <span class="loading-text">Loading people...</span>
-                            </div>
-                        </div>
-                        
-                        <!-- Time Period -->
-                        <div class="detail-section" id="time-section">
-                            <h3 class="section-subtitle">Time Period</h3>
-                            <div class="tags-container" id="time-container">
-                                <span class="loading-text">Loading time period...</span>
-                            </div>
+                    </div>
+                    
+                    <!-- Time Period -->
+                    <div class="detail-section" id="time-section">
+                        <h3 class="section-subtitle">Time Period</h3>
+                        <div class="tags-container" id="time-container">
+                            <span class="loading-text">Loading time period...</span>
                         </div>
                     </div>
                 </div>
@@ -298,8 +274,6 @@
             </div>
         </div>
     </section>
-
-
 
     <!-- Floating Action Button -->
     <div class="fab">
