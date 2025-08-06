@@ -71,7 +71,7 @@ async function loadBooks(searchTerm = null, page = 1, append = false) {
 
 // Search books using Open Library API with pagination
 async function searchBooks(query, page = 1) {
-    const limit = 12;
+    const limit = 20;
     const offset = (page - 1) * limit;
     
     const response = await fetch(`${BOOKS_API_BASE_URL}/search.json?q=${encodeURIComponent(query)}&limit=${limit}&offset=${offset}`);
@@ -623,7 +623,7 @@ async function loadMoreBooks() {
             
             if (newBooks.length > 0) {
                 appendBooks(newBooks);
-                hasMoreResults = newBooks.length === 12; // Assuming 12 books per page
+                hasMoreResults = newBooks.length === 20; // Assuming 20 books per page
             } else {
                 hasMoreResults = false;
             }
