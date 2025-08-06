@@ -16,6 +16,24 @@ document.addEventListener('DOMContentLoaded', function() {
 const BOOKS_API_BASE_URL = 'https://openlibrary.org';
 const DEFAULT_SEARCH_TERMS = ['bestseller', 'popular', 'award winner', 'classic literature', 'new york times bestseller', 'pulitzer prize'];
 
+// Function to fetch detailed rating data for a book
+async function fetchBookRatings(bookKey) {
+    try {
+        const response = await fetch(`${BOOKS_API_BASE_URL}${bookKey}/ratings.json`);
+        const ratingData = await response.json();
+        
+        if (ratingData && ratingData.summary) {
+            return {
+                average: ratingData.summary.average,
+                count: ratingData.summary.count
+            };
+        }
+    } catch (error) {
+        console.log(`Could not fetch detailed ratings for book ${bookKey}`);
+    }
+    return null;
+}
+
 // Global variables for pagination
 let currentPage = 1;
 let isLoading = false;
@@ -50,7 +68,18 @@ async function loadBooks(searchTerm = null, page = 1, append = false) {
             books = searchResult.books;
             totalBooksFound = searchResult.total;
             currentSearchTerm = searchTerm;
-            sectionTitle.textContent = `Search Results for "${searchTerm}" (${totalBooksFound} books found)`;
+            
+            // Calculate rating statistics for search results
+            const booksWithRatings = books.filter(book => book.averageRating);
+            const avgRating = booksWithRatings.length > 0 
+                ? (booksWithRatings.reduce((sum, book) => sum + book.averageRating, 0) / booksWithRatings.length).toFixed(1)
+                : null;
+            
+            let titleText = `Search Results for "${searchTerm}" (${totalBooksFound} books found)`;
+            if (avgRating && booksWithRatings.length > 0) {
+                titleText += ` • Average Rating: ${avgRating}⭐ (${booksWithRatings.length} rated)`;
+            }
+            sectionTitle.textContent = titleText;
         } else {
             // Load popular books for initial display
             books = await getPopularBooks();
@@ -116,7 +145,14 @@ async function searchBooks(query, page = 1, filters = {}) {
     
     // Add sort parameter
     if (filters.sort && filters.sort !== 'relevance') {
-        url += `&sort=${filters.sort}`;
+        // Handle rating-based sorting
+        if (filters.sort === 'rating') {
+            url += `&sort=rating desc`;
+        } else if (filters.sort === 'rating_asc') {
+            url += `&sort=rating asc`;
+        } else {
+            url += `&sort=${filters.sort}`;
+        }
     }
     
     const response = await fetch(url);
@@ -129,7 +165,21 @@ async function searchBooks(query, page = 1, filters = {}) {
     const books = data.docs.map(item => formatBookData(item));
     const total = data.numFound || 0;
     
-    return { books, total };
+    // Enhance books with detailed ratings (limit to first 10 for performance)
+    const booksWithRatings = [];
+    const booksToEnhance = books.slice(0, 10);
+    const remainingBooks = books.slice(10);
+    
+    // Fetch detailed ratings for the first 10 books
+    for (const book of booksToEnhance) {
+        const enhancedBook = await enhanceBookWithRatings(book);
+        booksWithRatings.push(enhancedBook);
+    }
+    
+    // Add remaining books without additional API calls
+    booksWithRatings.push(...remainingBooks);
+    
+    return { books: booksWithRatings, total };
 }
 
 // Get popular books for initial display
@@ -149,20 +199,9 @@ async function getPopularBooks() {
             // Format trending books
             for (const book of trendingBooks) {
                 const formattedBook = formatBookData(book);
-                // Try to get detailed rating data for trending books
-                if (book.key) {
-                    try {
-                        const ratingResponse = await fetch(`${BOOKS_API_BASE_URL}${book.key}/ratings.json`);
-                        const ratingData = await ratingResponse.json();
-                        if (ratingData && ratingData.summary) {
-                            formattedBook.averageRating = ratingData.summary.average;
-                            formattedBook.ratingsCount = ratingData.summary.count;
-                        }
-                    } catch (error) {
-                        console.log(`Could not fetch detailed ratings for ${book.title}`);
-                    }
-                }
-                books.push(formattedBook);
+                // Enhance with detailed rating data
+                const enhancedBook = await enhanceBookWithRatings(formattedBook);
+                books.push(enhancedBook);
             }
         }
     } catch (error) {
@@ -195,7 +234,15 @@ async function getPopularBooks() {
                 
                 if (data.docs && data.docs.length > 0) {
                     const newBooks = data.docs.map(item => formatBookData(item));
-                    books.push(...newBooks);
+                    // Enhance first 5 books with detailed ratings for better performance
+                    const booksToEnhance = newBooks.slice(0, 5);
+                    const remainingBooks = newBooks.slice(5);
+                    
+                    for (const book of booksToEnhance) {
+                        const enhancedBook = await enhanceBookWithRatings(book);
+                        books.push(enhancedBook);
+                    }
+                    books.push(...remainingBooks);
                 }
             } catch (error) {
                 console.error(`Error loading books for term "${term}":`, error);
@@ -220,7 +267,15 @@ async function getPopularBooks() {
                 
                 if (data.docs && data.docs.length > 0) {
                     const newBooks = data.docs.map(item => formatBookData(item));
-                    books.push(...newBooks);
+                    // Enhance first 3 books with detailed ratings for better performance
+                    const booksToEnhance = newBooks.slice(0, 3);
+                    const remainingBooks = newBooks.slice(3);
+                    
+                    for (const book of booksToEnhance) {
+                        const enhancedBook = await enhanceBookWithRatings(book);
+                        books.push(enhancedBook);
+                    }
+                    books.push(...remainingBooks);
                 }
             } catch (error) {
                 console.error(`Error loading books for query "${query}":`, error);
@@ -245,7 +300,15 @@ async function getPopularBooks() {
                 
                 if (data.docs && data.docs.length > 0) {
                     const newBooks = data.docs.map(item => formatBookData(item));
-                    books.push(...newBooks);
+                    // Enhance first 3 books with detailed ratings for better performance
+                    const booksToEnhance = newBooks.slice(0, 3);
+                    const remainingBooks = newBooks.slice(3);
+                    
+                    for (const book of booksToEnhance) {
+                        const enhancedBook = await enhanceBookWithRatings(book);
+                        books.push(enhancedBook);
+                    }
+                    books.push(...remainingBooks);
                 }
             } catch (error) {
                 console.error(`Error loading books for query "${query}":`, error);
@@ -266,9 +329,23 @@ async function getPopularBooks() {
             
             if (data.docs && data.docs.length > 0) {
                 const fallbackBooks = data.docs.map(item => formatBookData(item));
-                uniqueBooks.push(...fallbackBooks.filter(book => 
-                    !uniqueBooks.some(existing => existing.key === book.key)
-                ));
+                // Enhance first 5 fallback books with detailed ratings
+                const booksToEnhance = fallbackBooks.slice(0, 5);
+                const remainingBooks = fallbackBooks.slice(5);
+                
+                for (const book of booksToEnhance) {
+                    const enhancedBook = await enhanceBookWithRatings(book);
+                    if (!uniqueBooks.some(existing => existing.key === enhancedBook.key)) {
+                        uniqueBooks.push(enhancedBook);
+                    }
+                }
+                
+                // Add remaining books without additional API calls
+                remainingBooks.forEach(book => {
+                    if (!uniqueBooks.some(existing => existing.key === book.key)) {
+                        uniqueBooks.push(book);
+                    }
+                });
             }
         } catch (error) {
             console.error('Error loading fallback books:', error);
@@ -323,6 +400,43 @@ function formatBookData(item) {
     };
 }
 
+// Function to enhance book data with detailed ratings
+async function enhanceBookWithRatings(book) {
+    if (book.key) {
+        const ratingData = await fetchBookRatings(book.key);
+        if (ratingData) {
+            book.averageRating = ratingData.average;
+            book.ratingsCount = ratingData.count;
+        }
+    }
+    return book;
+}
+
+// Function to update book card with fresh rating data
+async function updateBookCardRatings(bookCard, bookKey) {
+    try {
+        const ratingData = await fetchBookRatings(bookKey);
+        if (ratingData) {
+            const ratingContainer = bookCard.querySelector('.book-rating');
+            if (ratingContainer) {
+                const ratingStars = createRatingStars(ratingData.average);
+                const ratingText = `${ratingData.average.toFixed(1)} (${ratingData.count} reviews)`;
+                const ratingQuality = ratingData.count >= 100 ? 'Highly Rated' : 
+                                    ratingData.count >= 50 ? 'Well Rated' : 
+                                    ratingData.count >= 10 ? 'Rated' : '';
+                
+                ratingContainer.innerHTML = `
+                    ${ratingStars}
+                    <span class="rating-text">${ratingText}</span>
+                    ${ratingQuality ? `<span class="rating-quality">${ratingQuality}</span>` : ''}
+                `;
+            }
+        }
+    } catch (error) {
+        console.log('Could not update ratings for book card');
+    }
+}
+
 // Generate random price for demo
 function generateRandomPrice() {
     const prices = [9.99, 12.99, 15.50, 18.75, 22.00, 11.25, 14.99, 19.99, 16.50, 13.75];
@@ -356,6 +470,9 @@ function displayBooks(books) {
     
     // Initialize animations for new cards
     initializeAnimations();
+    
+    // Initialize rating refresh functionality
+    initializeRatingRefresh();
 }
 
 // Create book card HTML
@@ -366,8 +483,13 @@ function createBookCard(book) {
     const ratingStars = book.averageRating ? createRatingStars(book.averageRating) : '';
     const ratingText = book.averageRating ? `${book.averageRating.toFixed(1)} (${book.ratingsCount || 0} reviews)` : '';
     
+    // Add rating quality indicator
+    const ratingQuality = book.ratingsCount >= 100 ? 'Highly Rated' : 
+                         book.ratingsCount >= 50 ? 'Well Rated' : 
+                         book.ratingsCount >= 10 ? 'Rated' : '';
+    
     return `
-        <div class="book-card" data-book-id="${book.id}">
+        <div class="book-card" data-book-id="${book.id}" data-book-key="${book.key}">
             <div class="book-image">
                 <img src="${book.coverImage}" alt="${book.title}" onerror="this.src='${createFallbackCoverImage(book.title, book.author)}'">
                 <button class="wishlist-btn">
@@ -377,7 +499,13 @@ function createBookCard(book) {
             <div class="book-info">
                 <h3 class="book-title">${book.title}</h3>
                 <p class="book-author">${book.author}</p>
-                ${ratingStars ? `<div class="book-rating">${ratingStars}<span class="rating-text">${ratingText}</span></div>` : ''}
+                ${ratingStars ? `
+                    <div class="book-rating">
+                        ${ratingStars}
+                        <span class="rating-text">${ratingText}</span>
+                        ${ratingQuality ? `<span class="rating-quality">${ratingQuality}</span>` : ''}
+                    </div>
+                ` : ''}
                 <div class="book-meta">
                     <span class="condition-badge ${conditionClass}">${book.condition}</span>
                     <span class="book-price">$${book.price}</span>
@@ -436,6 +564,9 @@ function appendBooks(books) {
     
     // Initialize animations for new cards
     initializeAnimations();
+    
+    // Initialize rating refresh functionality
+    initializeRatingRefresh();
 }
 
 // Initialize all dropdown functionality
@@ -806,6 +937,38 @@ function initializeAnimations() {
         card.style.transform = 'translateY(20px)';
         card.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
         observer.observe(card);
+    });
+}
+
+// Initialize rating refresh functionality
+function initializeRatingRefresh() {
+    const bookCards = document.querySelectorAll('.book-card');
+    
+    bookCards.forEach(card => {
+        card.addEventListener('click', async function(e) {
+            // Don't trigger if clicking on wishlist button
+            if (e.target.closest('.wishlist-btn')) {
+                return;
+            }
+            
+            const bookKey = this.getAttribute('data-book-key');
+            if (bookKey) {
+                // Show loading state on rating
+                const ratingContainer = this.querySelector('.book-rating');
+                if (ratingContainer) {
+                    const originalContent = ratingContainer.innerHTML;
+                    ratingContainer.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Updating ratings...';
+                    
+                    // Update ratings
+                    await updateBookCardRatings(this, bookKey);
+                    
+                    // If no rating data was found, restore original content
+                    if (!ratingContainer.querySelector('.fas.fa-star')) {
+                        ratingContainer.innerHTML = originalContent;
+                    }
+                }
+            }
+        });
     });
 }
 
