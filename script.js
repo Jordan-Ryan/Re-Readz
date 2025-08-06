@@ -131,7 +131,7 @@ async function getPopularBooks() {
     // Search for popular books using different terms with higher limits
     for (const term of DEFAULT_SEARCH_TERMS) {
         try {
-            const response = await fetch(`${BOOKS_API_BASE_URL}/search.json?q=${encodeURIComponent(term)}&limit=8&sort=rating desc`);
+            const response = await fetch(`${BOOKS_API_BASE_URL}/search.json?q=${encodeURIComponent(term)}&limit=12&sort=rating desc`);
             const data = await response.json();
             
             if (data.docs) {
@@ -144,7 +144,7 @@ async function getPopularBooks() {
     
     // Also try to get some highly rated books
     try {
-        const response = await fetch(`${BOOKS_API_BASE_URL}/search.json?q=rating_average:[4 TO 5]&limit=10&sort=rating desc`);
+        const response = await fetch(`${BOOKS_API_BASE_URL}/search.json?q=rating_average:[4 TO 5]&limit=15&sort=rating desc`);
         const data = await response.json();
         
         if (data.docs) {
@@ -152,6 +152,30 @@ async function getPopularBooks() {
         }
     } catch (error) {
         console.error('Error loading highly rated books:', error);
+    }
+    
+    // Try to get some bestselling books
+    try {
+        const response = await fetch(`${BOOKS_API_BASE_URL}/search.json?q=bestseller&limit=10&sort=rating desc`);
+        const data = await response.json();
+        
+        if (data.docs) {
+            books.push(...data.docs.map(item => formatBookData(item)));
+        }
+    } catch (error) {
+        console.error('Error loading bestselling books:', error);
+    }
+    
+    // Try to get some classic literature
+    try {
+        const response = await fetch(`${BOOKS_API_BASE_URL}/search.json?q=classic literature&limit=10&sort=rating desc`);
+        const data = await response.json();
+        
+        if (data.docs) {
+            books.push(...data.docs.map(item => formatBookData(item)));
+        }
+    } catch (error) {
+        console.error('Error loading classic literature:', error);
     }
     
     // Remove duplicates and limit to 20 books for better variety

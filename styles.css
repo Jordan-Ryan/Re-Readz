@@ -5,6 +5,13 @@
     box-sizing: border-box;
 }
 
+/* Prevent zoom on mobile */
+html {
+    -webkit-text-size-adjust: 100%;
+    -ms-text-size-adjust: 100%;
+    text-size-adjust: 100%;
+}
+
 body {
     font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
     line-height: 1.6;
@@ -12,6 +19,8 @@ body {
     background-color: #FAFAFA;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+    overflow-x: hidden;
+    width: 100%;
 }
 
 .container {
@@ -191,6 +200,10 @@ body {
     outline: none;
     font-size: 16px;
     background: transparent;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    border-radius: 0;
 }
 
 .search-input::placeholder {
@@ -614,6 +627,38 @@ body {
     
     .book-price {
         font-size: 16px;
+    }
+    
+    /* Prevent zoom on input focus */
+    input[type="text"],
+    input[type="search"],
+    input[type="email"],
+    input[type="tel"],
+    textarea {
+        font-size: 16px !important;
+        transform: none !important;
+    }
+    
+    /* Prevent horizontal scroll */
+    .container {
+        padding: 0 16px;
+        max-width: 100%;
+        overflow-x: hidden;
+    }
+    
+    .nav-container {
+        padding: 0 16px;
+    }
+    
+    /* Improve touch targets */
+    .nav-link,
+    .filter-btn,
+    .search-btn,
+    .cta-btn {
+        min-height: 44px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
     }
 }
 
