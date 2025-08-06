@@ -1850,7 +1850,8 @@ a:focus {
 
 @media (max-width: 768px) {
     .details-book-card {
-        max-width: 320px;
+        max-width: 100%;
+        margin: 0 16px 24px;
     }
     
     .details-book-card .book-image {
@@ -1947,8 +1948,8 @@ a:focus {
 
 @media (max-width: 480px) {
     .details-book-card {
-        max-width: 280px;
-        margin: 0 auto 24px;
+        max-width: 100%;
+        margin: 0 12px 20px;
     }
     
     .details-book-card .book-image {
