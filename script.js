@@ -11,8 +11,8 @@ document.addEventListener('DOMContentLoaded', function() {
     loadBooks();
 });
 
-// Google Books API configuration
-const BOOKS_API_BASE_URL = 'https://www.googleapis.com/books/v1/volumes';
+// Open Library API configuration (Free, no API key required)
+const BOOKS_API_BASE_URL = 'https://openlibrary.org';
 const DEFAULT_SEARCH_TERMS = ['fiction', 'bestseller', 'classic', 'popular'];
 
 // Load books from API
@@ -43,16 +43,16 @@ async function loadBooks(searchTerm = null) {
     }
 }
 
-// Search books using Google Books API
+// Search books using Open Library API
 async function searchBooks(query) {
-    const response = await fetch(`${BOOKS_API_BASE_URL}?q=${encodeURIComponent(query)}&maxResults=12&printType=books`);
+    const response = await fetch(`${BOOKS_API_BASE_URL}/search.json?q=${encodeURIComponent(query)}&limit=12`);
     const data = await response.json();
     
-    if (!data.items) {
+    if (!data.docs) {
         return [];
     }
     
-    return data.items.map(item => formatBookData(item));
+    return data.docs.map(item => formatBookData(item));
 }
 
 // Get popular books for initial display
@@ -62,11 +62,11 @@ async function getPopularBooks() {
     // Search for popular books using different terms
     for (const term of DEFAULT_SEARCH_TERMS) {
         try {
-            const response = await fetch(`${BOOKS_API_BASE_URL}?q=${encodeURIComponent(term)}&maxResults=3&orderBy=relevance&printType=books`);
+            const response = await fetch(`${BOOKS_API_BASE_URL}/search.json?q=${encodeURIComponent(term)}&limit=3`);
             const data = await response.json();
             
-            if (data.items) {
-                books.push(...data.items.map(item => formatBookData(item)));
+            if (data.docs) {
+                books.push(...data.docs.map(item => formatBookData(item)));
             }
         } catch (error) {
             console.error(`Error loading books for term "${term}":`, error);
@@ -75,30 +75,27 @@ async function getPopularBooks() {
     
     // Remove duplicates and limit to 12 books
     const uniqueBooks = books.filter((book, index, self) => 
-        index === self.findIndex(b => b.id === book.id)
+        index === self.findIndex(b => b.key === book.key)
     ).slice(0, 12);
     
     return uniqueBooks;
 }
 
-// Format book data from API response
+// Format book data from Open Library API response
 function formatBookData(item) {
-    const volumeInfo = item.volumeInfo;
-    const saleInfo = item.saleInfo;
-    
     return {
-        id: item.id,
-        title: volumeInfo.title || 'Unknown Title',
-        author: volumeInfo.authors ? volumeInfo.authors.join(', ') : 'Unknown Author',
-        description: volumeInfo.description || 'No description available.',
-        coverImage: volumeInfo.imageLinks?.thumbnail || 'https://via.placeholder.com/128x200/4A5568/FFFFFF?text=No+Cover',
-        publishedDate: volumeInfo.publishedDate,
-        pageCount: volumeInfo.pageCount,
-        categories: volumeInfo.categories || [],
-        averageRating: volumeInfo.averageRating,
-        ratingsCount: volumeInfo.ratingsCount,
-        previewLink: volumeInfo.previewLink,
-        infoLink: volumeInfo.infoLink,
+        id: item.key,
+        title: item.title || 'Unknown Title',
+        author: item.author_name ? item.author_name.join(', ') : 'Unknown Author',
+        description: item.description || 'No description available.',
+        coverImage: item.cover_i ? `https://covers.openlibrary.org/b/id/${item.cover_i}-M.jpg` : 'https://via.placeholder.com/128x200/4A5568/FFFFFF?text=No+Cover',
+        publishedDate: item.first_publish_year,
+        pageCount: item.number_of_pages_median,
+        categories: item.subject || [],
+        averageRating: item.ratings_average,
+        ratingsCount: item.ratings_count,
+        previewLink: `https://openlibrary.org${item.key}`,
+        infoLink: `https://openlibrary.org${item.key}`,
         // Generate random price and condition for demo purposes
         price: generateRandomPrice(),
         condition: generateRandomCondition()
