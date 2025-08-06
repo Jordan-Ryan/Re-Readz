@@ -711,22 +711,15 @@ body {
     .filters-container {
         gap: 8px;
         justify-content: flex-start;
-        overflow-x: auto;
-        -webkit-overflow-scrolling: touch;
-        scrollbar-width: none;
-        -ms-overflow-style: none;
+        flex-wrap: wrap;
         padding-bottom: 8px;
     }
     
-    .filters-container::-webkit-scrollbar {
-        display: none;
-    }
+
     
     .filter-btn {
         padding: 8px 12px;
         font-size: 12px;
-        white-space: nowrap;
-        flex-shrink: 0;
         min-height: 44px;
         display: flex;
         align-items: center;
