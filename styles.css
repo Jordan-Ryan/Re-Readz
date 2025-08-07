@@ -753,6 +753,11 @@ body {
     animation-duration: var(--duration);
     animation-timing-function: ease;
     animation-iteration-count: infinite;
+    -webkit-transform-origin: 100% 2px;
+    -webkit-transform: rotateZ(0deg) translateX(-18px);
+    -webkit-animation-duration: var(--duration);
+    -webkit-animation-timing-function: ease;
+    -webkit-animation-iteration-count: infinite;
 }
 
 
@@ -2532,6 +2537,12 @@ a:focus {
     63% { transform: rotateZ(0deg) translateX(-18px); }
 }
 
+@-webkit-keyframes page-1 {
+    4% { -webkit-transform: rotateZ(0deg) translateX(-18px); }
+    13%, 54% { -webkit-transform: rotateZ(180deg) translateX(-18px); }
+    63% { -webkit-transform: rotateZ(0deg) translateX(-18px); }
+}
+
 @keyframes page-2 {
     5.86% { transform: rotateZ(0deg) translateX(-18px); }
     14.74%, 55.74% { transform: rotateZ(180deg) translateX(-18px); }
@@ -2839,6 +2850,23 @@ a:focus {
 @media (min-width: 651px) {
     .mobile-filters-section {
         display: none !important;
+    }
+}
+
+/* Safari mobile fixes for loading animation */
+@media screen and (-webkit-min-device-pixel-ratio: 0) and (max-width: 767px) {
+    .book ul li {
+        -webkit-backface-visibility: hidden;
+        backface-visibility: hidden;
+        -webkit-transform-style: preserve-3d;
+        transform-style: preserve-3d;
+    }
+    
+    .book {
+        -webkit-backface-visibility: hidden;
+        backface-visibility: hidden;
+        -webkit-transform-style: preserve-3d;
+        transform-style: preserve-3d;
     }
 }
 
