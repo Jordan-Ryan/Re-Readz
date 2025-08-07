@@ -5,6 +5,8 @@ document.addEventListener('DOMContentLoaded', function() {
         console.log('🔍 DEBUG: Starting initialization sequence...');
         initializeDropdowns();
         console.log('🔍 DEBUG: initializeDropdowns() completed');
+        disableDesktopDropdownsOnMobile();
+        console.log('🔍 DEBUG: disableDesktopDropdownsOnMobile() completed');
         initializeWishlistButtons();
         initializeSearch();
         initializeFilters();
@@ -659,6 +661,13 @@ function initializeDropdowns() {
     if (window.innerWidth <= 650) {
         console.log('🔍 DEBUG: Skipping desktop dropdown initialization on mobile');
         console.log('🔍 DEBUG: Mobile width detected, returning early');
+        
+        // Force disable any existing desktop dropdowns on mobile
+        document.querySelectorAll('.dropdown').forEach(dropdown => {
+            dropdown.classList.remove('active');
+            console.log('🔍 DEBUG: Forced disabled desktop dropdown:', dropdown);
+        });
+        
         return;
     }
     
@@ -1563,4 +1572,32 @@ function initializeMobileFilters() {
     });
     
     console.log('🔍 DEBUG: initializeMobileFilters() completed');
+}
+
+// Function to disable desktop dropdowns on mobile
+function disableDesktopDropdownsOnMobile() {
+    if (window.innerWidth <= 650) {
+        console.log('🔍 DEBUG: Disabling all desktop dropdown functionality on mobile');
+        
+        // Remove all click events from desktop dropdown toggles
+        document.querySelectorAll('.dropdown-toggle').forEach(toggle => {
+            const newToggle = toggle.cloneNode(true);
+            toggle.parentNode.replaceChild(newToggle, toggle);
+            console.log('🔍 DEBUG: Removed click events from desktop dropdown toggle:', toggle);
+        });
+        
+        // Remove all click events from filter toggles
+        document.querySelectorAll('.filter-toggle').forEach(toggle => {
+            const newToggle = toggle.cloneNode(true);
+            toggle.parentNode.replaceChild(newToggle, toggle);
+            console.log('🔍 DEBUG: Removed click events from filter toggle:', toggle);
+        });
+        
+        // Force close any open dropdowns
+        document.querySelectorAll('.dropdown').forEach(dropdown => {
+            dropdown.classList.remove('active');
+        });
+        
+        console.log('🔍 DEBUG: Desktop dropdown functionality disabled on mobile');
+    }
 }
