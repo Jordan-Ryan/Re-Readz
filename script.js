@@ -1527,30 +1527,60 @@ function initializeMobileFilters() {
             console.log('🔍 DEBUG: Is currently active:', isActive);
             console.log('🔍 DEBUG: Element:', this);
             
-            // Close all other filter options
-            document.querySelectorAll('.mobile-filter-options').forEach(options => {
-                options.style.display = 'none';
-            });
-            document.querySelectorAll('.mobile-filter-toggle').forEach(other => {
-                other.classList.remove('active');
-            });
-            
-            // Toggle current filter options
-            const filterOptions = document.querySelector(`.mobile-filter-options[data-filter="${filterType}"]`);
-            console.log('🔍 DEBUG: Found filter options element:', filterOptions);
-            
-            if (filterOptions) {
-                if (isActive) {
-                    console.log('🔍 DEBUG: Closing filter options');
-                    this.classList.remove('active');
-                    filterOptions.style.display = 'none';
-                } else {
-                    console.log('🔍 DEBUG: Opening filter options');
-                    this.classList.add('active');
-                    filterOptions.style.display = 'block';
+            // Special handling for main "Filters" toggle
+            if (filterType === 'filters') {
+                console.log('🔍 DEBUG: Main filters toggle clicked');
+                
+                // Close all other filter options first
+                document.querySelectorAll('.mobile-filter-options').forEach(options => {
+                    options.style.display = 'none';
+                });
+                document.querySelectorAll('.mobile-filter-toggle').forEach(other => {
+                    other.classList.remove('active');
+                });
+                
+                // Toggle main filters container
+                const filterOptions = document.querySelector(`.mobile-filter-options[data-filter="${filterType}"]`);
+                if (filterOptions) {
+                    if (isActive) {
+                        console.log('🔍 DEBUG: Closing main filters');
+                        this.classList.remove('active');
+                        filterOptions.style.display = 'none';
+                    } else {
+                        console.log('🔍 DEBUG: Opening main filters');
+                        this.classList.add('active');
+                        filterOptions.style.display = 'block';
+                    }
                 }
             } else {
-                console.log('🔍 DEBUG: ERROR - No filter options found for:', filterType);
+                // Handle individual filter toggles (genre, language, year)
+                console.log('🔍 DEBUG: Individual filter toggle clicked:', filterType);
+                
+                // Only close other individual filter options, not the main filters container
+                document.querySelectorAll('.mobile-filter-options[data-filter="genre"], .mobile-filter-options[data-filter="language"], .mobile-filter-options[data-filter="year"]').forEach(options => {
+                    options.style.display = 'none';
+                });
+                document.querySelectorAll('.mobile-filter-toggle[data-filter="genre"], .mobile-filter-toggle[data-filter="language"], .mobile-filter-toggle[data-filter="year"]').forEach(other => {
+                    other.classList.remove('active');
+                });
+                
+                // Toggle current filter options
+                const filterOptions = document.querySelector(`.mobile-filter-options[data-filter="${filterType}"]`);
+                console.log('🔍 DEBUG: Found filter options element:', filterOptions);
+                
+                if (filterOptions) {
+                    if (isActive) {
+                        console.log('🔍 DEBUG: Closing filter options');
+                        this.classList.remove('active');
+                        filterOptions.style.display = 'none';
+                    } else {
+                        console.log('🔍 DEBUG: Opening filter options');
+                        this.classList.add('active');
+                        filterOptions.style.display = 'block';
+                    }
+                } else {
+                    console.log('🔍 DEBUG: ERROR - No filter options found for:', filterType);
+                }
             }
             
             console.log('🔍 DEBUG: Mobile filter toggle state:', this.classList.contains('active') ? 'opened' : 'closed');

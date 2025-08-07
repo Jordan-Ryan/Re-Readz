@@ -1123,11 +1123,11 @@ body {
     }
     
     .nav-menu.active .nav-link {
-        width: 100%;
+        width: 100% !important;
         justify-content: flex-start;
         padding: 12px 16px;
-        border-radius: 8px;
-        min-height: 44px;
+        border-radius: 0;
+        min-height: 48px;
         display: flex;
         align-items: center;
         gap: 12px;
@@ -2552,17 +2552,24 @@ a:focus {
     .nav-menu.active .mobile-filters-section {
         display: block !important;
         width: 100% !important;
-        margin-bottom: 16px;
+        margin-bottom: 0;
     }
     
     /* Ensure all mobile filter options are hidden by default */
     .mobile-filter-options {
         display: none !important;
+        width: 100% !important;
     }
     
     /* Only show when toggle is active */
     .mobile-filter-toggle.active + .mobile-filter-options {
         display: block !important;
+    }
+    
+    /* Ensure mobile filter toggles are full width */
+    .mobile-filter-toggle {
+        width: 100% !important;
+        max-width: 100% !important;
     }
 }
 
