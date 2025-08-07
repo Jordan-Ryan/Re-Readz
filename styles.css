@@ -989,6 +989,7 @@ body {
         .filter-chevron {
             -webkit-transform: translateZ(0);
             transform: translateZ(0);
+            display: none;
         }
         
         .filter-section.active .filter-chevron {
@@ -1413,6 +1414,7 @@ a:focus {
     font-size: 10px;
     transition: transform 0.2s ease;
     -webkit-transition: -webkit-transform 0.2s ease;
+    display: none;
 }
 
 .filters-menu .filter-toggle.active .filter-chevron {
@@ -2765,6 +2767,7 @@ a:focus {
 
 .mobile-filter-toggle .filter-chevron {
     transition: transform 0.2s ease;
+    display: block;
 }
 
 .mobile-filter-toggle.active .filter-chevron {
