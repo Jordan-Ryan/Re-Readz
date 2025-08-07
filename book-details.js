@@ -527,7 +527,7 @@ async function initializeBookDetails() {
     
     if (!bookKey) {
         // Redirect to home page if no book ID provided
-        window.location.href = 'index.html';
+        window.location.href = '/';
         return;
     }
     
