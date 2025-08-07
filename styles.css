@@ -669,7 +669,7 @@ body {
     color: #718096;
     font-size: 16px;
     gap: 24px;
-    background: #000000;
+    background: #FFFFFF;
     border-radius: 12px;
     margin: 20px;
 }
@@ -690,7 +690,7 @@ body {
     transform: translate(-50%, -50%);
     width: 2px;
     height: 60px;
-    background: #FFFFFF;
+    background: #000000;
     z-index: 10;
 }
 
@@ -700,7 +700,7 @@ body {
     top: 50%;
     width: 60px;
     height: 40px;
-    border: 1px solid rgba(255, 255, 255, 0.3);
+    border: 1px solid rgba(0, 0, 0, 0.3);
     background: transparent;
     transform-origin: center bottom;
     animation: pageFan 3s ease-in-out infinite;
@@ -713,7 +713,7 @@ body {
     left: 8px;
     right: 8px;
     height: 1px;
-    background: rgba(255, 255, 255, 0.2);
+    background: rgba(0, 0, 0, 0.2);
 }
 
 .loading-spinner .book-page::after {
@@ -723,7 +723,7 @@ body {
     left: 8px;
     right: 8px;
     height: 1px;
-    background: rgba(255, 255, 255, 0.2);
+    background: rgba(0, 0, 0, 0.2);
 }
 
 .loading-spinner .book-page:nth-child(2) {
