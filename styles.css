@@ -1316,6 +1316,17 @@ a:focus {
     transform: rotate(180deg);
 }
 
+/* Filters dropdown specific chevron */
+.filters-dropdown .dropdown-toggle .fa-chevron-right {
+    transition: transform 0.2s ease;
+    -webkit-transition: -webkit-transform 0.2s ease;
+}
+
+.filters-dropdown.active .dropdown-toggle .fa-chevron-right {
+    -webkit-transform: rotate(90deg);
+    transform: rotate(90deg);
+}
+
 /* Filter Toggle within dropdown */
 .filters-menu .filter-toggle {
     display: flex;

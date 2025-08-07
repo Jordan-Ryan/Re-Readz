@@ -479,9 +479,11 @@ function initializeDropdowns() {
                 if (isActive) {
                     this.classList.remove('active');
                     filterOptions.classList.remove('active');
+                    filterOptions.style.display = 'none';
                 } else {
                     this.classList.add('active');
                     filterOptions.classList.add('active');
+                    filterOptions.style.display = 'flex';
                 }
             }
             

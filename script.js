@@ -686,6 +686,7 @@ filterToggles.forEach(toggle => {
         // Close all other filter options
         document.querySelectorAll('.filter-options').forEach(options => {
             options.classList.remove('active');
+            options.style.display = 'none';
         });
         document.querySelectorAll('.filter-toggle').forEach(other => {
             other.classList.remove('active');
@@ -697,9 +698,11 @@ filterToggles.forEach(toggle => {
             if (isActive) {
                 this.classList.remove('active');
                 filterOptions.classList.remove('active');
+                filterOptions.style.display = 'none';
             } else {
                 this.classList.add('active');
                 filterOptions.classList.add('active');
+                filterOptions.style.display = 'flex';
             }
         }
         
