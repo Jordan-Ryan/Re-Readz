@@ -1599,6 +1599,7 @@ a:focus {
         align-items: center;
         justify-content: center;
         min-height: 400px;
+        grid-column: 1 / -1; /* Span full width of grid */
     }
     
     /* Improve error message display */
