@@ -13,16 +13,16 @@
       "destination": "/book-details.html"
     }
   ],
-  "routes": [
+  "redirects": [
     {
-      "src": "/index.html",
-      "dest": "/",
-      "status": 301
+      "source": "/index.html",
+      "destination": "/",
+      "permanent": true
     },
     {
-      "src": "/book-details.html",
-      "dest": "/bd",
-      "status": 301
+      "source": "/book-details.html",
+      "destination": "/bd",
+      "permanent": true
     }
   ]
 } 
