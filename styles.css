@@ -770,6 +770,9 @@ body {
         justify-content: space-between;
         width: 100%;
         min-height: 44px;
+        flex-direction: row;
+        -webkit-box-orient: horizontal;
+        -webkit-box-direction: normal;
     }
     
     .logo {
@@ -796,6 +799,8 @@ body {
         -webkit-appearance: none;
         appearance: none;
         -webkit-tap-highlight-color: transparent;
+        align-self: center;
+        flex-shrink: 0;
     }
     
     .nav-brand .mobile-menu-toggle:hover {
