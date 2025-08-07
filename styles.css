@@ -667,118 +667,7 @@ body {
 }
 
 /* Loading and Error States */
-.book {
-    margin: 0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    --color: #000000;
-    --duration: 2s;
-}
-
-.book .inner {
-    width: 32px;
-    height: 12px;
-    position: relative;
-    transform-style: preserve-3d;
-    transform: rotateY(-25deg);
-    transition: 1s;
-    animation: book 2s ease infinite;
-}
-
-.book .inner .left,
-.book .inner .right {
-    position: absolute;
-    width: 31px;
-    height: 12px;
-    top: 0;
-}
-
-.book .inner .left:before,
-.book .inner .right:before {
-    content: '';
-    position: absolute;
-    width: 31px;
-    height: 12px;
-    border-radius: 2px 0 0 2px;
-    background: var(--color);
-}
-
-.book .inner .left {
-    transform: rotateY(90deg);
-    transform-origin: 100% 50%;
-    left: 0;
-}
-
-.book .inner .right {
-    transform: rotateY(-90deg);
-    transform-origin: 0% 50%;
-    right: -31px;
-}
-
-.book .inner .middle {
-    position: absolute;
-    width: 32px;
-    height: 12px;
-    border: 2px solid var(--color);
-    border-left: 0;
-    border-radius: 0 2px 2px 0;
-    transform: translateZ(-1px);
-    background: white;
-}
-
-/* Remove all the ul/li page elements and their keyframes */
-.book ul {
-    display: none;
-}
-
-/* Keep only the book opening animation */
-@keyframes book {
-    0% { transform: rotateY(-25deg); }
-    25% { transform: rotateY(-5deg); }
-    50% { transform: rotateY(0deg); }
-    75% { transform: rotateY(-5deg); }
-    100% { transform: rotateY(-25deg); }
-}
-
-/* Safari compatibility for book animation */
-@media screen and (-webkit-min-device-pixel-ratio: 0) {
-    .book .inner {
-        -webkit-transform-style: preserve-3d;
-        transform-style: preserve-3d;
-        -webkit-transform: rotateY(-25deg);
-        transform: rotateY(-25deg);
-        -webkit-animation: book 2s ease infinite;
-        animation: book 2s ease infinite;
-    }
-    
-    .book .inner .left {
-        -webkit-transform: rotateY(90deg);
-        transform: rotateY(90deg);
-        -webkit-transform-origin: 100% 50%;
-        transform-origin: 100% 50%;
-    }
-    
-    .book .inner .right {
-        -webkit-transform: rotateY(-90deg);
-        transform: rotateY(-90deg);
-        -webkit-transform-origin: 0% 50%;
-        transform-origin: 0% 50%;
-    }
-    
-    .book .inner .middle {
-        -webkit-transform: translateZ(-1px);
-        transform: translateZ(-1px);
-    }
-    
-    @-webkit-keyframes book {
-        0% { -webkit-transform: rotateY(-25deg); }
-        25% { -webkit-transform: rotateY(-5deg); }
-        50% { -webkit-transform: rotateY(0deg); }
-        75% { -webkit-transform: rotateY(-5deg); }
-        100% { -webkit-transform: rotateY(-25deg); }
-    }
-}
+/* Old book animation removed - replaced with falling books */
 
 .error-message {
     text-align: center;
@@ -2502,16 +2391,131 @@ a:focus {
     min-height: 200px;
 }
 
+/* Loading Animation - Books Falling Over */
 .loading-spinner {
-    width: 100%;
-    height: 100vh;
-    margin: 0 auto;
-    position: relative;
-    perspective: 100px;
     display: flex;
     align-items: center;
     justify-content: center;
-    text-align: center;
+    min-height: 400px;
+    perspective: 1000px;
+}
+
+.books-stack {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+}
+
+.book-item {
+    width: 60px;
+    height: 8px;
+    background: #2D3748;
+    border-radius: 2px;
+    position: relative;
+    transform-origin: bottom center;
+    animation: fall 1.5s ease-in-out infinite;
+}
+
+.book-item:nth-child(1) {
+    animation-delay: 0s;
+    background: #4A5568;
+}
+
+.book-item:nth-child(2) {
+    animation-delay: 0.2s;
+    background: #2D3748;
+}
+
+.book-item:nth-child(3) {
+    animation-delay: 0.4s;
+    background: #1A202C;
+}
+
+.book-item:nth-child(4) {
+    animation-delay: 0.6s;
+    background: #4A5568;
+}
+
+.book-item:nth-child(5) {
+    animation-delay: 0.8s;
+    background: #2D3748;
+}
+
+.book-item:nth-child(6) {
+    animation-delay: 1s;
+    background: #1A202C;
+}
+
+@keyframes fall {
+    0% {
+        transform: rotateX(0deg) translateY(0);
+        opacity: 1;
+    }
+    20% {
+        transform: rotateX(0deg) translateY(0);
+        opacity: 1;
+    }
+    40% {
+        transform: rotateX(15deg) translateY(0);
+        opacity: 1;
+    }
+    60% {
+        transform: rotateX(45deg) translateY(10px);
+        opacity: 0.8;
+    }
+    80% {
+        transform: rotateX(75deg) translateY(20px);
+        opacity: 0.6;
+    }
+    100% {
+        transform: rotateX(90deg) translateY(30px);
+        opacity: 0.3;
+    }
+}
+
+/* Safari compatibility */
+@media screen and (-webkit-min-device-pixel-ratio: 0) {
+    .book-item {
+        -webkit-transform-origin: bottom center;
+        transform-origin: bottom center;
+        -webkit-animation: fall 1.5s ease-in-out infinite;
+        animation: fall 1.5s ease-in-out infinite;
+    }
+    
+    @-webkit-keyframes fall {
+        0% {
+            -webkit-transform: rotateX(0deg) translateY(0);
+            transform: rotateX(0deg) translateY(0);
+            opacity: 1;
+        }
+        20% {
+            -webkit-transform: rotateX(0deg) translateY(0);
+            transform: rotateX(0deg) translateY(0);
+            opacity: 1;
+        }
+        40% {
+            -webkit-transform: rotateX(15deg) translateY(0);
+            transform: rotateX(15deg) translateY(0);
+            opacity: 1;
+        }
+        60% {
+            -webkit-transform: rotateX(45deg) translateY(10px);
+            transform: rotateX(45deg) translateY(10px);
+            opacity: 0.8;
+        }
+        80% {
+            -webkit-transform: rotateX(75deg) translateY(20px);
+            transform: rotateX(75deg) translateY(20px);
+            opacity: 0.6;
+        }
+        100% {
+            -webkit-transform: rotateX(90deg) translateY(30px);
+            transform: rotateX(90deg) translateY(30px);
+            opacity: 0.3;
+        }
+    }
 }
 
 /* Individual page animations */

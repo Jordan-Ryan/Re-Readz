@@ -287,7 +287,7 @@ async function loadBooks(searchTerm = null, page = 1, append = false) {
     
     // Show loading state
             if (!append) {
-            booksGrid.innerHTML = '<div class="loading-spinner" style="grid-column: 1 / -1; display: flex; align-items: center; justify-content: center; min-height: 400px;"><div class="book"><div class="inner"><div class="left"></div><div class="middle"></div><div class="right"></div></div></div></div>';
+            booksGrid.innerHTML = '<div class="loading-spinner" style="grid-column: 1 / -1; display: flex; align-items: center; justify-content: center; min-height: 400px;"><div class="books-stack"><div class="book-item"></div><div class="book-item"></div><div class="book-item"></div><div class="book-item"></div><div class="book-item"></div><div class="book-item"></div></div></div>';
         }
     
     try {
