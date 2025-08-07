@@ -2538,10 +2538,13 @@ a:focus {
     display: none;
 }
 
-.nav-menu.active .mobile-filters-section {
-    display: block;
-    width: 100%;
-    margin-bottom: 16px;
+/* Show mobile filters on mobile when menu is active */
+@media (max-width: 650px) {
+    .nav-menu.active .mobile-filters-section {
+        display: block;
+        width: 100%;
+        margin-bottom: 16px;
+    }
 }
 
 .filter-section-header {
@@ -2636,6 +2639,23 @@ a:focus {
 /* Hide desktop filters on mobile */
 @media (max-width: 650px) {
     .desktop-only {
+        display: none !important;
+    }
+    
+    /* Ensure mobile menu shows mobile filters instead of desktop dropdown */
+    .nav-menu.active .filters-dropdown {
+        display: none !important;
+    }
+    
+    /* Show mobile filters in mobile menu */
+    .nav-menu.active .mobile-filters-section {
+        display: block !important;
+        width: 100% !important;
+        margin-bottom: 16px !important;
+    }
+    
+    /* Hide desktop dropdown menu on mobile */
+    .nav-menu.active .dropdown-menu {
         display: none !important;
     }
 }
