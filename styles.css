@@ -773,6 +773,7 @@ body {
         flex-direction: row;
         -webkit-box-orient: horizontal;
         -webkit-box-direction: normal;
+        position: relative;
     }
     
     .logo {
@@ -791,7 +792,7 @@ body {
         font-size: 24px;
         background: none;
         border: none;
-        color: inherit;
+        color: #4A5568;
         cursor: pointer;
         padding: 8px;
         border-radius: 4px;
@@ -801,6 +802,8 @@ body {
         -webkit-tap-highlight-color: transparent;
         align-self: center;
         flex-shrink: 0;
+        min-width: 44px;
+        min-height: 44px;
     }
     
     .nav-brand .mobile-menu-toggle:hover {
@@ -820,6 +823,7 @@ body {
             display: block !important;
             visibility: visible !important;
             opacity: 1 !important;
+            pointer-events: auto !important;
         }
     }
     
