@@ -286,9 +286,9 @@ async function loadBooks(searchTerm = null, page = 1, append = false) {
     const requestId = ++currentRequestId;
     
     // Show loading state
-    if (!append) {
-        booksGrid.innerHTML = '<div class="loading-spinner" style="grid-column: 1 / -1; display: flex; align-items: center; justify-content: center; min-height: 400px;"><div class="book"><div class="inner"><div class="left"></div><div class="middle"></div><div class="right"></div></div><ul><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li></ul></div></div>';
-    }
+            if (!append) {
+            booksGrid.innerHTML = '<div class="loading-spinner" style="grid-column: 1 / -1; display: flex; align-items: center; justify-content: center; min-height: 400px;"><div class="book"><div class="inner"><div class="left"></div><div class="middle"></div><div class="right"></div></div></div></div>';
+        }
     
     try {
         let books = [];
