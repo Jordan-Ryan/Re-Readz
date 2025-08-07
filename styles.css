@@ -1584,8 +1584,15 @@ a:focus {
     
     /* Better loading spinner for mobile */
     .loading-spinner {
-        padding: 40px 20px;
-        font-size: 16px;
+        width: 100%;
+        height: 100vh;
+        margin: 0;
+        position: relative;
+        perspective: 100px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        min-height: 400px;
     }
     
     /* Improve error message display */
@@ -2482,7 +2489,7 @@ a:focus {
 
 .loading-spinner {
     width: 100%;
-    height: 200px;
+    height: 100vh;
     margin: 0;
     position: relative;
     perspective: 100px;
