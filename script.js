@@ -646,6 +646,12 @@ function appendBooks(books) {
 
 // Initialize all dropdown functionality
 function initializeDropdowns() {
+    // Only initialize desktop dropdowns on larger screens
+    if (window.innerWidth <= 650) {
+        console.log('Skipping desktop dropdown initialization on mobile');
+        return;
+    }
+    
     const dropdowns = document.querySelectorAll('.dropdown');
     
     dropdowns.forEach(dropdown => {
@@ -668,10 +674,8 @@ function initializeDropdowns() {
             // Toggle current dropdown
             dropdown.classList.toggle('active');
             
-
-            
-                console.log('Dropdown state:', dropdown.classList.contains('active') ? 'opened' : 'closed');
-};
+            console.log('Dropdown state:', dropdown.classList.contains('active') ? 'opened' : 'closed');
+        };
 
 // Initialize filter toggles
 const filterToggles = document.querySelectorAll('.filter-toggle');
@@ -1106,6 +1110,13 @@ function initializeMobileMenu() {
                 navContainer.classList.toggle('mobile-menu-active');
             }
             
+            // Disable desktop dropdowns when mobile menu is active
+            if (window.innerWidth <= 650) {
+                document.querySelectorAll('.dropdown').forEach(dropdown => {
+                    dropdown.classList.remove('active');
+                });
+            }
+            
             // Update aria-label for accessibility
             const isActive = navMenu.classList.contains('active');
             mobileMenuToggle.setAttribute('aria-label', isActive ? 'Close mobile menu' : 'Open mobile menu');
@@ -1140,6 +1151,11 @@ function initializeMobileMenu() {
                     navContainer.classList.remove('mobile-menu-active');
                 }
                 mobileMenuToggle.setAttribute('aria-label', 'Open mobile menu');
+            } else {
+                // Ensure desktop dropdowns are disabled on mobile
+                document.querySelectorAll('.dropdown').forEach(dropdown => {
+                    dropdown.classList.remove('active');
+                });
             }
         });
     } else {
