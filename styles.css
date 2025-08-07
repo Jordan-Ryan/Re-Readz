@@ -170,12 +170,17 @@ body {
     transition: all 0.2s ease;
     z-index: 10000;
     margin-top: 8px;
+    -webkit-transform: translateY(-10px);
+    -webkit-transition: all 0.2s ease;
+    -webkit-backface-visibility: hidden;
+    backface-visibility: hidden;
 }
 
 .dropdown.active .dropdown-menu {
     opacity: 1;
     visibility: visible;
     transform: translateY(0);
+    -webkit-transform: translateY(0);
 }
 
 .dropdown-item {
@@ -190,6 +195,10 @@ body {
     width: 100%;
     text-align: left;
     cursor: pointer;
+    -webkit-transition: background 0.2s ease;
+    -webkit-appearance: none;
+    appearance: none;
+    -webkit-tap-highlight-color: transparent;
 }
 
 .dropdown-item:hover {
@@ -215,17 +224,30 @@ body {
 }
 
 .sub-dropdown-toggle {
+    display: -webkit-box;
+    display: -webkit-flex;
     display: flex;
+    -webkit-box-pack: justify;
+    -webkit-justify-content: space-between;
     justify-content: space-between;
+    -webkit-box-align: center;
+    -webkit-align-items: center;
     align-items: center;
     width: 100%;
+    -webkit-appearance: none;
+    appearance: none;
+    -webkit-tap-highlight-color: transparent;
 }
 
 .sub-dropdown-toggle .fa-chevron-right {
     transition: transform 0.2s ease;
+    -webkit-transition: -webkit-transform 0.2s ease;
+    -webkit-transform: rotate(0deg);
+    transform: rotate(0deg);
 }
 
 .sub-dropdown.active .sub-dropdown-toggle .fa-chevron-right {
+    -webkit-transform: rotate(90deg);
     transform: rotate(90deg);
 }
 
@@ -243,12 +265,17 @@ body {
     transition: all 0.2s ease;
     z-index: 10001;
     margin-left: 8px;
+    -webkit-transform: translateX(-10px);
+    -webkit-transition: all 0.2s ease;
+    -webkit-backface-visibility: hidden;
+    backface-visibility: hidden;
 }
 
 .sub-dropdown.active .sub-dropdown-menu {
     opacity: 1;
     visibility: visible;
     transform: translateX(0);
+    -webkit-transform: translateX(0);
 }
 
 .sub-dropdown-menu .dropdown-item {
@@ -841,6 +868,26 @@ body {
             display: -webkit-box !important;
             display: -webkit-flex !important;
             display: flex !important;
+        }
+        
+        .dropdown-menu {
+            -webkit-transform: translateY(-10px);
+            transform: translateY(-10px);
+        }
+        
+        .dropdown.active .dropdown-menu {
+            -webkit-transform: translateY(0);
+            transform: translateY(0);
+        }
+        
+        .sub-dropdown-menu {
+            -webkit-transform: translateX(-10px);
+            transform: translateX(-10px);
+        }
+        
+        .sub-dropdown.active .sub-dropdown-menu {
+            -webkit-transform: translateX(0);
+            transform: translateX(0);
         }
     }
     
