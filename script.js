@@ -667,6 +667,16 @@ function initializeDropdowns() {
             // Toggle current dropdown
             dropdown.classList.toggle('active');
             
+            // Special handling for filters dropdown
+            if (dropdown.classList.contains('filters-dropdown')) {
+                const filterContainer = document.querySelector('.filter-options-container');
+                if (dropdown.classList.contains('active')) {
+                    filterContainer.style.display = 'block';
+                } else {
+                    filterContainer.style.display = 'none';
+                }
+            }
+            
             console.log('Dropdown state:', dropdown.classList.contains('active') ? 'opened' : 'closed');
         };
         
