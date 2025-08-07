@@ -686,11 +686,12 @@ body {
 .loading-spinner .book-spine {
     position: absolute;
     left: 50%;
-    top: 50%;
-    transform: translate(-50%, -50%);
-    width: 2px;
-    height: 60px;
+    bottom: 20px;
+    transform: translateX(-50%);
+    width: 40px;
+    height: 2px;
     background: #000000;
+    border-radius: 1px;
     z-index: 10;
 }
 
@@ -698,52 +699,38 @@ body {
     position: absolute;
     left: 50%;
     top: 50%;
-    width: 60px;
-    height: 40px;
-    border: 1px solid rgba(0, 0, 0, 0.3);
-    background: transparent;
-    transform-origin: center bottom;
-    animation: pageFan 3s ease-in-out infinite;
+    width: 30px;
+    height: 2px;
+    background: #000000;
+    border-radius: 1px;
+    transform-origin: center;
+    animation: pageLine 2s ease-in-out infinite;
 }
 
-.loading-spinner .book-page::before {
-    content: '';
-    position: absolute;
-    top: 8px;
-    left: 8px;
-    right: 8px;
-    height: 1px;
-    background: rgba(0, 0, 0, 0.2);
-}
 
-.loading-spinner .book-page::after {
-    content: '';
-    position: absolute;
-    top: 16px;
-    left: 8px;
-    right: 8px;
-    height: 1px;
-    background: rgba(0, 0, 0, 0.2);
-}
 
 .loading-spinner .book-page:nth-child(2) {
-    animation-delay: 0.2s;
-    transform: translate(-50%, -50%) rotateY(15deg);
+    animation-delay: 0.1s;
+    transform: translate(-50%, -50%) rotate(-10deg);
+    top: calc(50% - 15px);
 }
 
 .loading-spinner .book-page:nth-child(3) {
-    animation-delay: 0.4s;
-    transform: translate(-50%, -50%) rotateY(30deg);
+    animation-delay: 0.2s;
+    transform: translate(-50%, -50%) rotate(-20deg);
+    top: calc(50% - 8px);
 }
 
 .loading-spinner .book-page:nth-child(4) {
-    animation-delay: 0.6s;
-    transform: translate(-50%, -50%) rotateY(45deg);
+    animation-delay: 0.3s;
+    transform: translate(-50%, -50%) rotate(10deg);
+    top: calc(50% + 8px);
 }
 
 .loading-spinner .book-page:nth-child(5) {
-    animation-delay: 0.8s;
-    transform: translate(-50%, -50%) rotateY(60deg);
+    animation-delay: 0.4s;
+    transform: translate(-50%, -50%) rotate(20deg);
+    top: calc(50% + 15px);
 }
 
 .loading-spinner i {
@@ -2517,22 +2504,22 @@ a:focus {
     animation-delay: 0.8s;
 }
 
-@keyframes pageFan {
+@keyframes pageLine {
     0%, 100% {
-        transform: translate(-50%, -50%) rotateY(0deg);
-        opacity: 0.2;
+        transform: translate(-50%, -50%) rotate(0deg);
+        opacity: 0.3;
     }
     25% {
-        transform: translate(-50%, -50%) rotateY(-45deg);
-        opacity: 0.4;
-    }
-    50% {
-        transform: translate(-50%, -50%) rotateY(-90deg);
+        transform: translate(-50%, -50%) rotate(-15deg);
         opacity: 0.6;
     }
+    50% {
+        transform: translate(-50%, -50%) rotate(-30deg);
+        opacity: 0.8;
+    }
     75% {
-        transform: translate(-50%, -50%) rotateY(-45deg);
-        opacity: 0.4;
+        transform: translate(-50%, -50%) rotate(-15deg);
+        opacity: 0.6;
     }
 }
 
