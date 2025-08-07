@@ -1325,15 +1325,15 @@ a:focus {
     transform: rotate(180deg);
 }
 
-/* Filters dropdown specific chevron */
-.filters-dropdown .dropdown-toggle .fa-chevron-right {
-    transition: transform 0.2s ease;
-    -webkit-transition: -webkit-transform 0.2s ease;
+/* Desktop filters dropdown - hidden on mobile */
+.filters-dropdown {
+    display: block;
 }
 
-.filters-dropdown.active .dropdown-toggle .fa-chevron-right {
-    -webkit-transform: rotate(90deg);
-    transform: rotate(90deg);
+@media (max-width: 650px) {
+    .filters-dropdown {
+        display: none !important;
+    }
 }
 
 /* Filter Toggle within dropdown */

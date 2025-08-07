@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Clear Cache - Re-Readz</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 600px;
+            margin: 50px auto;
+            padding: 20px;
+            line-height: 1.6;
+        }
+        .step {
+            background: #f8f9fa;
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 8px;
+            border-left: 4px solid #007bff;
+        }
+        .important {
+            background: #fff3cd;
+            border-left-color: #ffc107;
+        }
+        .success {
+            background: #d4edda;
+            border-left-color: #28a745;
+        }
+        button {
+            background: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 10px 5px;
+        }
+        button:hover {
+            background: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <h1>🔄 Clear Browser Cache</h1>
+    
+    <div class="step important">
+        <h3>⚠️ Important: Browser Cache Issue</h3>
+        <p>If you're still seeing the old dropdown behavior in the mobile menu, your browser has cached the old CSS. Here's how to fix it:</p>
+    </div>
+
+    <div class="step">
+        <h3>Method 1: Hard Refresh (Recommended)</h3>
+        <p><strong>Mac:</strong> Cmd + Shift + R</p>
+        <p><strong>Windows/Linux:</strong> Ctrl + Shift + R</p>
+        <p>This forces the browser to reload all files from the server, ignoring cache.</p>
+    </div>
+
+    <div class="step">
+        <h3>Method 2: Clear Browser Cache</h3>
+        <p><strong>Chrome:</strong> Cmd + Shift + Delete (Mac) or Ctrl + Shift + Delete (Windows)</p>
+        <p><strong>Safari:</strong> Cmd + Option + E</p>
+        <p><strong>Firefox:</strong> Cmd + Shift + Delete (Mac) or Ctrl + Shift + Delete (Windows)</p>
+    </div>
+
+    <div class="step">
+        <h3>Method 3: Developer Tools</h3>
+        <p>1. Open Developer Tools (F12 or Cmd + Option + I)</p>
+        <p>2. Right-click the refresh button</p>
+        <p>3. Select "Empty Cache and Hard Reload"</p>
+    </div>
+
+    <div class="step success">
+        <h3>✅ What Should You See After Clearing Cache?</h3>
+        <ul>
+            <li>Mobile menu opens with filters integrated directly (no separate dropdown)</li>
+            <li>Filter options appear inline within the mobile menu</li>
+            <li>Desktop filters are completely hidden on mobile screens</li>
+            <li>Smooth animations for filter toggles</li>
+        </ul>
+    </div>
+
+    <div class="step">
+        <h3>Test the Changes</h3>
+        <button onclick="window.open('index.html', '_blank')">Open Main Page</button>
+        <button onclick="window.open('book-details.html', '_blank')">Open Book Details</button>
+        <button onclick="window.location.reload(true)">Hard Refresh This Page</button>
+    </div>
+
+    <div class="step">
+        <h3>🔧 Technical Details</h3>
+        <p><strong>What was changed:</strong></p>
+        <ul>
+            <li>Removed separate dropdown container for filters in mobile menu</li>
+            <li>Integrated filters directly into mobile menu structure</li>
+            <li>Added mobile-specific CSS classes (.mobile-filters-section, .mobile-filter-toggle, etc.)</li>
+            <li>Hidden desktop filters on mobile with .desktop-only class</li>
+            <li>Added new JavaScript for mobile filter interactions</li>
+        </ul>
+    </div>
+
+    <script>
+        // Add cache-busting parameter to CSS links
+        document.addEventListener('DOMContentLoaded', function() {
+            const links = document.querySelectorAll('link[rel="stylesheet"]');
+            links.forEach(link => {
+                if (link.href.includes('styles.css')) {
+                    link.href = link.href + '?v=' + Date.now();
+                }
+            });
+        });
+    </script>
+</body>
+</html> 
