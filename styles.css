@@ -744,20 +744,20 @@ body {
 }
 
 .book ul li {
-    height: 4px;
+    height: 12px;
     border-radius: 2px;
-    transform-origin: 100% 2px;
-    width: 48px;
+    transform-origin: 100% 6px;
+    width: 32px;
     right: 0;
-    top: -10px;
+    top: 0;
     position: absolute;
     background: var(--color);
-    transform: rotateZ(0deg) translateX(-18px);
+    transform: rotateZ(0deg) translateX(-16px);
     animation-duration: var(--duration);
     animation-timing-function: ease;
     animation-iteration-count: infinite;
-    -webkit-transform-origin: 100% 2px;
-    -webkit-transform: rotateZ(0deg) translateX(-18px);
+    -webkit-transform-origin: 100% 6px;
+    -webkit-transform: rotateZ(0deg) translateX(-16px);
     -webkit-animation-duration: var(--duration);
     -webkit-animation-timing-function: ease;
     -webkit-animation-iteration-count: infinite;
@@ -2530,24 +2530,24 @@ a:focus {
 .book ul li:nth-child(18) { animation-name: page-18; }
 
 @keyframes page-1 {
-    4% { transform: rotateZ(0deg) translateX(-18px); }
-    13%, 54% { transform: rotateZ(180deg) translateX(-18px); }
-    63% { transform: rotateZ(0deg) translateX(-18px); }
+    4% { transform: rotateZ(0deg) translateX(-16px); }
+    13%, 54% { transform: rotateZ(180deg) translateX(-16px); }
+    63% { transform: rotateZ(0deg) translateX(-16px); }
 }
 
 @-webkit-keyframes page-1 {
-    4% { -webkit-transform: rotateZ(0deg) translateX(-18px); }
-    13%, 54% { -webkit-transform: rotateZ(180deg) translateX(-18px); }
-    63% { -webkit-transform: rotateZ(0deg) translateX(-18px); }
+    4% { -webkit-transform: rotateZ(0deg) translateX(-16px); }
+    13%, 54% { -webkit-transform: rotateZ(180deg) translateX(-16px); }
+    63% { -webkit-transform: rotateZ(0deg) translateX(-16px); }
 }
 
 /* Safari specific fix for page flipping direction */
 @media screen and (-webkit-min-device-pixel-ratio: 0) {
-    @-webkit-keyframes page-1 {
-    4% { -webkit-transform: rotateY(0deg) translateX(-18px) translateZ(1px); }
-    13%, 54% { -webkit-transform: rotateY(180deg) translateX(-18px) translateZ(1px); }
-    63% { -webkit-transform: rotateY(0deg) translateX(-18px) translateZ(1px); }
-}
+        @-webkit-keyframes page-1 {
+        4% { -webkit-transform: rotateY(0deg) translateX(-16px) translateZ(1px); }
+        13%, 54% { -webkit-transform: rotateY(180deg) translateX(-16px) translateZ(1px); }
+        63% { -webkit-transform: rotateY(0deg) translateX(-16px) translateZ(1px); }
+    }
 }
 
 @keyframes page-2 {
