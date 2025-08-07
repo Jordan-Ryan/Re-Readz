@@ -1070,7 +1070,7 @@ body {
     
     .nav-menu.active {
         position: static;
-        background: #f0f0f0;
+        background: #FFFFFF;
         box-shadow: none;
         padding: 16px;
         flex-direction: column;
@@ -1089,7 +1089,6 @@ body {
         -webkit-transform: translateZ(0);
         transform: translateZ(0);
         margin-top: 16px;
-        border: 2px solid red;
     }
     
     .nav-menu.active .nav-item {
@@ -2540,13 +2539,14 @@ a:focus {
 /* Mobile filter styles */
 .mobile-filters-section {
     display: none;
+    width: 100%;
 }
 
 /* Show mobile filters on mobile when menu is active */
 @media (max-width: 650px) {
     .nav-menu.active .mobile-filters-section {
-        display: block;
-        width: 100%;
+        display: block !important;
+        width: 100% !important;
         margin-bottom: 16px;
     }
 }
@@ -2564,7 +2564,7 @@ a:focus {
 }
 
 .mobile-filter-toggle {
-    width: 100%;
+    width: 100% !important;
     background: none;
     border: none;
     padding: 12px 16px;
@@ -2613,6 +2613,7 @@ a:focus {
     margin-top: 4px;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
     overflow: hidden;
+    display: none;
 }
 
 .mobile-filter-option {
