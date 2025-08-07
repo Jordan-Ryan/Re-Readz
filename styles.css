@@ -1166,17 +1166,19 @@ body {
     /* Old filter styles removed */
     
     .section-header {
-        flex-direction: column;
-        align-items: flex-start;
+        flex-direction: row;
+        align-items: center;
+        justify-content: space-between;
         gap: 16px;
     }
     
     .section-title {
         font-size: 24px;
+        flex-shrink: 0;
     }
     
     .sort-filter {
-        align-self: flex-end;
+        margin-left: auto;
     }
     
     /* Grid styles handled by main breakpoints above */
@@ -1265,45 +1267,17 @@ a:focus {
     transform: rotate(180deg);
 }
 
-/* Filter Options Container */
-.filter-options-container {
-    position: absolute;
-    top: 100%;
-    left: 0;
-    background: #FFFFFF;
-    border-radius: 12px;
-    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
-    min-width: 250px;
-    margin-top: 8px;
-    z-index: 10000;
-    opacity: 0;
-    visibility: hidden;
-    transform: translateY(-10px);
-    transition: all 0.2s ease;
-    -webkit-transform: translateY(-10px);
-    -webkit-transition: all 0.2s ease;
-    -webkit-backface-visibility: hidden;
-    backface-visibility: hidden;
-}
-
-.filters-dropdown.active .filter-options-container {
-    opacity: 1;
-    visibility: visible;
-    transform: translateY(0);
-    -webkit-transform: translateY(0);
-}
-
-/* Filter Section */
-.filter-section {
+/* Filter Section within dropdown */
+.filters-menu .filter-section {
     padding: 16px;
     border-bottom: 1px solid #E2E8F0;
 }
 
-.filter-section:last-child {
+.filters-menu .filter-section:last-child {
     border-bottom: none;
 }
 
-.filter-section-header {
+.filters-menu .filter-section-header {
     display: flex;
     align-items: center;
     gap: 8px;
@@ -1313,35 +1287,22 @@ a:focus {
     font-size: 14px;
 }
 
-.filter-section-header i {
+.filters-menu .filter-section-header i {
     color: #4A5568;
     font-size: 12px;
 }
 
-/* Filter Options */
-.filter-options {
+/* Filter Options within dropdown */
+.filters-menu .filter-options {
     display: flex;
     flex-direction: column;
     gap: 4px;
 }
 
-.filter-option {
-    display: block;
+.filters-menu .filter-option {
     padding: 8px 12px;
-    color: #4A5568;
-    text-decoration: none;
     font-size: 13px;
-    transition: background 0.2s ease;
     border-radius: 6px;
-    -webkit-transition: background 0.2s ease;
-    -webkit-appearance: none;
-    appearance: none;
-    -webkit-tap-highlight-color: transparent;
-}
-
-.filter-option:hover {
-    background: #F7FAFC;
-    color: #2D3748;
 }
 
 /* Old filter group styles removed */
