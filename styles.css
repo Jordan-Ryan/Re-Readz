@@ -763,8 +763,8 @@ body {
     -webkit-animation-iteration-count: infinite;
 }
 
-/* Safari mobile specific transform origin fix */
-@media screen and (-webkit-min-device-pixel-ratio: 0) and (max-width: 767px) {
+/* Safari specific transform origin fix */
+@media screen and (-webkit-min-device-pixel-ratio: 0) {
     .book ul li {
         -webkit-transform-origin: 0% 50%;
         transform-origin: 0% 50%;
@@ -2563,13 +2563,13 @@ a:focus {
     63% { -webkit-transform: rotateZ(0deg) translateX(-18px); }
 }
 
-/* Safari mobile specific fix for page flipping direction */
-@media screen and (-webkit-min-device-pixel-ratio: 0) and (max-width: 767px) {
+/* Safari specific fix for page flipping direction */
+@media screen and (-webkit-min-device-pixel-ratio: 0) {
     @-webkit-keyframes page-1 {
-        4% { -webkit-transform: rotateZ(0deg) translateX(-18px) translateZ(1px); }
-        13%, 54% { -webkit-transform: rotateZ(180deg) translateX(-18px) translateZ(1px); }
-        63% { -webkit-transform: rotateZ(0deg) translateX(-18px) translateZ(1px); }
-    }
+    4% { -webkit-transform: rotateY(0deg) translateX(-18px) translateZ(1px); }
+    13%, 54% { -webkit-transform: rotateY(180deg) translateX(-18px) translateZ(1px); }
+    63% { -webkit-transform: rotateY(0deg) translateX(-18px) translateZ(1px); }
+}
 }
 
 @keyframes page-2 {
@@ -2882,8 +2882,8 @@ a:focus {
     }
 }
 
-/* Safari mobile fixes for loading animation */
-@media screen and (-webkit-min-device-pixel-ratio: 0) and (max-width: 767px) {
+/* Safari fixes for loading animation */
+@media screen and (-webkit-min-device-pixel-ratio: 0) {
     .book ul li {
         -webkit-backface-visibility: hidden;
         backface-visibility: hidden;
