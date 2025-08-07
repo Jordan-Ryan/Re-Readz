@@ -650,9 +650,12 @@ function initializeDropdowns() {
     dropdowns.forEach(dropdown => {
         const toggle = dropdown.querySelector('.dropdown-toggle');
         
-        toggle.addEventListener('click', function(e) {
+        // Safari-compatible event handling
+        const handleClick = function(e) {
             e.preventDefault();
             e.stopPropagation();
+            
+            console.log('Dropdown toggle clicked');
             
             // Close other dropdowns
             dropdowns.forEach(other => {
@@ -663,7 +666,13 @@ function initializeDropdowns() {
             
             // Toggle current dropdown
             dropdown.classList.toggle('active');
-        });
+            
+            console.log('Dropdown state:', dropdown.classList.contains('active') ? 'opened' : 'closed');
+        };
+        
+        // Add multiple event listeners for Safari compatibility
+        toggle.addEventListener('click', handleClick, false);
+        toggle.addEventListener('touchstart', handleClick, false);
     });
     
     // Initialize sort filter dropdown
@@ -729,9 +738,12 @@ function initializeDropdowns() {
     subDropdowns.forEach(subDropdown => {
         const toggle = subDropdown.querySelector('.sub-dropdown-toggle');
         
-        toggle.addEventListener('click', function(e) {
+        // Safari-compatible event handling
+        const handleClick = function(e) {
             e.preventDefault();
             e.stopPropagation();
+            
+            console.log('Sub-dropdown toggle clicked');
             
             // Close other sub-dropdowns
             subDropdowns.forEach(other => {
@@ -742,7 +754,13 @@ function initializeDropdowns() {
             
             // Toggle current sub-dropdown
             subDropdown.classList.toggle('active');
-        });
+            
+            console.log('Sub-dropdown state:', subDropdown.classList.contains('active') ? 'opened' : 'closed');
+        };
+        
+        // Add multiple event listeners for Safari compatibility
+        toggle.addEventListener('click', handleClick, false);
+        toggle.addEventListener('touchstart', handleClick, false);
     });
     
     // Close dropdowns when clicking outside
@@ -992,10 +1010,15 @@ function initializeMobileMenu() {
     const mobileMenuToggle = document.querySelector('.mobile-menu-toggle');
     const navMenu = document.querySelector('.nav-menu');
     
+    console.log('Initializing mobile menu:', { mobileMenuToggle, navMenu });
+    
     if (mobileMenuToggle && navMenu) {
-        mobileMenuToggle.addEventListener('click', function(e) {
+        // Safari-compatible event handling
+        const handleClick = function(e) {
             e.preventDefault();
             e.stopPropagation();
+            
+            console.log('Mobile menu toggle clicked');
             
             navMenu.classList.toggle('active');
             mobileMenuToggle.classList.toggle('active');
@@ -1003,7 +1026,13 @@ function initializeMobileMenu() {
             // Update aria-label for accessibility
             const isActive = navMenu.classList.contains('active');
             mobileMenuToggle.setAttribute('aria-label', isActive ? 'Close mobile menu' : 'Open mobile menu');
-        });
+            
+            console.log('Menu state:', isActive ? 'opened' : 'closed');
+        };
+        
+        // Add multiple event listeners for Safari compatibility
+        mobileMenuToggle.addEventListener('click', handleClick, false);
+        mobileMenuToggle.addEventListener('touchstart', handleClick, false);
         
         // Close mobile menu when clicking outside
         document.addEventListener('click', function(e) {

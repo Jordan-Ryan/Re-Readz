@@ -765,21 +765,28 @@ body {
     .nav-brand {
         order: 1;
         -webkit-box-ordinal-group: 1;
+        display: -webkit-box;
+        display: -webkit-flex;
         display: flex;
+        -webkit-box-align: center;
+        -webkit-align-items: center;
         align-items: center;
+        -webkit-box-pack: justify;
+        -webkit-justify-content: space-between;
         justify-content: space-between;
         width: 100%;
         min-height: 44px;
-        flex-direction: row;
         -webkit-box-orient: horizontal;
         -webkit-box-direction: normal;
-        position: relative;
+        -webkit-flex-direction: row;
+        flex-direction: row;
     }
     
     .logo {
         font-size: 24px;
         margin-bottom: 0;
         font-weight: 700;
+        flex-shrink: 0;
     }
     
     .nav-brand .mobile-menu-toggle {
@@ -800,30 +807,40 @@ body {
         -webkit-appearance: none;
         appearance: none;
         -webkit-tap-highlight-color: transparent;
+        -webkit-align-self: center;
         align-self: center;
+        -webkit-flex-shrink: 0;
         flex-shrink: 0;
         min-width: 44px;
         min-height: 44px;
+        pointer-events: auto !important;
+        visibility: visible !important;
+        opacity: 1 !important;
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
     }
     
     .nav-brand .mobile-menu-toggle:hover {
         background-color: rgba(0, 0, 0, 0.1);
     }
     
-    /* Safari-specific override */
-    @media screen and (-webkit-min-device-pixel-ratio: 0) {
-        .nav-brand .mobile-menu-toggle {
-            display: block !important;
-        }
-    }
-    
-    /* Additional Safari fix - target Safari specifically */
+    /* Safari-specific fixes */
     @supports (-webkit-appearance: none) {
         .nav-brand .mobile-menu-toggle {
             display: block !important;
             visibility: visible !important;
             opacity: 1 !important;
             pointer-events: auto !important;
+            -webkit-transform: translateZ(0);
+            transform: translateZ(0);
+        }
+        
+        .nav-brand {
+            display: -webkit-box !important;
+            display: -webkit-flex !important;
+            display: flex !important;
         }
     }
     
@@ -1183,14 +1200,7 @@ a:focus {
     appearance: none;
 }
 
-/* Always show burger menu on mobile for Safari compatibility */
-@media (max-width: 650px) {
-    .mobile-menu-toggle {
-        display: block !important;
-        visibility: visible !important;
-        opacity: 1 !important;
-    }
-}
+
 
 .mobile-menu-toggle:hover {
     background: #F7FAFC;
