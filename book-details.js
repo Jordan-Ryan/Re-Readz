@@ -505,7 +505,7 @@ function initializeSearch() {
         const query = searchInput.value.trim();
         if (query) {
             // Navigate to home page with search query
-            window.location.href = `index.html?search=${encodeURIComponent(query)}`;
+            window.location.href = `/?search=${encodeURIComponent(query)}`;
         }
     });
     
@@ -515,7 +515,7 @@ function initializeSearch() {
             const query = searchInput.value.trim();
             if (query) {
                 // Navigate to home page with search query
-                window.location.href = `index.html?search=${encodeURIComponent(query)}`;
+                window.location.href = `/?search=${encodeURIComponent(query)}`;
             }
         }
     });
@@ -574,7 +574,7 @@ async function initializeBookDetails() {
 // Initialize when DOM is loaded
 document.addEventListener('DOMContentLoaded', function() {
     // Prevent conflicts with main script.js
-    if (window.location.pathname.includes('book-details.html')) {
+    if (window.location.pathname.includes('book-details.html') || window.location.pathname.includes('/bd')) {
         initializeBookDetails();
     }
 }); 

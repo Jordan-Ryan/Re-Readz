@@ -1,0 +1,28 @@
+{
+  "rewrites": [
+    {
+      "source": "/",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/bd",
+      "destination": "/book-details.html"
+    },
+    {
+      "source": "/bd/:path*",
+      "destination": "/book-details.html"
+    }
+  ],
+  "routes": [
+    {
+      "src": "/index.html",
+      "dest": "/",
+      "status": 301
+    },
+    {
+      "src": "/book-details.html",
+      "dest": "/bd",
+      "status": 301
+    }
+  ]
+} 

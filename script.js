@@ -1,7 +1,7 @@
 // DOM Content Loaded
 document.addEventListener('DOMContentLoaded', function() {
     // Only initialize main page functionality if not on book details page
-    if (!window.location.pathname.includes('book-details.html')) {
+    if (!window.location.pathname.includes('book-details.html') && !window.location.pathname.includes('/bd')) {
         initializeDropdowns();
         initializeWishlistButtons();
         initializeSearch();
@@ -1199,7 +1199,7 @@ function initializeAnimations() {
 // Initialize book card click handlers
 function initializeBookCardClicks() {
     // Don't initialize on book details page
-    if (window.location.pathname.includes('book-details.html')) {
+    if (window.location.pathname.includes('book-details.html') || window.location.pathname.includes('/bd')) {
         return;
     }
     
@@ -1230,14 +1230,14 @@ function handleBookCardClick(e) {
         }
         
         // Navigate to book details page
-        window.location.href = `book-details.html?id=${bookKey}`;
+        window.location.href = `/bd?id=${bookKey}`;
     }
 }
 
 // Initialize rating refresh functionality
 function initializeRatingRefresh() {
     // Don't initialize on book details page
-    if (window.location.pathname.includes('book-details.html')) {
+    if (window.location.pathname.includes('book-details.html') || window.location.pathname.includes('/bd')) {
         return;
     }
     
