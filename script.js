@@ -801,9 +801,19 @@ function initializeFilters() {
     // Handle filter option clicks for nested dropdowns
     const filterOptions = document.querySelectorAll('.filter-option');
     
-    filterOptions.forEach(option => {
+    console.log('Initializing filters, found options:', filterOptions.length);
+    
+    filterOptions.forEach((option, index) => {
+        console.log(`Filter option ${index}:`, {
+            text: option.textContent,
+            filter: option.getAttribute('data-filter'),
+            value: option.getAttribute('data-value')
+        });
+        
         option.addEventListener('click', function(e) {
             e.preventDefault();
+            
+            console.log('Filter option clicked:', this.textContent);
             
             // Get filter type and value from data attributes
             const filterType = this.getAttribute('data-filter');

@@ -394,6 +394,103 @@ function initializeBookDetailSections() {
 
 
 
+// Initialize mobile menu functionality
+function initializeMobileMenu() {
+    const mobileMenuToggle = document.querySelector('.mobile-menu-toggle');
+    const navMenu = document.querySelector('.nav-menu');
+    
+    if (mobileMenuToggle && navMenu) {
+        const handleClick = function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            console.log('Mobile menu toggle clicked (details page)');
+            navMenu.classList.toggle('active');
+            mobileMenuToggle.classList.toggle('active');
+            const isActive = navMenu.classList.contains('active');
+            mobileMenuToggle.setAttribute('aria-label', isActive ? 'Close mobile menu' : 'Open mobile menu');
+            console.log('Menu state (details page):', isActive ? 'opened' : 'closed');
+        };
+        
+        mobileMenuToggle.addEventListener('click', handleClick, false);
+        mobileMenuToggle.addEventListener('touchstart', handleClick, false);
+        
+        // Close menu when clicking outside
+        document.addEventListener('click', function(e) {
+            if (!navMenu.contains(e.target) && !mobileMenuToggle.contains(e.target)) {
+                navMenu.classList.remove('active');
+                mobileMenuToggle.classList.remove('active');
+                mobileMenuToggle.setAttribute('aria-label', 'Open mobile menu');
+            }
+        });
+    } else {
+        console.error('Mobile menu elements not found (details page):', { mobileMenuToggle, navMenu });
+    }
+}
+
+// Initialize dropdown functionality
+function initializeDropdowns() {
+    const dropdowns = document.querySelectorAll('.dropdown');
+    const subDropdowns = document.querySelectorAll('.sub-dropdown');
+    
+    // Initialize main dropdowns
+    dropdowns.forEach(dropdown => {
+        const toggle = dropdown.querySelector('.dropdown-toggle');
+        const handleClick = function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            console.log('Dropdown toggle clicked (details page)');
+            
+            dropdowns.forEach(other => {
+                if (other !== dropdown) {
+                    other.classList.remove('active');
+                }
+            });
+            
+            dropdown.classList.toggle('active');
+            console.log('Dropdown state (details page):', dropdown.classList.contains('active') ? 'opened' : 'closed');
+        };
+        
+        toggle.addEventListener('click', handleClick, false);
+        toggle.addEventListener('touchstart', handleClick, false);
+    });
+    
+    // Initialize sub-dropdowns
+    subDropdowns.forEach(subDropdown => {
+        const toggle = subDropdown.querySelector('.sub-dropdown-toggle');
+        
+        console.log('Initializing sub-dropdown (details page):', { subDropdown, toggle });
+        
+        const handleClick = function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            
+            console.log('Sub-dropdown toggle clicked (details page)');
+            
+            subDropdowns.forEach(other => {
+                if (other !== subDropdown) {
+                    other.classList.remove('active');
+                }
+            });
+            
+            subDropdown.classList.toggle('active');
+            console.log('Sub-dropdown state (details page):', subDropdown.classList.contains('active') ? 'opened' : 'closed');
+            
+            // Force Safari to re-render
+            setTimeout(() => {
+                subDropdown.style.display = 'block';
+            }, 0);
+        };
+        
+        toggle.addEventListener('click', handleClick, false);
+        toggle.addEventListener('touchstart', handleClick, false);
+        
+        // Add mousedown event for Safari
+        toggle.addEventListener('mousedown', function(e) {
+            e.preventDefault();
+        }, false);
+    });
+}
+
 // Initialize search functionality
 function initializeSearch() {
     const searchInput = document.querySelector('.search-input');
@@ -451,6 +548,8 @@ async function initializeBookDetails() {
         initializeReviewFilters();
         initializeBookDetailSections();
         initializeSearch();
+        initializeMobileMenu();
+        initializeDropdowns();
         
         // Hide loading screen
         setTimeout(() => {
