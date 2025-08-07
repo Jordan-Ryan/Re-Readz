@@ -804,20 +804,20 @@ body {
     
     /* Fix sub-dropdown positioning for icon-only mode (651px-1023px) */
     .sub-dropdown-menu {
-        left: 0;
-        top: 100%;
-        margin-left: 0;
-        margin-top: 8px;
-        transform: translateY(-10px);
-        -webkit-transform: translateY(-10px);
+        left: -100%;
+        top: 0;
+        margin-left: -8px;
+        margin-top: 0;
+        transform: translateX(-10px);
+        -webkit-transform: translateX(-10px);
         -webkit-backface-visibility: hidden;
         backface-visibility: hidden;
         pointer-events: auto;
     }
     
     .sub-dropdown.active .sub-dropdown-menu {
-        transform: translateY(0);
-        -webkit-transform: translateY(0);
+        transform: translateX(0);
+        -webkit-transform: translateX(0);
     }
     
     /* Ensure sub-dropdown container has proper positioning */
