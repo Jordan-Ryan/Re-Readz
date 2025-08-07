@@ -1089,6 +1089,7 @@ body {
         -webkit-transform: translateZ(0);
         transform: translateZ(0);
         margin-top: 16px;
+        width: 100% !important;
     }
     
     .nav-menu.active .nav-item {
