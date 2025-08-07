@@ -287,7 +287,7 @@ async function loadBooks(searchTerm = null, page = 1, append = false) {
     
     // Show loading state
     if (!append) {
-        booksGrid.innerHTML = '<div class="loading-spinner"><div class="book-animation"><div class="book-spine"></div><div class="book-page"></div><div class="book-page"></div><div class="book-page"></div><div class="book-page"></div><div class="book-page"></div></div>Loading books...</div>';
+        booksGrid.innerHTML = '<div class="loading-spinner"><div class="book"><div class="inner"><div class="left"></div><div class="middle"></div><div class="right"></div></div><ul><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li></ul></div>Loading books...</div>';
     }
     
     try {
