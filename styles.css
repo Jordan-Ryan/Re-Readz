@@ -699,38 +699,35 @@ body {
     position: absolute;
     left: 50%;
     top: 50%;
-    width: 30px;
-    height: 2px;
-    background: #000000;
-    border-radius: 1px;
-    transform-origin: center;
-    animation: pageLine 2s ease-in-out infinite;
+    width: 0;
+    height: 0;
+    border-left: 15px solid transparent;
+    border-right: 15px solid transparent;
+    border-bottom: 20px solid #000000;
+    transform-origin: center bottom;
+    animation: pageFlip 2s ease-in-out infinite;
 }
 
 
 
 .loading-spinner .book-page:nth-child(2) {
-    animation-delay: 0.1s;
-    transform: translate(-50%, -50%) rotate(-10deg);
-    top: calc(50% - 15px);
+    animation-delay: 0.2s;
+    transform: translate(-50%, -50%) rotateY(15deg);
 }
 
 .loading-spinner .book-page:nth-child(3) {
-    animation-delay: 0.2s;
-    transform: translate(-50%, -50%) rotate(-20deg);
-    top: calc(50% - 8px);
+    animation-delay: 0.4s;
+    transform: translate(-50%, -50%) rotateY(30deg);
 }
 
 .loading-spinner .book-page:nth-child(4) {
-    animation-delay: 0.3s;
-    transform: translate(-50%, -50%) rotate(10deg);
-    top: calc(50% + 8px);
+    animation-delay: 0.6s;
+    transform: translate(-50%, -50%) rotateY(45deg);
 }
 
 .loading-spinner .book-page:nth-child(5) {
-    animation-delay: 0.4s;
-    transform: translate(-50%, -50%) rotate(20deg);
-    top: calc(50% + 15px);
+    animation-delay: 0.8s;
+    transform: translate(-50%, -50%) rotateY(60deg);
 }
 
 .loading-spinner i {
@@ -2504,21 +2501,21 @@ a:focus {
     animation-delay: 0.8s;
 }
 
-@keyframes pageLine {
+@keyframes pageFlip {
     0%, 100% {
-        transform: translate(-50%, -50%) rotate(0deg);
+        transform: translate(-50%, -50%) rotateY(0deg);
         opacity: 0.3;
     }
     25% {
-        transform: translate(-50%, -50%) rotate(-15deg);
+        transform: translate(-50%, -50%) rotateY(-45deg);
         opacity: 0.6;
     }
     50% {
-        transform: translate(-50%, -50%) rotate(-30deg);
+        transform: translate(-50%, -50%) rotateY(-90deg);
         opacity: 0.8;
     }
     75% {
-        transform: translate(-50%, -50%) rotate(-15deg);
+        transform: translate(-50%, -50%) rotateY(-45deg);
         opacity: 0.6;
     }
 }
