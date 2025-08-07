@@ -809,6 +809,15 @@ body {
         }
     }
     
+    /* Additional Safari fix - target Safari specifically */
+    @supports (-webkit-appearance: none) {
+        .nav-brand .mobile-menu-toggle {
+            display: block !important;
+            visibility: visible !important;
+            opacity: 1 !important;
+        }
+    }
+    
     .nav-search {
         order: 3;
         margin: 0;
@@ -1163,6 +1172,15 @@ a:focus {
     flex-shrink: 0;
     -webkit-appearance: none;
     appearance: none;
+}
+
+/* Always show burger menu on mobile for Safari compatibility */
+@media (max-width: 650px) {
+    .mobile-menu-toggle {
+        display: block !important;
+        visibility: visible !important;
+        opacity: 1 !important;
+    }
 }
 
 .mobile-menu-toggle:hover {
