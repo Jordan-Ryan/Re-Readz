@@ -648,12 +648,15 @@ function appendBooks(books) {
 function initializeDropdowns() {
     console.log('🔍 DEBUG: initializeDropdowns() called');
     console.log('🔍 DEBUG: Window width:', window.innerWidth);
+    console.log('🔍 DEBUG: Is mobile check (width <= 650):', window.innerWidth <= 650);
     
     // Only initialize desktop dropdowns on larger screens
     if (window.innerWidth <= 650) {
         console.log('🔍 DEBUG: Skipping desktop dropdown initialization on mobile');
         return;
     }
+    
+    console.log('🔍 DEBUG: Proceeding with desktop dropdown initialization (should not happen on mobile)');
     
     const dropdowns = document.querySelectorAll('.dropdown');
     console.log('🔍 DEBUG: Found desktop dropdowns:', dropdowns.length);
@@ -1127,12 +1130,15 @@ function initializeMobileMenu() {
                 navContainer.classList.toggle('mobile-menu-active');
             }
             
-            // Disable desktop dropdowns when mobile menu is active
-            if (window.innerWidth <= 650) {
-                document.querySelectorAll('.dropdown').forEach(dropdown => {
-                    dropdown.classList.remove('active');
-                });
-            }
+                    // Disable desktop dropdowns when mobile menu is active
+        if (window.innerWidth <= 650) {
+            console.log('🔍 DEBUG: Disabling desktop dropdowns on mobile menu toggle');
+            document.querySelectorAll('.dropdown').forEach(dropdown => {
+                dropdown.classList.remove('active');
+            });
+        } else {
+            console.log('🔍 DEBUG: Not mobile, keeping desktop dropdowns enabled');
+        }
             
             // Update aria-label for accessibility
             const isActive = navMenu.classList.contains('active');
