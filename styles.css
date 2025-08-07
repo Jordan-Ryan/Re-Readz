@@ -383,6 +383,9 @@ body {
     color: #2D3748;
     margin: 0;
     letter-spacing: -0.5px;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    hyphens: auto;
 }
 
 .sort-filter {
@@ -1283,6 +1286,10 @@ body {
     .section-title {
         font-size: 24px;
         flex-shrink: 0;
+        line-height: 1.3;
+        word-wrap: break-word;
+        overflow-wrap: break-word;
+        hyphens: auto;
     }
     
     .sort-filter {
@@ -1551,10 +1558,15 @@ a:focus {
     /* Old filter dropdown styles removed */
     
     /* Additional mobile improvements for very small screens */
-    @media (max-width: 480px) {
-        .nav-menu.active {
-            padding: 16px;
-        }
+            @media (max-width: 480px) {
+            .nav-menu.active {
+                padding: 16px;
+            }
+            
+            .section-title {
+                font-size: 20px;
+                line-height: 1.4;
+            }
         
         .nav-menu.active .nav-link {
             padding: 12px;
