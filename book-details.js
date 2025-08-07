@@ -454,40 +454,31 @@ function initializeDropdowns() {
         toggle.addEventListener('touchstart', handleClick, false);
     });
     
-    // Initialize sub-dropdowns
-    subDropdowns.forEach(subDropdown => {
-        const toggle = subDropdown.querySelector('.sub-dropdown-toggle');
-        
-        console.log('Initializing sub-dropdown (details page):', { subDropdown, toggle });
-        
+    // Initialize filter section toggles
+    const filterSections = document.querySelectorAll('.filter-section-toggle');
+    filterSections.forEach(section => {
         const handleClick = function(e) {
             e.preventDefault();
             e.stopPropagation();
+            console.log('Filter section toggle clicked (details page)');
             
-            console.log('Sub-dropdown toggle clicked (details page)');
+            const filterSection = this.closest('.filter-section');
+            const isActive = filterSection.classList.contains('active');
             
-            subDropdowns.forEach(other => {
-                if (other !== subDropdown) {
+            // Close all other sections
+            document.querySelectorAll('.filter-section').forEach(other => {
+                if (other !== filterSection) {
                     other.classList.remove('active');
                 }
             });
             
-            subDropdown.classList.toggle('active');
-            console.log('Sub-dropdown state (details page):', subDropdown.classList.contains('active') ? 'opened' : 'closed');
-            
-            // Force Safari to re-render
-            setTimeout(() => {
-                subDropdown.style.display = 'block';
-            }, 0);
+            // Toggle current section
+            filterSection.classList.toggle('active');
+            console.log('Filter section state (details page):', filterSection.classList.contains('active') ? 'opened' : 'closed');
         };
         
-        toggle.addEventListener('click', handleClick, false);
-        toggle.addEventListener('touchstart', handleClick, false);
-        
-        // Add mousedown event for Safari
-        toggle.addEventListener('mousedown', function(e) {
-            e.preventDefault();
-        }, false);
+        section.addEventListener('click', handleClick, false);
+        section.addEventListener('touchstart', handleClick, false);
     });
 }
 

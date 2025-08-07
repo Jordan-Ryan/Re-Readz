@@ -669,8 +669,35 @@ function initializeDropdowns() {
             
 
             
-            console.log('Dropdown state:', dropdown.classList.contains('active') ? 'opened' : 'closed');
-        };
+                console.log('Dropdown state:', dropdown.classList.contains('active') ? 'opened' : 'closed');
+};
+
+// Initialize filter section toggles
+const filterSections = document.querySelectorAll('.filter-section-toggle');
+filterSections.forEach(section => {
+    const handleClick = function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        console.log('Filter section toggle clicked');
+        
+        const filterSection = this.closest('.filter-section');
+        const isActive = filterSection.classList.contains('active');
+        
+        // Close all other sections
+        document.querySelectorAll('.filter-section').forEach(other => {
+            if (other !== filterSection) {
+                other.classList.remove('active');
+            }
+        });
+        
+        // Toggle current section
+        filterSection.classList.toggle('active');
+        console.log('Filter section state:', filterSection.classList.contains('active') ? 'opened' : 'closed');
+    };
+    
+    section.addEventListener('click', handleClick, false);
+    section.addEventListener('touchstart', handleClick, false);
+});
         
         // Add multiple event listeners for Safari compatibility
         toggle.addEventListener('click', handleClick, false);
