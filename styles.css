@@ -698,11 +698,10 @@ body {
     position: absolute;
     left: 50%;
     top: 50%;
-    width: 0;
-    height: 0;
-    border-left: 30px solid transparent;
-    border-right: 30px solid transparent;
-    border-bottom: 50px solid rgba(255, 255, 255, 0.1);
+    width: 60px;
+    height: 40px;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    background: transparent;
     transform-origin: center bottom;
     animation: pageFan 3s ease-in-out infinite;
 }
@@ -714,7 +713,7 @@ body {
     left: 8px;
     right: 8px;
     height: 1px;
-    background: #E2E8F0;
+    background: rgba(255, 255, 255, 0.2);
 }
 
 .loading-spinner .book-page::after {
@@ -724,27 +723,27 @@ body {
     left: 8px;
     right: 8px;
     height: 1px;
-    background: #E2E8F0;
+    background: rgba(255, 255, 255, 0.2);
 }
 
 .loading-spinner .book-page:nth-child(2) {
-    animation-delay: 0.1s;
-    transform: translate(-50%, -50%) rotateX(5deg) rotateZ(2deg);
+    animation-delay: 0.2s;
+    transform: translate(-50%, -50%) rotateY(15deg);
 }
 
 .loading-spinner .book-page:nth-child(3) {
-    animation-delay: 0.2s;
-    transform: translate(-50%, -50%) rotateX(10deg) rotateZ(4deg);
+    animation-delay: 0.4s;
+    transform: translate(-50%, -50%) rotateY(30deg);
 }
 
 .loading-spinner .book-page:nth-child(4) {
-    animation-delay: 0.3s;
-    transform: translate(-50%, -50%) rotateX(15deg) rotateZ(6deg);
+    animation-delay: 0.6s;
+    transform: translate(-50%, -50%) rotateY(45deg);
 }
 
 .loading-spinner .book-page:nth-child(5) {
-    animation-delay: 0.4s;
-    transform: translate(-50%, -50%) rotateX(20deg) rotateZ(8deg);
+    animation-delay: 0.8s;
+    transform: translate(-50%, -50%) rotateY(60deg);
 }
 
 .loading-spinner i {
@@ -2520,20 +2519,20 @@ a:focus {
 
 @keyframes pageFan {
     0%, 100% {
-        transform: translate(-50%, -50%) rotateX(0deg) rotateZ(0deg);
-        opacity: 0.3;
+        transform: translate(-50%, -50%) rotateY(0deg);
+        opacity: 0.2;
     }
     25% {
-        transform: translate(-50%, -50%) rotateX(15deg) rotateZ(5deg);
-        opacity: 0.6;
+        transform: translate(-50%, -50%) rotateY(-45deg);
+        opacity: 0.4;
     }
     50% {
-        transform: translate(-50%, -50%) rotateX(30deg) rotateZ(10deg);
-        opacity: 0.8;
+        transform: translate(-50%, -50%) rotateY(-90deg);
+        opacity: 0.6;
     }
     75% {
-        transform: translate(-50%, -50%) rotateX(15deg) rotateZ(5deg);
-        opacity: 0.6;
+        transform: translate(-50%, -50%) rotateY(-45deg);
+        opacity: 0.4;
     }
 }
 
