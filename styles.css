@@ -2550,6 +2550,10 @@ a:focus {
 
 /* Show mobile filters on mobile when menu is active */
 @media (max-width: 650px) {
+    .nav-container {
+        padding: 0 2px;
+    }
+    
     .nav-menu.active .mobile-filters-section {
         display: block !important;
         width: 100% !important;
