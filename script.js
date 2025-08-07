@@ -646,23 +646,31 @@ function appendBooks(books) {
 
 // Initialize all dropdown functionality
 function initializeDropdowns() {
+    console.log('🔍 DEBUG: initializeDropdowns() called');
+    console.log('🔍 DEBUG: Window width:', window.innerWidth);
+    
     // Only initialize desktop dropdowns on larger screens
     if (window.innerWidth <= 650) {
-        console.log('Skipping desktop dropdown initialization on mobile');
+        console.log('🔍 DEBUG: Skipping desktop dropdown initialization on mobile');
         return;
     }
     
     const dropdowns = document.querySelectorAll('.dropdown');
+    console.log('🔍 DEBUG: Found desktop dropdowns:', dropdowns.length);
     
-    dropdowns.forEach(dropdown => {
+    dropdowns.forEach((dropdown, index) => {
+        console.log(`🔍 DEBUG: Setting up desktop dropdown ${index}:`, dropdown);
         const toggle = dropdown.querySelector('.dropdown-toggle');
+        console.log(`🔍 DEBUG: Found toggle for dropdown ${index}:`, toggle);
         
         // Safari-compatible event handling
         const handleClick = function(e) {
             e.preventDefault();
             e.stopPropagation();
             
-            console.log('Dropdown toggle clicked');
+            console.log('🔍 DEBUG: Desktop dropdown toggle clicked!');
+            console.log('🔍 DEBUG: Dropdown element:', dropdown);
+            console.log('🔍 DEBUG: Toggle element:', this);
             
             // Close other dropdowns
             dropdowns.forEach(other => {
@@ -674,7 +682,7 @@ function initializeDropdowns() {
             // Toggle current dropdown
             dropdown.classList.toggle('active');
             
-            console.log('Dropdown state:', dropdown.classList.contains('active') ? 'opened' : 'closed');
+            console.log('🔍 DEBUG: Desktop dropdown state:', dropdown.classList.contains('active') ? 'opened' : 'closed');
         };
 
 // Initialize filter toggles
@@ -1088,10 +1096,17 @@ function initializeSmoothScrolling() {
 
 // Initialize mobile menu functionality
 function initializeMobileMenu() {
+    console.log('🔍 DEBUG: initializeMobileMenu() called');
+    
     const mobileMenuToggle = document.querySelector('.mobile-menu-toggle');
     const navMenu = document.querySelector('.nav-menu');
     
-    console.log('Initializing mobile menu:', { mobileMenuToggle, navMenu });
+    console.log('🔍 DEBUG: Mobile menu elements found:', { 
+        mobileMenuToggle: !!mobileMenuToggle, 
+        navMenu: !!navMenu 
+    });
+    console.log('🔍 DEBUG: Mobile menu toggle element:', mobileMenuToggle);
+    console.log('🔍 DEBUG: Nav menu element:', navMenu);
     
     if (mobileMenuToggle && navMenu) {
         // Safari-compatible event handling
@@ -1099,7 +1114,9 @@ function initializeMobileMenu() {
             e.preventDefault();
             e.stopPropagation();
             
-            console.log('Mobile menu toggle clicked');
+            console.log('🔍 DEBUG: Mobile menu toggle clicked!');
+            console.log('🔍 DEBUG: Event:', e);
+            console.log('🔍 DEBUG: Current nav menu classes:', navMenu.className);
             
             navMenu.classList.toggle('active');
             mobileMenuToggle.classList.toggle('active');
@@ -1432,15 +1449,25 @@ async function loadMoreBooks() {
 
 // Initialize mobile filter functionality
 function initializeMobileFilters() {
-    const mobileFilterToggles = document.querySelectorAll('.mobile-filter-toggle');
+    console.log('🔍 DEBUG: initializeMobileFilters() called');
     
-    mobileFilterToggles.forEach(toggle => {
+    const mobileFilterToggles = document.querySelectorAll('.mobile-filter-toggle');
+    console.log('🔍 DEBUG: Found mobile filter toggles:', mobileFilterToggles.length);
+    
+    mobileFilterToggles.forEach((toggle, index) => {
+        console.log(`🔍 DEBUG: Setting up mobile filter toggle ${index}:`, toggle);
+        
         const handleClick = function(e) {
             e.preventDefault();
             e.stopPropagation();
             
             const filterType = this.getAttribute('data-filter');
             const isActive = this.classList.contains('active');
+            
+            console.log('🔍 DEBUG: Mobile filter toggle clicked!');
+            console.log('🔍 DEBUG: Filter type:', filterType);
+            console.log('🔍 DEBUG: Is currently active:', isActive);
+            console.log('🔍 DEBUG: Element:', this);
             
             // Close all other filter options
             document.querySelectorAll('.mobile-filter-options').forEach(options => {
@@ -1452,32 +1479,48 @@ function initializeMobileFilters() {
             
             // Toggle current filter options
             const filterOptions = document.querySelector(`.mobile-filter-options[data-filter="${filterType}"]`);
+            console.log('🔍 DEBUG: Found filter options element:', filterOptions);
+            
             if (filterOptions) {
                 if (isActive) {
+                    console.log('🔍 DEBUG: Closing filter options');
                     this.classList.remove('active');
                     filterOptions.style.display = 'none';
                 } else {
+                    console.log('🔍 DEBUG: Opening filter options');
                     this.classList.add('active');
                     filterOptions.style.display = 'block';
                 }
+            } else {
+                console.log('🔍 DEBUG: ERROR - No filter options found for:', filterType);
             }
             
-            console.log('Mobile filter toggle state:', this.classList.contains('active') ? 'opened' : 'closed');
+            console.log('🔍 DEBUG: Mobile filter toggle state:', this.classList.contains('active') ? 'opened' : 'closed');
         };
         
         toggle.addEventListener('click', handleClick, false);
         toggle.addEventListener('touchstart', handleClick, false);
+        console.log(`🔍 DEBUG: Event listeners added to mobile filter toggle ${index}`);
     });
     
     // Handle mobile filter option clicks
     const mobileFilterOptions = document.querySelectorAll('.mobile-filter-option');
-    mobileFilterOptions.forEach(option => {
+    console.log('🔍 DEBUG: Found mobile filter options:', mobileFilterOptions.length);
+    
+    mobileFilterOptions.forEach((option, index) => {
+        console.log(`🔍 DEBUG: Setting up mobile filter option ${index}:`, option);
+        
         const handleClick = function(e) {
             e.preventDefault();
             e.stopPropagation();
             
             const filterType = this.getAttribute('data-filter');
             const filterValue = this.getAttribute('data-value');
+            
+            console.log('🔍 DEBUG: Mobile filter option clicked!');
+            console.log('🔍 DEBUG: Filter type:', filterType);
+            console.log('🔍 DEBUG: Filter value:', filterValue);
+            console.log('🔍 DEBUG: Element:', this);
             
             // Update active state
             document.querySelectorAll(`.mobile-filter-option[data-filter="${filterType}"]`).forEach(opt => {
@@ -1486,20 +1529,25 @@ function initializeMobileFilters() {
             this.classList.add('active');
             
             // Apply filter
+            console.log('🔍 DEBUG: Calling applyFilter with:', filterType, filterValue);
             applyFilter(filterType, filterValue);
             
             // Close the filter options
             const filterOptions = document.querySelector(`.mobile-filter-options[data-filter="${filterType}"]`);
             const filterToggle = document.querySelector(`.mobile-filter-toggle[data-filter="${filterType}"]`);
             if (filterOptions && filterToggle) {
+                console.log('🔍 DEBUG: Closing filter options after selection');
                 filterOptions.style.display = 'none';
                 filterToggle.classList.remove('active');
             }
             
-            console.log('Mobile filter applied:', filterType, filterValue);
+            console.log('🔍 DEBUG: Mobile filter applied:', filterType, filterValue);
         };
         
         option.addEventListener('click', handleClick, false);
         option.addEventListener('touchstart', handleClick, false);
+        console.log(`🔍 DEBUG: Event listeners added to mobile filter option ${index}`);
     });
+    
+    console.log('🔍 DEBUG: initializeMobileFilters() completed');
 }
