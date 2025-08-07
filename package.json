@@ -1,0 +1,13 @@
+{
+  "name": "re-readz",
+  "version": "1.0.0",
+  "description": "Re-Readz book website",
+  "main": "server.js",
+  "scripts": {
+    "dev": "node server.js",
+    "start": "node server.js"
+  },
+  "keywords": ["books", "reading", "website"],
+  "author": "Jordan Ryan",
+  "license": "MIT"
+} 
