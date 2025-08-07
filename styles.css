@@ -2533,5 +2533,119 @@ a:focus {
     line-height: 1.5;
 }
 
+/* Mobile filter styles */
+.mobile-filters-section {
+    display: none;
+}
+
+.nav-menu.active .mobile-filters-section {
+    display: block;
+    width: 100%;
+    margin-bottom: 16px;
+}
+
+.filter-section-header {
+    background: #F7FAFC;
+    border-radius: 8px;
+    margin-bottom: 8px;
+    font-weight: 600;
+    color: #2D3748;
+}
+
+.mobile-filter-item {
+    margin-bottom: 8px;
+}
+
+.mobile-filter-toggle {
+    width: 100%;
+    background: none;
+    border: none;
+    padding: 12px 16px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 16px;
+    font-weight: 500;
+    color: #4A5568;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+    text-align: left;
+}
+
+.mobile-filter-toggle:hover {
+    background-color: #F7FAFC;
+}
+
+.mobile-filter-toggle.active {
+    background-color: #EDF2F7;
+    color: #2D3748;
+}
+
+.mobile-filter-toggle i:first-child {
+    margin-right: 12px;
+    width: 16px;
+    text-align: center;
+}
+
+.mobile-filter-toggle span {
+    flex: 1;
+}
+
+.mobile-filter-toggle .filter-chevron {
+    transition: transform 0.2s ease;
+}
+
+.mobile-filter-toggle.active .filter-chevron {
+    transform: rotate(90deg);
+}
+
+.mobile-filter-options {
+    background: #FFFFFF;
+    border-radius: 8px;
+    margin-top: 4px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+}
+
+.mobile-filter-option {
+    display: block;
+    padding: 12px 16px;
+    color: #4A5568;
+    text-decoration: none;
+    font-size: 16px;
+    transition: background-color 0.2s ease;
+    border-bottom: 1px solid #E2E8F0;
+}
+
+.mobile-filter-option:last-child {
+    border-bottom: none;
+}
+
+.mobile-filter-option:hover {
+    background-color: #F7FAFC;
+    color: #2D3748;
+}
+
+.mobile-filter-option.active {
+    background-color: #EDF2F7;
+    color: #2D3748;
+    font-weight: 500;
+}
+
+/* Hide desktop filters on mobile */
+@media (max-width: 650px) {
+    .desktop-only {
+        display: none !important;
+    }
+}
+
+/* Show desktop filters on larger screens */
+@media (min-width: 651px) {
+    .mobile-filters-section {
+        display: none !important;
+    }
+}
+
 
 

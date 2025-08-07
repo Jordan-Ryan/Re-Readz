@@ -392,7 +392,75 @@ function initializeBookDetailSections() {
     // Detail sections are populated by loadBookDetailSections function
 }
 
-
+// Initialize mobile filter functionality
+function initializeMobileFilters() {
+    const mobileFilterToggles = document.querySelectorAll('.mobile-filter-toggle');
+    
+    mobileFilterToggles.forEach(toggle => {
+        const handleClick = function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            
+            const filterType = this.getAttribute('data-filter');
+            const isActive = this.classList.contains('active');
+            
+            // Close all other filter options
+            document.querySelectorAll('.mobile-filter-options').forEach(options => {
+                options.style.display = 'none';
+            });
+            document.querySelectorAll('.mobile-filter-toggle').forEach(other => {
+                other.classList.remove('active');
+            });
+            
+            // Toggle current filter options
+            const filterOptions = document.querySelector(`.mobile-filter-options[data-filter="${filterType}"]`);
+            if (filterOptions) {
+                if (isActive) {
+                    this.classList.remove('active');
+                    filterOptions.style.display = 'none';
+                } else {
+                    this.classList.add('active');
+                    filterOptions.style.display = 'block';
+                }
+            }
+            
+            console.log('Mobile filter toggle state (details page):', this.classList.contains('active') ? 'opened' : 'closed');
+        };
+        
+        toggle.addEventListener('click', handleClick, false);
+        toggle.addEventListener('touchstart', handleClick, false);
+    });
+    
+    // Handle mobile filter option clicks
+    const mobileFilterOptions = document.querySelectorAll('.mobile-filter-option');
+    mobileFilterOptions.forEach(option => {
+        const handleClick = function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            
+            const filterType = this.getAttribute('data-filter');
+            const filterValue = this.getAttribute('data-value');
+            
+            // Update active state
+            document.querySelectorAll(`.mobile-filter-option[data-filter="${filterType}"]`).forEach(opt => {
+                opt.classList.remove('active');
+            });
+            this.classList.add('active');
+            
+            // Apply filter (redirect to main page with filter)
+            const params = new URLSearchParams();
+            if (filterValue) {
+                params.set(filterType, filterValue);
+            }
+            window.location.href = `/?${params.toString()}`;
+            
+            console.log('Mobile filter applied (details page):', filterType, filterValue);
+        };
+        
+        option.addEventListener('click', handleClick, false);
+        option.addEventListener('touchstart', handleClick, false);
+    });
+}
 
 // Initialize mobile menu functionality
 function initializeMobileMenu() {
@@ -554,6 +622,7 @@ async function initializeBookDetails() {
         initializeSearch();
         initializeMobileMenu();
         initializeDropdowns();
+        initializeMobileFilters(); // Initialize mobile filters
         
         // Hide loading screen
         setTimeout(() => {
