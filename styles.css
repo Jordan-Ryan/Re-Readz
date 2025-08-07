@@ -763,6 +763,14 @@ body {
     -webkit-animation-iteration-count: infinite;
 }
 
+/* Safari mobile specific transform origin fix */
+@media screen and (-webkit-min-device-pixel-ratio: 0) and (max-width: 767px) {
+    .book ul li {
+        -webkit-transform-origin: 0% 50%;
+        transform-origin: 0% 50%;
+    }
+}
+
 
 
 .loading-spinner .book-page:nth-child(2) {
@@ -2555,6 +2563,15 @@ a:focus {
     63% { -webkit-transform: rotateZ(0deg) translateX(-18px); }
 }
 
+/* Safari mobile specific fix for page flipping direction */
+@media screen and (-webkit-min-device-pixel-ratio: 0) and (max-width: 767px) {
+    @-webkit-keyframes page-1 {
+        4% { -webkit-transform: rotateZ(0deg) translateX(-18px) translateZ(1px); }
+        13%, 54% { -webkit-transform: rotateZ(180deg) translateX(-18px) translateZ(1px); }
+        63% { -webkit-transform: rotateZ(0deg) translateX(-18px) translateZ(1px); }
+    }
+}
+
 @keyframes page-2 {
     5.86% { transform: rotateZ(0deg) translateX(-18px); }
     14.74%, 55.74% { transform: rotateZ(180deg) translateX(-18px); }
@@ -2872,6 +2889,8 @@ a:focus {
         backface-visibility: hidden;
         -webkit-transform-style: preserve-3d;
         transform-style: preserve-3d;
+        -webkit-perspective: 100px;
+        perspective: 100px;
     }
     
     .book {
@@ -2879,6 +2898,15 @@ a:focus {
         backface-visibility: hidden;
         -webkit-transform-style: preserve-3d;
         transform-style: preserve-3d;
+        -webkit-perspective: 100px;
+        perspective: 100px;
+    }
+    
+    .book ul {
+        -webkit-transform-style: preserve-3d;
+        transform-style: preserve-3d;
+        -webkit-perspective: 100px;
+        perspective: 100px;
     }
 }
 
