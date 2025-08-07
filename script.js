@@ -738,6 +738,8 @@ function initializeDropdowns() {
     subDropdowns.forEach(subDropdown => {
         const toggle = subDropdown.querySelector('.sub-dropdown-toggle');
         
+        console.log('Initializing sub-dropdown:', { subDropdown, toggle });
+        
         // Safari-compatible event handling
         const handleClick = function(e) {
             e.preventDefault();
@@ -756,11 +758,21 @@ function initializeDropdowns() {
             subDropdown.classList.toggle('active');
             
             console.log('Sub-dropdown state:', subDropdown.classList.contains('active') ? 'opened' : 'closed');
+            
+            // Force Safari to re-render
+            setTimeout(() => {
+                subDropdown.style.display = 'block';
+            }, 0);
         };
         
         // Add multiple event listeners for Safari compatibility
         toggle.addEventListener('click', handleClick, false);
         toggle.addEventListener('touchstart', handleClick, false);
+        
+        // Add mousedown event for Safari
+        toggle.addEventListener('mousedown', function(e) {
+            e.preventDefault();
+        }, false);
     });
     
     // Close dropdowns when clicking outside
