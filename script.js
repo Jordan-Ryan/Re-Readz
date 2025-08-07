@@ -687,6 +687,24 @@ function initializeDropdowns() {
             e.preventDefault();
             e.stopPropagation();
             
+            // Check if we're on mobile - if so, redirect to mobile filter function
+            if (window.innerWidth <= 650) {
+                console.log('🔍 DEBUG: Mobile detected in desktop dropdown click, redirecting to mobile filter');
+                
+                // Find the corresponding mobile filter toggle and trigger it
+                const filterType = this.getAttribute('data-filter') || 'genre'; // Default to genre if not specified
+                const mobileToggle = document.querySelector(`.mobile-filter-toggle[data-filter="${filterType}"]`);
+                
+                if (mobileToggle) {
+                    console.log('🔍 DEBUG: Found mobile toggle, triggering it:', mobileToggle);
+                    mobileToggle.click();
+                } else {
+                    console.log('🔍 DEBUG: No mobile toggle found for filter type:', filterType);
+                }
+                
+                return;
+            }
+            
             console.log('🔍 DEBUG: Desktop dropdown toggle clicked!');
             console.log('🔍 DEBUG: Dropdown element:', dropdown);
             console.log('🔍 DEBUG: Toggle element:', this);
@@ -710,6 +728,24 @@ filterToggles.forEach(toggle => {
     const handleClick = function(e) {
         e.preventDefault();
         e.stopPropagation();
+        
+        // Check if we're on mobile - if so, redirect to mobile filter function
+        if (window.innerWidth <= 650) {
+            console.log('🔍 DEBUG: Mobile detected in filter toggle click, redirecting to mobile filter');
+            
+            const filterType = this.getAttribute('data-filter');
+            const mobileToggle = document.querySelector(`.mobile-filter-toggle[data-filter="${filterType}"]`);
+            
+            if (mobileToggle) {
+                console.log('🔍 DEBUG: Found mobile toggle for filter, triggering it:', mobileToggle);
+                mobileToggle.click();
+            } else {
+                console.log('🔍 DEBUG: No mobile toggle found for filter type:', filterType);
+            }
+            
+            return;
+        }
+        
         console.log('Filter toggle clicked');
         
         const filterType = this.getAttribute('data-filter');
