@@ -1372,7 +1372,8 @@ a:focus {
 }
 
 .details-book-card .book-image {
-    height: 300px;
+    aspect-ratio: 1 / 1.4; /* Standard book cover aspect ratio */
+    -webkit-aspect-ratio: 1 / 1.4;
     position: relative;
     background: #F7FAFC;
     display: flex;
@@ -1919,7 +1920,8 @@ a:focus {
     }
     
     .details-book-card .book-image {
-        height: 280px;
+        aspect-ratio: 1 / 1.4; /* Standard book cover aspect ratio */
+        -webkit-aspect-ratio: 1 / 1.4;
     }
 }
 
@@ -1930,7 +1932,8 @@ a:focus {
     }
     
     .details-book-card .book-image {
-        height: 260px;
+        aspect-ratio: 1 / 1.4; /* Standard book cover aspect ratio */
+        -webkit-aspect-ratio: 1 / 1.4;
     }
     
     .details-book-card .book-title {
@@ -2028,7 +2031,8 @@ a:focus {
     }
     
     .details-book-card .book-image {
-        height: 220px;
+        aspect-ratio: 1 / 1.4; /* Standard book cover aspect ratio */
+        -webkit-aspect-ratio: 1 / 1.4;
     }
     
     .details-book-card .book-title {
@@ -2064,10 +2068,14 @@ a:focus {
         margin: 0 auto;
         -webkit-transform: translateZ(0);
         transform: translateZ(0);
+        aspect-ratio: 1 / 1.4; /* Standard book cover aspect ratio */
+        -webkit-aspect-ratio: 1 / 1.4;
     }
     
     .book-cover {
-        height: 200px;
+        width: 100%;
+        height: 100%;
+        object-fit: contain;
         -webkit-transform: translateZ(0);
         transform: translateZ(0);
     }
