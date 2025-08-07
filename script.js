@@ -2,14 +2,19 @@
 document.addEventListener('DOMContentLoaded', function() {
     // Only initialize main page functionality if not on book details page
     if (!window.location.pathname.includes('book-details.html') && !window.location.pathname.includes('/bd')) {
+        console.log('🔍 DEBUG: Starting initialization sequence...');
         initializeDropdowns();
+        console.log('🔍 DEBUG: initializeDropdowns() completed');
         initializeWishlistButtons();
         initializeSearch();
         initializeFilters();
         initializeSmoothScrolling();
         initializeMobileMenu();
+        console.log('🔍 DEBUG: initializeMobileMenu() completed');
         initializeMobileFilters();
+        console.log('🔍 DEBUG: initializeMobileFilters() completed');
         initializeInfiniteScroll();
+        console.log('🔍 DEBUG: All initialization completed');
         
         // Load cached state from sessionStorage first
         loadCachedStateFromStorage();
@@ -653,10 +658,12 @@ function initializeDropdowns() {
     // Only initialize desktop dropdowns on larger screens
     if (window.innerWidth <= 650) {
         console.log('🔍 DEBUG: Skipping desktop dropdown initialization on mobile');
+        console.log('🔍 DEBUG: Mobile width detected, returning early');
         return;
     }
     
     console.log('🔍 DEBUG: Proceeding with desktop dropdown initialization (should not happen on mobile)');
+    console.log('🔍 DEBUG: This should NOT appear at 500px width!');
     
     const dropdowns = document.querySelectorAll('.dropdown');
     console.log('🔍 DEBUG: Found desktop dropdowns:', dropdowns.length);
