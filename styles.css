@@ -845,6 +845,10 @@ body {
         -webkit-box-direction: normal;
     }
     
+    .nav-container.mobile-menu-active {
+        gap: 8px;
+    }
+    
     .nav-brand {
         order: 1;
         -webkit-box-ordinal-group: 1;
@@ -1065,32 +1069,30 @@ body {
     }
     
     .nav-menu.active {
-        position: fixed;
-        top: 120px;
-        left: 0;
-        right: 0;
-        background: #FFFFFF;
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-        padding: 24px 20px;
+        position: static;
+        background: transparent;
+        box-shadow: none;
+        padding: 0;
         flex-direction: column;
-        gap: 12px;
-        z-index: 999;
+        gap: 8px;
+        z-index: auto;
         transform: none;
         opacity: 1;
         visibility: visible;
         order: unset;
         height: auto;
         overflow: visible;
-        border-bottom: 1px solid #E2E8F0;
-        display: block;
+        border-bottom: none;
+        display: flex;
         -webkit-box-orient: vertical;
         -webkit-box-direction: normal;
         -webkit-transform: translateZ(0);
         transform: translateZ(0);
+        margin-top: 16px;
     }
     
     .nav-menu.active .nav-item {
-        display: block !important;
+        display: flex !important;
         width: 100%;
         margin-bottom: 4px;
     }
@@ -1118,7 +1120,7 @@ body {
     .nav-menu.active .nav-link {
         width: 100%;
         justify-content: flex-start;
-        padding: 16px;
+        padding: 12px 16px;
         border-radius: 8px;
         min-height: 44px;
         display: flex;
@@ -1126,6 +1128,13 @@ body {
         gap: 12px;
         font-size: 16px;
         font-weight: 500;
+        background: transparent;
+        transition: background-color 0.2s ease;
+        -webkit-transition: background-color 0.2s ease;
+    }
+    
+    .nav-menu.active .nav-link:hover {
+        background-color: #F7FAFC;
     }
     
     .nav-text {
