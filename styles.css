@@ -687,18 +687,19 @@ body {
     height: 60px;
     background: #2D3748;
     border-radius: 2px;
+    z-index: 2;
 }
 
 .loading-spinner .book-page {
     position: absolute;
-    left: 50%;
+    left: calc(50% - 20px);
     top: 50%;
     width: 40px;
     height: 56px;
     background: #FFFFFF;
     border: 1px solid #E2E8F0;
     border-radius: 2px;
-    transform-origin: left center;
+    transform-origin: right center;
     animation: pageFlip 2s ease-in-out infinite;
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
 }
@@ -2512,20 +2513,20 @@ a:focus {
 
 @keyframes pageFlip {
     0%, 100% {
-        transform: translate(-50%, -50%) rotateY(0deg);
+        transform: translateY(-50%) rotateY(0deg);
         z-index: 1;
     }
     25% {
-        transform: translate(-50%, -50%) rotateY(-180deg);
+        transform: translateY(-50%) rotateY(-90deg);
         z-index: 5;
     }
     50% {
-        transform: translate(-50%, -50%) rotateY(-180deg);
+        transform: translateY(-50%) rotateY(-180deg);
         z-index: 5;
     }
     75% {
-        transform: translate(-50%, -50%) rotateY(0deg);
-        z-index: 1;
+        transform: translateY(-50%) rotateY(-90deg);
+        z-index: 5;
     }
 }
 
