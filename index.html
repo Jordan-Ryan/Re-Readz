@@ -57,59 +57,59 @@
                         <i class="fas fa-chevron-down"></i>
                     </button>
                     <div class="dropdown-menu filters-menu">
-                        <!-- Genre Section -->
-                        <div class="filter-section">
-                            <button class="filter-section-toggle">
-                                <i class="fas fa-book"></i>
-                                <span>Genre</span>
-                                <i class="fas fa-chevron-right filter-chevron"></i>
-                            </button>
-                            <div class="filter-options" style="display: none;">
-                                <a href="#" class="dropdown-item filter-option" data-filter="genre" data-value="">All Genres</a>
-                                <a href="#" class="dropdown-item filter-option" data-filter="genre" data-value="Fiction">Fiction</a>
-                                <a href="#" class="dropdown-item filter-option" data-filter="genre" data-value="Non-fiction">Non-fiction</a>
-                                <a href="#" class="dropdown-item filter-option" data-filter="genre" data-value="Science fiction">Science Fiction</a>
-                                <a href="#" class="dropdown-item filter-option" data-filter="genre" data-value="Mystery">Mystery</a>
-                                <a href="#" class="dropdown-item filter-option" data-filter="genre" data-value="Romance">Romance</a>
-                                <a href="#" class="dropdown-item filter-option" data-filter="genre" data-value="Biography">Biography</a>
-                                <a href="#" class="dropdown-item filter-option" data-filter="genre" data-value="History">History</a>
-                                <a href="#" class="dropdown-item filter-option" data-filter="genre" data-value="Children's literature">Children's</a>
-                            </div>
+                        <!-- Genre Toggle -->
+                        <div class="dropdown-item filter-toggle" data-filter="genre">
+                            <i class="fas fa-book"></i>
+                            <span>Genre</span>
+                            <i class="fas fa-chevron-right filter-chevron"></i>
                         </div>
                         
-                        <!-- Language Section -->
-                        <div class="filter-section">
-                            <button class="filter-section-toggle">
-                                <i class="fas fa-language"></i>
-                                <span>Language</span>
-                                <i class="fas fa-chevron-right filter-chevron"></i>
-                            </button>
-                            <div class="filter-options" style="display: none;">
-                                <a href="#" class="dropdown-item filter-option" data-filter="language" data-value="">All Languages</a>
-                                <a href="#" class="dropdown-item filter-option" data-filter="language" data-value="eng">English</a>
-                                <a href="#" class="dropdown-item filter-option" data-filter="language" data-value="spa">Spanish</a>
-                                <a href="#" class="dropdown-item filter-option" data-filter="language" data-value="fre">French</a>
-                                <a href="#" class="dropdown-item filter-option" data-filter="language" data-value="ger">German</a>
-                                <a href="#" class="dropdown-item filter-option" data-filter="language" data-value="ita">Italian</a>
-                            </div>
+                        <!-- Genre Options (Hidden by default) -->
+                        <div class="filter-options" data-filter="genre" style="display: none;">
+                            <a href="#" class="dropdown-item filter-option" data-filter="genre" data-value="">All Genres</a>
+                            <a href="#" class="dropdown-item filter-option" data-filter="genre" data-value="Fiction">Fiction</a>
+                            <a href="#" class="dropdown-item filter-option" data-filter="genre" data-value="Non-fiction">Non-fiction</a>
+                            <a href="#" class="dropdown-item filter-option" data-filter="genre" data-value="Science fiction">Science Fiction</a>
+                            <a href="#" class="dropdown-item filter-option" data-filter="genre" data-value="Mystery">Mystery</a>
+                            <a href="#" class="dropdown-item filter-option" data-filter="genre" data-value="Romance">Romance</a>
+                            <a href="#" class="dropdown-item filter-option" data-filter="genre" data-value="Biography">Biography</a>
+                            <a href="#" class="dropdown-item filter-option" data-filter="genre" data-value="History">History</a>
+                            <a href="#" class="dropdown-item filter-option" data-filter="genre" data-value="Children's literature">Children's</a>
                         </div>
                         
-                        <!-- Year Section -->
-                        <div class="filter-section">
-                            <button class="filter-section-toggle">
-                                <i class="fas fa-calendar"></i>
-                                <span>Year</span>
-                                <i class="fas fa-chevron-right filter-chevron"></i>
-                            </button>
-                            <div class="filter-options" style="display: none;">
-                                <a href="#" class="dropdown-item filter-option" data-filter="year" data-value="">All Years</a>
-                                <a href="#" class="dropdown-item filter-option" data-filter="year" data-value="2020-2024">2020-2024</a>
-                                <a href="#" class="dropdown-item filter-option" data-filter="year" data-value="2010-2019">2010-2019</a>
-                                <a href="#" class="dropdown-item filter-option" data-filter="year" data-value="2000-2009">2000-2009</a>
-                                <a href="#" class="dropdown-item filter-option" data-filter="year" data-value="1990-1999">1990-1999</a>
-                                <a href="#" class="dropdown-item filter-option" data-filter="year" data-value="1980-1989">1980-1989</a>
-                                <a href="#" class="dropdown-item filter-option" data-filter="year" data-value="1900-1979">1900-1979</a>
-                            </div>
+                        <!-- Language Toggle -->
+                        <div class="dropdown-item filter-toggle" data-filter="language">
+                            <i class="fas fa-language"></i>
+                            <span>Language</span>
+                            <i class="fas fa-chevron-right filter-chevron"></i>
+                        </div>
+                        
+                        <!-- Language Options (Hidden by default) -->
+                        <div class="filter-options" data-filter="language" style="display: none;">
+                            <a href="#" class="dropdown-item filter-option" data-filter="language" data-value="">All Languages</a>
+                            <a href="#" class="dropdown-item filter-option" data-filter="language" data-value="eng">English</a>
+                            <a href="#" class="dropdown-item filter-option" data-filter="language" data-value="spa">Spanish</a>
+                            <a href="#" class="dropdown-item filter-option" data-filter="language" data-value="fre">French</a>
+                            <a href="#" class="dropdown-item filter-option" data-filter="language" data-value="ger">German</a>
+                            <a href="#" class="dropdown-item filter-option" data-filter="language" data-value="ita">Italian</a>
+                        </div>
+                        
+                        <!-- Year Toggle -->
+                        <div class="dropdown-item filter-toggle" data-filter="year">
+                            <i class="fas fa-calendar"></i>
+                            <span>Year</span>
+                            <i class="fas fa-chevron-right filter-chevron"></i>
+                        </div>
+                        
+                        <!-- Year Options (Hidden by default) -->
+                        <div class="filter-options" data-filter="year" style="display: none;">
+                            <a href="#" class="dropdown-item filter-option" data-filter="year" data-value="">All Years</a>
+                            <a href="#" class="dropdown-item filter-option" data-filter="year" data-value="2020-2024">2020-2024</a>
+                            <a href="#" class="dropdown-item filter-option" data-filter="year" data-value="2010-2019">2010-2019</a>
+                            <a href="#" class="dropdown-item filter-option" data-filter="year" data-value="2000-2009">2000-2009</a>
+                            <a href="#" class="dropdown-item filter-option" data-filter="year" data-value="1990-1999">1990-1999</a>
+                            <a href="#" class="dropdown-item filter-option" data-filter="year" data-value="1980-1989">1980-1989</a>
+                            <a href="#" class="dropdown-item filter-option" data-filter="year" data-value="1900-1979">1900-1979</a>
                         </div>
                     </div>
                 </div>

@@ -672,31 +672,42 @@ function initializeDropdowns() {
                 console.log('Dropdown state:', dropdown.classList.contains('active') ? 'opened' : 'closed');
 };
 
-// Initialize filter section toggles
-const filterSections = document.querySelectorAll('.filter-section-toggle');
-filterSections.forEach(section => {
+// Initialize filter toggles
+const filterToggles = document.querySelectorAll('.filter-toggle');
+filterToggles.forEach(toggle => {
     const handleClick = function(e) {
         e.preventDefault();
         e.stopPropagation();
-        console.log('Filter section toggle clicked');
+        console.log('Filter toggle clicked');
         
-        const filterSection = this.closest('.filter-section');
-        const isActive = filterSection.classList.contains('active');
+        const filterType = this.getAttribute('data-filter');
+        const isActive = this.classList.contains('active');
         
-        // Close all other sections
-        document.querySelectorAll('.filter-section').forEach(other => {
-            if (other !== filterSection) {
-                other.classList.remove('active');
-            }
+        // Close all other filter options
+        document.querySelectorAll('.filter-options').forEach(options => {
+            options.classList.remove('active');
+        });
+        document.querySelectorAll('.filter-toggle').forEach(other => {
+            other.classList.remove('active');
         });
         
-        // Toggle current section
-        filterSection.classList.toggle('active');
-        console.log('Filter section state:', filterSection.classList.contains('active') ? 'opened' : 'closed');
+        // Toggle current filter options
+        const filterOptions = document.querySelector(`.filter-options[data-filter="${filterType}"]`);
+        if (filterOptions) {
+            if (isActive) {
+                this.classList.remove('active');
+                filterOptions.classList.remove('active');
+            } else {
+                this.classList.add('active');
+                filterOptions.classList.add('active');
+            }
+        }
+        
+        console.log('Filter toggle state:', this.classList.contains('active') ? 'opened' : 'closed');
     };
     
-    section.addEventListener('click', handleClick, false);
-    section.addEventListener('touchstart', handleClick, false);
+    toggle.addEventListener('click', handleClick, false);
+    toggle.addEventListener('touchstart', handleClick, false);
 });
         
         // Add multiple event listeners for Safari compatibility
@@ -709,9 +720,10 @@ filterSections.forEach(section => {
     if (sortFilter) {
         const sortBtn = sortFilter.querySelector('.sort-btn');
         
-        sortBtn.addEventListener('click', function(e) {
+        const handleSortClick = function(e) {
             e.preventDefault();
             e.stopPropagation();
+            console.log('Sort button clicked');
             
             // Close other dropdowns
             dropdowns.forEach(dropdown => {
@@ -720,7 +732,11 @@ filterSections.forEach(section => {
             
             // Toggle sort filter
             sortFilter.classList.toggle('active');
-        });
+            console.log('Sort dropdown state:', sortFilter.classList.contains('active') ? 'opened' : 'closed');
+        };
+        
+        sortBtn.addEventListener('click', handleSortClick, false);
+        sortBtn.addEventListener('touchstart', handleSortClick, false);
         
         // Handle sort option clicks
         const sortOptions = sortFilter.querySelectorAll('.sort-option');
