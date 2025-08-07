@@ -735,17 +735,23 @@ function initializeDropdowns() {
     // Initialize nested dropdowns (sub-dropdowns)
     const subDropdowns = document.querySelectorAll('.sub-dropdown');
     
-    subDropdowns.forEach(subDropdown => {
+    console.log('Found sub-dropdowns:', subDropdowns.length);
+    
+    subDropdowns.forEach((subDropdown, index) => {
         const toggle = subDropdown.querySelector('.sub-dropdown-toggle');
         
-        console.log('Initializing sub-dropdown:', { subDropdown, toggle });
+        console.log(`Initializing sub-dropdown ${index}:`, { 
+            subDropdown, 
+            toggle,
+            text: toggle ? toggle.textContent.trim() : 'No toggle found'
+        });
         
         // Safari-compatible event handling
         const handleClick = function(e) {
             e.preventDefault();
             e.stopPropagation();
             
-            console.log('Sub-dropdown toggle clicked');
+            console.log('Sub-dropdown toggle clicked:', this.textContent.trim());
             
             // Close other sub-dropdowns
             subDropdowns.forEach(other => {

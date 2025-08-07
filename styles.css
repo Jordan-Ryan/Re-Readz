@@ -153,6 +153,28 @@ body {
     .nav-text {
         display: inline;
     }
+    
+    /* Fix sub-dropdown positioning for icon-only mode */
+    .sub-dropdown-menu {
+        left: 0;
+        top: 100%;
+        margin-left: 0;
+        margin-top: 8px;
+        transform: translateY(-10px);
+        -webkit-transform: translateY(-10px);
+    }
+    
+    .sub-dropdown.active .sub-dropdown-menu {
+        transform: translateY(0);
+        -webkit-transform: translateY(0);
+    }
+    
+    /* Ensure sub-dropdown container has proper positioning */
+    .sub-dropdown {
+        position: relative;
+        -webkit-transform: translateZ(0);
+        transform: translateZ(0);
+    }
 }
 
 /* Dropdown Styles */
