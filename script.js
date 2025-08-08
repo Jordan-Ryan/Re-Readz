@@ -350,9 +350,9 @@ async function loadBooks(searchTerm = null, page = 1, append = false) {
         }
         
         if (append) {
-            appendBooks(books);
+            await appendBooks(books);
         } else {
-            displayBooks(books);
+            await displayBooks(books);
         }
         
         // Update pagination state
@@ -541,7 +541,7 @@ function generateRandomCondition() {
 }
 
 // Display books in the grid
-function displayBooks(books) {
+async function displayBooks(books) {
     const booksGrid = document.querySelector('.books-grid');
     
     if (books.length === 0) {
@@ -560,7 +560,7 @@ function displayBooks(books) {
     initializeWishlistButtons();
     
     // Update wishlist buttons state based on authentication
-    updateWishlistButtonsState();
+    await updateWishlistButtonsState();
     
     // Initialize animations for new cards
     initializeAnimations();
@@ -642,7 +642,7 @@ function createRatingStars(rating) {
 }
 
 // Append books to the existing grid
-function appendBooks(books) {
+async function appendBooks(books) {
     const booksGrid = document.querySelector('.books-grid');
     
     // Remove existing sentinel if present
@@ -663,7 +663,7 @@ function appendBooks(books) {
     initializeWishlistButtons();
     
     // Update wishlist buttons state based on authentication
-    updateWishlistButtonsState();
+    await updateWishlistButtonsState();
     
     // Initialize animations for new cards
     initializeAnimations();
@@ -1061,27 +1061,31 @@ async function addToWishlist(bookKey, button) {
     }
     
     try {
-        // Store in localStorage for now (could be moved to Supabase later)
-        const wishlist = JSON.parse(localStorage.getItem('wishlist') || '[]');
-        const bookData = {
-            bookKey: bookKey,
-            userId: currentUser.id,
-            addedAt: new Date().toISOString()
-        };
+        // Get book details from the card
+        const bookCard = button.closest('.book-card');
+        const bookTitle = bookCard.querySelector('.book-title')?.textContent || '';
+        const bookAuthor = bookCard.querySelector('.book-author')?.textContent || '';
+        const bookCover = bookCard.querySelector('.book-image img')?.src || '';
         
-        // Check if already in wishlist
-        const existingIndex = wishlist.findIndex(item => 
-            item.bookKey === bookKey && item.userId === currentUser.id
-        );
+        // Insert into Supabase wishlist table
+        const { data, error } = await supabase
+            .from('wishlist')
+            .insert({
+                user_id: currentUser.id,
+                book_key: bookKey,
+                book_title: bookTitle,
+                book_author: bookAuthor,
+                book_cover_url: bookCover
+            });
         
-        if (existingIndex === -1) {
-            wishlist.push(bookData);
-            localStorage.setItem('wishlist', JSON.stringify(wishlist));
-            
-            // Update UI
-            updateWishlistButtonUI(button, true);
-            console.log('Added to wishlist');
+        if (error) {
+            console.error('Error adding to wishlist:', error);
+            return;
         }
+        
+        // Update UI
+        updateWishlistButtonUI(button, true);
+        console.log('Added to wishlist');
     } catch (error) {
         console.error('Error adding to wishlist:', error);
     }
@@ -1094,12 +1098,17 @@ async function removeFromWishlist(bookKey, button) {
     }
     
     try {
-        const wishlist = JSON.parse(localStorage.getItem('wishlist') || '[]');
-        const updatedWishlist = wishlist.filter(item => 
-            !(item.bookKey === bookKey && item.userId === currentUser.id)
-        );
+        // Delete from Supabase wishlist table
+        const { error } = await supabase
+            .from('wishlist')
+            .delete()
+            .eq('user_id', currentUser.id)
+            .eq('book_key', bookKey);
         
-        localStorage.setItem('wishlist', JSON.stringify(updatedWishlist));
+        if (error) {
+            console.error('Error removing from wishlist:', error);
+            return;
+        }
         
         // Update UI
         updateWishlistButtonUI(button, false);
@@ -1133,27 +1142,61 @@ function updateWishlistButtonUI(button, isActive) {
 }
 
 // Check if book is in user's wishlist
-function isBookInWishlist(bookKey) {
+async function isBookInWishlist(bookKey) {
     if (!isAuthenticated || !currentUser) {
         return false;
     }
     
     try {
-        const wishlist = JSON.parse(localStorage.getItem('wishlist') || '[]');
-        return wishlist.some(item => 
-            item.bookKey === bookKey && item.userId === currentUser.id
-        );
+        const { data, error } = await supabase
+            .from('wishlist')
+            .select('id')
+            .eq('user_id', currentUser.id)
+            .eq('book_key', bookKey)
+            .single();
+        
+        if (error && error.code !== 'PGRST116') { // PGRST116 is "not found"
+            console.error('Error checking wishlist:', error);
+            return false;
+        }
+        
+        return !!data;
     } catch (error) {
         console.error('Error checking wishlist:', error);
         return false;
     }
 }
 
+// Get user's wishlist
+async function getUserWishlist() {
+    if (!isAuthenticated || !currentUser) {
+        return [];
+    }
+    
+    try {
+        const { data, error } = await supabase
+            .from('wishlist')
+            .select('*')
+            .eq('user_id', currentUser.id)
+            .order('added_at', { ascending: false });
+        
+        if (error) {
+            console.error('Error fetching wishlist:', error);
+            return [];
+        }
+        
+        return data || [];
+    } catch (error) {
+        console.error('Error fetching wishlist:', error);
+        return [];
+    }
+}
+
 // Update all wishlist buttons based on authentication state
-function updateWishlistButtonsState() {
+async function updateWishlistButtonsState() {
     const wishlistButtons = document.querySelectorAll('.wishlist-btn');
     
-    wishlistButtons.forEach(button => {
+    for (const button of wishlistButtons) {
         const bookCard = button.closest('.book-card');
         const bookKey = bookCard ? bookCard.dataset.bookKey : null;
         
@@ -1163,8 +1206,9 @@ function updateWishlistButtonsState() {
             button.classList.add('authenticated');
             
             // Set initial state based on wishlist
-            if (bookKey && isBookInWishlist(bookKey)) {
-                updateWishlistButtonUI(button, true);
+            if (bookKey) {
+                const isInWishlist = await isBookInWishlist(bookKey);
+                updateWishlistButtonUI(button, isInWishlist);
             } else {
                 updateWishlistButtonUI(button, false);
             }
@@ -1173,7 +1217,7 @@ function updateWishlistButtonsState() {
             button.style.display = 'none';
             button.classList.remove('authenticated');
         }
-    });
+    }
 }
 
 // Initialize search functionality
@@ -1620,7 +1664,7 @@ async function loadMoreBooks() {
             const newBooks = searchResult.books;
             
             if (newBooks.length > 0) {
-                appendBooks(newBooks);
+                await appendBooks(newBooks);
                 hasMoreResults = newBooks.length === 20; // Assuming 20 books per page
             } else {
                 hasMoreResults = false;
@@ -2326,7 +2370,7 @@ async function signOut() {
 }
 
 // UI updates
-function updateUIForAuthenticatedUser() {
+async function updateUIForAuthenticatedUser() {
     loginNavItem.classList.add('hidden');
     userMenu.classList.remove('hidden');
     
@@ -2345,10 +2389,10 @@ function updateUIForAuthenticatedUser() {
     }
     
     // Update wishlist buttons state
-    updateWishlistButtonsState();
+    await updateWishlistButtonsState();
 }
 
-function updateUIForUnauthenticatedUser() {
+async function updateUIForUnauthenticatedUser() {
     loginNavItem.classList.remove('hidden');
     userMenu.classList.add('hidden');
     
@@ -2359,7 +2403,7 @@ function updateUIForUnauthenticatedUser() {
     if (mobileLogoutLink) mobileLogoutLink.classList.add('hidden');
     
     // Update wishlist buttons state
-    updateWishlistButtonsState();
+    await updateWishlistButtonsState();
 }
 
 // User menu toggle
