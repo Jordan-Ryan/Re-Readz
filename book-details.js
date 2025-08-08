@@ -355,21 +355,58 @@ function displayTags(containerId, items, tagClass) {
     container.innerHTML = tagsHTML;
 }
 
-// Initialize wishlist functionality
-function initializeWishlist() {
+// Initialize wishlist functionality for book details page
+async function initializeWishlist() {
     const wishlistBtn = document.getElementById('wishlist-btn');
+    const bookKey = getBookIdFromUrl();
     
-    wishlistBtn.addEventListener('click', function() {
-        const isInWishlist = this.classList.contains('active');
+    if (!wishlistBtn || !bookKey) {
+        return;
+    }
+    
+    // Check if user is authenticated and get current wishlist state
+    if (window.isAuthenticated && window.currentUser) {
+        try {
+            const userWishlist = await window.getUserWishlist();
+            const isInWishlist = userWishlist.includes(bookKey);
+            
+            // Update UI based on current wishlist state
+            if (isInWishlist) {
+                wishlistBtn.classList.add('active');
+                wishlistBtn.innerHTML = '<i class="fas fa-heart"></i>';
+            } else {
+                wishlistBtn.classList.remove('active');
+                wishlistBtn.innerHTML = '<i class="far fa-heart"></i>';
+            }
+        } catch (error) {
+            console.error('Error checking wishlist state:', error);
+        }
+    }
+    
+    // Add click handler
+    wishlistBtn.addEventListener('click', async function(e) {
+        e.preventDefault();
         
-        if (isInWishlist) {
-            this.classList.remove('active');
-            this.innerHTML = '<i class="far fa-heart"></i>';
-            console.log('Removed from wishlist');
-        } else {
-            this.classList.add('active');
-            this.innerHTML = '<i class="fas fa-heart"></i>';
-            console.log('Added to wishlist');
+        if (!window.isAuthenticated || !window.currentUser) {
+            // Show login modal if not authenticated
+            if (window.openLoginModal) {
+                window.openLoginModal();
+            }
+            return;
+        }
+        
+        const isCurrentlyFilled = this.querySelector('i').classList.contains('fas');
+        
+        try {
+            if (isCurrentlyFilled) {
+                // Remove from wishlist
+                await window.removeFromWishlist(bookKey, this);
+            } else {
+                // Add to wishlist
+                await window.addToWishlist(bookKey, this);
+            }
+        } catch (error) {
+            console.error('Error updating wishlist:', error);
         }
     });
 }

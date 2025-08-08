@@ -209,37 +209,35 @@ function savePageState() {
     }
 }
 
-// Restore page state from cache
+// Restore page state from localStorage
 function restorePageState() {
-    console.log('Attempting to restore page state...', { 
-        isStateCached, 
-        booksLength: cachedState.books.length,
-        searchTerm: cachedState.searchTerm,
-        totalBooks: cachedState.totalBooks
-    });
+    const cachedState = loadCachedStateFromStorage();
     
-    if (!isStateCached || !cachedState.books.length) {
-        console.log('Cache check failed - isStateCached:', isStateCached, 'books.length:', cachedState.books.length);
+    if (!cachedState) {
+        console.log('No cached state found, loading initial books');
         return false;
     }
     
-    // Restore global variables
+    console.log('Found cached state:', {
+        searchTerm: cachedState.searchTerm,
+        currentPage: cachedState.currentPage,
+        filters: cachedState.filters,
+        booksCount: cachedState.books.length,
+        totalBooks: cachedState.totalBooks
+    });
+    
+    // Restore search term and page
     currentSearchTerm = cachedState.searchTerm;
-    currentFilters = { ...cachedState.filters };
+    currentPage = cachedState.currentPage;
     totalBooksFound = cachedState.totalBooks;
-    currentPage = cachedState.page;
-    hasMoreResults = cachedState.hasMore;
     
-    // Restore UI state
-    const searchInput = document.querySelector('.search-input');
-    if (currentSearchTerm) {
-        searchInput.value = currentSearchTerm;
-    }
+    // Restore filters
+    currentFilters = cachedState.filters || {};
     
-    // Restore filter states
+    // Restore filter button states
     restoreFilterStates();
     
-    // Display the cached books directly
+    // Display the cached books and check wishlist state
     displayBooks(cachedState.books);
     
     // Update section title
@@ -1076,9 +1074,6 @@ function initializeWishlistButtons() {
                 // Add to wishlist
                 await addToWishlist(bookKey, button);
             }
-            
-            // Refresh the entire wishlist state to ensure consistency
-            await refreshWishlistState();
         }
     });
 }
@@ -2481,3 +2476,10 @@ async function updateWishlistButtonsFromUserWishlist(userWishlist) {
         }
     }
 }
+
+// Make wishlist functions available globally for book details page
+window.addToWishlist = addToWishlist;
+window.removeFromWishlist = removeFromWishlist;
+window.getUserWishlist = getUserWishlist;
+window.updateWishlistButtonUI = updateWishlistButtonUI;
+window.openLoginModal = openLoginModal;
