@@ -1,3 +1,15 @@
+// Supabase Configuration
+const SUPABASE_URL = 'YOUR_SUPABASE_URL'; // Replace with your Supabase URL
+const SUPABASE_ANON_KEY = 'YOUR_SUPABASE_ANON_KEY'; // Replace with your Supabase anon key
+
+// Security validation
+if (!SUPABASE_URL || SUPABASE_URL === 'YOUR_SUPABASE_URL') {
+    console.error('SUPABASE_URL not configured');
+}
+if (!SUPABASE_ANON_KEY || SUPABASE_ANON_KEY === 'YOUR_SUPABASE_ANON_KEY') {
+    console.error('SUPABASE_ANON_KEY not configured');
+}
+
 // DOM Content Loaded
 document.addEventListener('DOMContentLoaded', function() {
     // Initialize authentication system
@@ -1678,20 +1690,6 @@ function disableDesktopDropdownsOnMobile() {
         
         console.log('🔍 DEBUG: Desktop dropdown functionality disabled on mobile');
     }
-}
-
-// Supabase Configuration
-const SUPABASE_URL = process.env.SUPABASE_URL || 'YOUR_SUPABASE_URL'; // Replace with your Supabase URL
-const SUPABASE_ANON_KEY = process.env.SUPABASE_ANON_KEY || 'YOUR_SUPABASE_ANON_KEY'; // Replace with your Supabase anon key
-
-// Initialize Supabase client
-
-// Security validation
-if (!SUPABASE_URL || SUPABASE_URL === 'YOUR_SUPABASE_URL') {
-    console.error('SUPABASE_URL not configured');
-}
-if (!SUPABASE_ANON_KEY || SUPABASE_ANON_KEY === 'YOUR_SUPABASE_ANON_KEY') {
-    console.error('SUPABASE_ANON_KEY not configured');
 }
 
 // Security utilities
