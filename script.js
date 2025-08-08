@@ -1,6 +1,11 @@
-// Supabase Configuration
-const SUPABASE_URL = 'https://yyqpfpccrcvkbgtrsxmb.supabase.co';
-const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inl5cXBmcGNjcmN2a2JndHJzeG1iIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTQ2Mzg4NTksImV4cCI6MjA3MDIxNDg1OX0.AtZMs8YZQ3grqEVl-JaRQtVgyx2zYjc_xLJPs6DI_nw';
+// Supabase Configuration - Uses external config file for better security
+// The config.js file can be generated with environment variables in production
+const SUPABASE_URL = window.SUPABASE_CONFIG?.url || 'https://yyqpfpccrcvkbgtrsxmb.supabase.co';
+const SUPABASE_ANON_KEY = window.SUPABASE_CONFIG?.anonKey || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inl5cXBmcGNjcmN2a2JndHJzeG1iIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTQ2Mzg4NTksImV4cCI6MjA3MDIxNDg1OX0.AtZMs8YZQ3grqEVl-JaRQtVgyx2zYjc_xLJPs6DI_nw';
+
+// Security note: Anon keys are safe to expose in client-side code
+// They only allow operations that are permitted by Row Level Security (RLS)
+// The real security comes from RLS policies, not hiding the anon key
 
 // Security validation
 if (!SUPABASE_URL) {
