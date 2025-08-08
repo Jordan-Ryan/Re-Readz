@@ -1728,9 +1728,23 @@ document.addEventListener('DOMContentLoaded', function() {
 
 function initializeSupabase() {
     if (window.supabase) {
-        supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+        // Only create client if we have valid URLs
+        if (SUPABASE_URL && SUPABASE_URL !== 'YOUR_SUPABASE_URL' && 
+            SUPABASE_ANON_KEY && SUPABASE_ANON_KEY !== 'YOUR_SUPABASE_ANON_KEY') {
+            try {
+                supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+                console.log('Supabase client initialized successfully');
+            } catch (error) {
+                console.error('Error initializing Supabase client:', error);
+                supabase = null;
+            }
+        } else {
+            console.warn('Supabase credentials not configured - authentication features will be disabled');
+            supabase = null;
+        }
     } else {
         console.error('Supabase not loaded');
+        supabase = null;
     }
 }
 
@@ -1748,6 +1762,12 @@ function initializeDOMElements() {
 
 // Initialize authentication state
 async function initializeAuth() {
+    if (!supabase) {
+        console.warn('Supabase not available - authentication features disabled');
+        updateUIForUnauthenticatedUser();
+        return;
+    }
+    
     try {
         // Get current session
         const { data: { session }, error } = await supabase.auth.getSession();
@@ -1775,6 +1795,7 @@ async function initializeAuth() {
         });
     } catch (error) {
         console.error('Error initializing auth:', error);
+        updateUIForUnauthenticatedUser();
     }
 }
 
@@ -1933,14 +1954,21 @@ async function handleLogin(e) {
     e.preventDefault();
     clearFormErrors();
     
+    if (!supabase) {
+        showFormError('login-form', 'Authentication service not available. Please configure Supabase credentials.');
+        return;
+    }
+    
     const email = sanitizeInput(document.getElementById('login-email').value);
     const password = document.getElementById('login-password').value;
     
     if (!email || !password) {
+        showFormError('login-form', 'Please fill in all fields');
+        return;
+    }
+    
     if (!validateEmail(email)) {
         showFormError('login-form', 'Please enter a valid email address');
-        return;
-    }        showFormError('login-form', 'Please fill in all fields');
         return;
     }
     
@@ -1952,10 +1980,10 @@ async function handleLogin(e) {
         
         if (error) {
             if (error.message.includes('Invalid login credentials')) {
-                            showFormError('login-form', 'Invalid email or password');
-        } else {
-                            showFormError('login-form', 'Login failed. Please try again.');
-        }
+                showFormError('login-form', 'Invalid email or password');
+            } else {
+                showFormError('login-form', 'Login failed. Please try again.');
+            }
         }
     } catch (error) {
         showFormError('login-form', 'An unexpected error occurred');
@@ -1965,6 +1993,11 @@ async function handleLogin(e) {
 async function handleSignup(e) {
     e.preventDefault();
     clearFormErrors();
+    
+    if (!supabase) {
+        showFormError('signup-form', 'Authentication service not available. Please configure Supabase credentials.');
+        return;
+    }
     
     const name = document.getElementById('signup-name').value;
     const email = document.getElementById('signup-email').value;
@@ -2009,6 +2042,11 @@ async function handleSignup(e) {
 
 // Social login functions
 async function signInWithGoogle() {
+    if (!supabase) {
+        showFormError('login-form', 'Authentication service not available. Please configure Supabase credentials.');
+        return;
+    }
+    
     try {
         const { data, error } = await supabase.auth.signInWithOAuth({
             provider: 'google',
@@ -2019,10 +2057,10 @@ async function signInWithGoogle() {
         
         if (error) {
             if (error.message.includes('Invalid login credentials')) {
-                            showFormError('login-form', 'Invalid email or password');
-        } else {
-                            showFormError('login-form', 'Login failed. Please try again.');
-        }
+                showFormError('login-form', 'Invalid email or password');
+            } else {
+                showFormError('login-form', 'Login failed. Please try again.');
+            }
         }
     } catch (error) {
         showFormError('login-form', 'An unexpected error occurred');
@@ -2030,6 +2068,11 @@ async function signInWithGoogle() {
 }
 
 async function signInWithApple() {
+    if (!supabase) {
+        showFormError('login-form', 'Authentication service not available. Please configure Supabase credentials.');
+        return;
+    }
+    
     try {
         const { data, error } = await supabase.auth.signInWithOAuth({
             provider: 'apple',
@@ -2040,10 +2083,10 @@ async function signInWithApple() {
         
         if (error) {
             if (error.message.includes('Invalid login credentials')) {
-                            showFormError('login-form', 'Invalid email or password');
-        } else {
-                            showFormError('login-form', 'Login failed. Please try again.');
-        }
+                showFormError('login-form', 'Invalid email or password');
+            } else {
+                showFormError('login-form', 'Login failed. Please try again.');
+            }
         }
     } catch (error) {
         showFormError('login-form', 'An unexpected error occurred');
@@ -2051,6 +2094,11 @@ async function signInWithApple() {
 }
 
 async function signInWithFacebook() {
+    if (!supabase) {
+        showFormError('login-form', 'Authentication service not available. Please configure Supabase credentials.');
+        return;
+    }
+    
     try {
         const { data, error } = await supabase.auth.signInWithOAuth({
             provider: 'facebook',
@@ -2061,10 +2109,10 @@ async function signInWithFacebook() {
         
         if (error) {
             if (error.message.includes('Invalid login credentials')) {
-                            showFormError('login-form', 'Invalid email or password');
-        } else {
-                            showFormError('login-form', 'Login failed. Please try again.');
-        }
+                showFormError('login-form', 'Invalid email or password');
+            } else {
+                showFormError('login-form', 'Login failed. Please try again.');
+            }
         }
     } catch (error) {
         showFormError('login-form', 'An unexpected error occurred');
