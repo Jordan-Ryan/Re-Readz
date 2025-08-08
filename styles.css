@@ -2914,6 +2914,51 @@ a:focus {
     .nav-menu.active .login-nav-item.hidden {
         display: none !important;
     }
+    
+    /* Hide login nav item when authenticated (more specific) */
+    .nav-menu.active .nav-item#login-nav-item.hidden {
+        display: none !important;
+    }
+    
+    /* Hide user menu container on mobile when authenticated */
+    .nav-menu.active .nav-item#user-menu {
+        display: none !important;
+    }
+    
+    /* Ensure mobile profile/logout links are visible when authenticated */
+    .nav-menu.active .nav-item.mobile-profile-link:not(.hidden),
+    .nav-menu.active .nav-item.mobile-logout-link:not(.hidden) {
+        display: block !important;
+    }
+    
+    /* Force hide login button when authenticated on mobile */
+    .nav-menu.active .nav-item#login-nav-item.hidden {
+        display: none !important;
+        visibility: hidden !important;
+        opacity: 0 !important;
+    }
+    
+    /* Additional aggressive hiding for mobile authenticated state */
+    .nav-menu.active .nav-item#login-nav-item.hidden,
+    .nav-menu.active .nav-item#user-menu {
+        display: none !important;
+        visibility: hidden !important;
+        opacity: 0 !important;
+        height: 0 !important;
+        overflow: hidden !important;
+        position: absolute !important;
+        left: -9999px !important;
+    }
+    
+    /* Ensure mobile profile/logout links are always visible when not hidden */
+    .nav-menu.active .nav-item.mobile-profile-link:not(.hidden),
+    .nav-menu.active .nav-item.mobile-logout-link:not(.hidden) {
+        display: block !important;
+        visibility: visible !important;
+        opacity: 1 !important;
+        height: auto !important;
+        position: static !important;
+    }
 }
 
 /* Responsive Design */
