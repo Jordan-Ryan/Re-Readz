@@ -1058,10 +1058,10 @@ function initializeWishlistButtons() {
                 return;
             }
             
-            // Check if book is currently in wishlist
-            const isCurrentlyInWishlist = await isBookInWishlist(bookKey);
+            // Check current heart state to determine action
+            const isCurrentlyFilled = button.querySelector('i').classList.contains('fas');
             
-            if (isCurrentlyInWishlist) {
+            if (isCurrentlyFilled) {
                 // Remove from wishlist
                 await removeFromWishlist(bookKey, button);
             } else {
@@ -1097,6 +1097,7 @@ async function addToWishlist(bookKey, button) {
         
         if (error) {
             console.error('Error adding to wishlist:', error);
+            // Don't update UI if there was an error
             return;
         }
         
@@ -1104,6 +1105,7 @@ async function addToWishlist(bookKey, button) {
         console.log('Added to wishlist');
     } catch (error) {
         console.error('Error adding to wishlist:', error);
+        // Don't update UI if there was an error
     }
 }
 
@@ -1122,6 +1124,7 @@ async function removeFromWishlist(bookKey, button) {
         
         if (error) {
             console.error('Error removing from wishlist:', error);
+            // Don't update UI if there was an error
             return;
         }
         
@@ -1129,6 +1132,7 @@ async function removeFromWishlist(bookKey, button) {
         console.log('Removed from wishlist');
     } catch (error) {
         console.error('Error removing from wishlist:', error);
+        // Don't update UI if there was an error
     }
 }
 
@@ -1194,12 +1198,14 @@ async function getUserWishlist() {
         
         if (error) {
             console.error('Error fetching user wishlist:', error);
+            // Return empty array if table doesn't exist or other error
             return [];
         }
         
         return data.map(item => item.book_key);
     } catch (error) {
         console.error('Error fetching user wishlist:', error);
+        // Return empty array if table doesn't exist or other error
         return [];
     }
 }
