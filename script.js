@@ -1,5 +1,11 @@
 // DOM Content Loaded
 document.addEventListener('DOMContentLoaded', function() {
+    // Initialize authentication system
+    initializeSupabase();
+    initializeDOMElements();
+    initializeAuth();
+    setupAuthEventListeners();
+    
     // Only initialize main page functionality if not on book details page
     if (!window.location.pathname.includes('book-details.html') && !window.location.pathname.includes('/bd')) {
         console.log('🔍 DEBUG: Starting initialization sequence...');
