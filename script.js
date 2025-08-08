@@ -15,6 +15,19 @@ if (!SUPABASE_ANON_KEY) {
     console.error('SUPABASE_ANON_KEY not configured');
 }
 
+// Global variables for wishlist state
+let supabase = null;
+
+// Make wishlist functions available globally for book details page
+// These will be properly assigned after the functions are defined
+window.addToWishlist = null;
+window.removeFromWishlist = null;
+window.getUserWishlist = null;
+window.updateWishlistButtonUI = null;
+window.openLoginModal = null;
+window.isAuthenticated = false;
+window.currentUser = null;
+
 // DOM Content Loaded
 document.addEventListener('DOMContentLoaded', function() {
     // Initialize authentication system
@@ -1085,6 +1098,13 @@ async function addToWishlist(bookKey, button) {
         return;
     }
     
+    // Prevent double API calls
+    if (button.dataset.processing === 'true') {
+        return;
+    }
+    
+    button.dataset.processing = 'true';
+    
     try {
         const bookCard = button.closest('.book-card');
         const bookTitle = bookCard.querySelector('.book-title')?.textContent || '';
@@ -1118,6 +1138,8 @@ async function addToWishlist(bookKey, button) {
     } catch (error) {
         console.error('Error adding to wishlist:', error);
         // Don't update UI if there was an error
+    } finally {
+        button.dataset.processing = 'false';
     }
 }
 
@@ -1126,6 +1148,13 @@ async function removeFromWishlist(bookKey, button) {
     if (!isAuthenticated || !currentUser) {
         return;
     }
+    
+    // Prevent double API calls
+    if (button.dataset.processing === 'true') {
+        return;
+    }
+    
+    button.dataset.processing = 'true';
     
     try {
         const { data, error } = await supabase
@@ -1145,6 +1174,8 @@ async function removeFromWishlist(bookKey, button) {
     } catch (error) {
         console.error('Error removing from wishlist:', error);
         // Don't update UI if there was an error
+    } finally {
+        button.dataset.processing = 'false';
     }
 }
 
@@ -1888,8 +1919,6 @@ function validatePassword(password) {
     return passwordRegex.test(password);
 }
 
-let supabase;
-
 // Authentication state
 let currentUser = null;
 let isAuthenticated = false;
@@ -2388,17 +2417,14 @@ async function signOut() {
     }
 }
 
-// UI updates
+// Update UI for authenticated user
 async function updateUIForAuthenticatedUser() {
     loginNavItem.classList.add('hidden');
     userMenu.classList.remove('hidden');
-    
-    // Show mobile profile and logout links
     const mobileProfileLink = document.getElementById('mobile-profile-link');
     const mobileLogoutLink = document.getElementById('mobile-logout-link');
     if (mobileProfileLink) mobileProfileLink.classList.remove('hidden');
     if (mobileLogoutLink) mobileLogoutLink.classList.remove('hidden');
-    
     if (currentUser) {
         const displayName = currentUser.user_metadata?.full_name || 
                            currentUser.user_metadata?.name || 
@@ -2406,23 +2432,26 @@ async function updateUIForAuthenticatedUser() {
                            'User';
         userName.textContent = displayName;
     }
-    
-    // Update wishlist buttons state
     await updateWishlistButtonsState();
+    
+    // Update global state
+    window.isAuthenticated = isAuthenticated;
+    window.currentUser = currentUser;
 }
 
+// Update UI for unauthenticated user
 async function updateUIForUnauthenticatedUser() {
     loginNavItem.classList.remove('hidden');
     userMenu.classList.add('hidden');
-    
-    // Hide mobile profile and logout links
     const mobileProfileLink = document.getElementById('mobile-profile-link');
     const mobileLogoutLink = document.getElementById('mobile-logout-link');
     if (mobileProfileLink) mobileProfileLink.classList.add('hidden');
     if (mobileLogoutLink) mobileLogoutLink.classList.add('hidden');
-    
-    // Update wishlist buttons state
     await updateWishlistButtonsState();
+    
+    // Update global state
+    window.isAuthenticated = isAuthenticated;
+    window.currentUser = currentUser;
 }
 
 // User menu toggle
@@ -2477,9 +2506,13 @@ async function updateWishlistButtonsFromUserWishlist(userWishlist) {
     }
 }
 
-// Make wishlist functions available globally for book details page
+// Update global function assignments for book details page
 window.addToWishlist = addToWishlist;
 window.removeFromWishlist = removeFromWishlist;
 window.getUserWishlist = getUserWishlist;
 window.updateWishlistButtonUI = updateWishlistButtonUI;
 window.openLoginModal = openLoginModal;
+
+// Update global authentication state
+window.isAuthenticated = isAuthenticated;
+window.currentUser = currentUser;
