@@ -28,12 +28,110 @@ window.openLoginModal = null;
 window.isAuthenticated = false;
 window.currentUser = null;
 
+// Wishlist functions (defined early to avoid reference errors)
+async function getUserWishlist() {
+    if (!isAuthenticated || !currentUser || !supabase) {
+        return [];
+    }
+    
+    try {
+        const { data, error } = await supabase
+            .from('wishlist')
+            .select('book_key')
+            .eq('user_id', currentUser.id);
+        
+        if (error) {
+            console.error('Error fetching user wishlist:', error);
+            // Return empty array if table doesn't exist or other error
+            return [];
+        }
+        
+        return data.map(item => item.book_key);
+    } catch (error) {
+        console.error('Error fetching user wishlist:', error);
+        // Return empty array if table doesn't exist or other error
+        return [];
+    }
+}
+
+// Update wishlist buttons based on user's wishlist (efficient)
+async function updateWishlistButtonsFromUserWishlist(userWishlist) {
+    const wishlistButtons = document.querySelectorAll('.wishlist-btn');
+    
+    for (const button of wishlistButtons) {
+        if (isAuthenticated && currentUser) {
+            button.style.display = 'block';
+            button.classList.add('authenticated');
+            
+            const bookCard = button.closest('.book-card');
+            const bookKey = bookCard ? bookCard.dataset.bookKey : null;
+            
+            if (bookKey && userWishlist.includes(bookKey)) {
+                updateWishlistButtonUI(button, true);
+            } else {
+                updateWishlistButtonUI(button, false);
+            }
+        } else {
+            button.style.display = 'none';
+            button.classList.remove('authenticated');
+        }
+    }
+}
+
+// Update all wishlist buttons based on authentication state (simplified)
+async function updateWishlistButtonsState() {
+    const wishlistButtons = document.querySelectorAll('.wishlist-btn');
+    
+    for (const button of wishlistButtons) {
+        if (isAuthenticated && currentUser) {
+            button.style.display = 'block';
+            button.classList.add('authenticated');
+            // Don't check wishlist status on load - only when user clicks
+            updateWishlistButtonUI(button, false); // Start with empty heart
+        } else {
+            button.style.display = 'none';
+            button.classList.remove('authenticated');
+        }
+    }
+}
+
+// Update wishlist button UI
+function updateWishlistButtonUI(button, isActive) {
+    const icon = button.querySelector('i');
+    
+    if (isActive) {
+        button.classList.add('active');
+        icon.classList.remove('far');
+        icon.classList.add('fas');
+        icon.style.color = '#E53E3E';
+    } else {
+        button.classList.remove('active');
+        icon.classList.remove('fas');
+        icon.classList.add('far');
+        icon.style.color = '#A0AEC0';
+    }
+    
+    // Add animation
+    button.style.transform = isActive ? 'scale(1.1)' : 'scale(0.9)';
+    setTimeout(() => {
+        button.style.transform = 'scale(1)';
+    }, 150);
+}
+
 // DOM Content Loaded
 document.addEventListener('DOMContentLoaded', function() {
-    // Initialize authentication system
+    console.log('🔍 DEBUG: DOM Content Loaded');
+    
+    // Initialize Supabase first
     initializeSupabase();
+    
+    // Initialize DOM elements
     initializeDOMElements();
+    
+    // Initialize authentication
     initializeAuth();
+    
+    // Setup authentication event listeners
     setupAuthEventListeners();
     
     // Only initialize main page functionality if not on book details page
@@ -1176,97 +1274,6 @@ async function removeFromWishlist(bookKey, button) {
         // Don't update UI if there was an error
     } finally {
         button.dataset.processing = 'false';
-    }
-}
-
-// Update wishlist button UI
-function updateWishlistButtonUI(button, isActive) {
-    const icon = button.querySelector('i');
-    
-    if (isActive) {
-        button.classList.add('active');
-        icon.classList.remove('far');
-        icon.classList.add('fas');
-        icon.style.color = '#E53E3E';
-    } else {
-        button.classList.remove('active');
-        icon.classList.remove('fas');
-        icon.classList.add('far');
-        icon.style.color = '#A0AEC0';
-    }
-    
-    // Add animation
-    button.style.transform = isActive ? 'scale(1.1)' : 'scale(0.9)';
-    setTimeout(() => {
-        button.style.transform = 'scale(1)';
-    }, 150);
-}
-
-// Check if book is in user's wishlist (Supabase migration)
-async function isBookInWishlist(bookKey) {
-    if (!isAuthenticated || !currentUser || !supabase) {
-        return false;
-    }
-    
-    try {
-        const { data, error } = await supabase
-            .from('wishlist')
-            .select('id')
-            .eq('user_id', currentUser.id)
-            .eq('book_key', bookKey)
-            .single();
-        
-        if (error && error.code !== 'PGRST116') { // PGRST116 is "not found"
-            console.error('Error checking wishlist:', error);
-            return false;
-        }
-        return !!data;
-    } catch (error) {
-        console.error('Error checking wishlist:', error);
-        return false;
-    }
-}
-
-// Get user's wishlist
-async function getUserWishlist() {
-    if (!isAuthenticated || !currentUser || !supabase) {
-        return [];
-    }
-    
-    try {
-        const { data, error } = await supabase
-            .from('wishlist')
-            .select('book_key')
-            .eq('user_id', currentUser.id);
-        
-        if (error) {
-            console.error('Error fetching user wishlist:', error);
-            // Return empty array if table doesn't exist or other error
-            return [];
-        }
-        
-        return data.map(item => item.book_key);
-    } catch (error) {
-        console.error('Error fetching user wishlist:', error);
-        // Return empty array if table doesn't exist or other error
-        return [];
-    }
-}
-
-// Update all wishlist buttons based on authentication state (simplified)
-async function updateWishlistButtonsState() {
-    const wishlistButtons = document.querySelectorAll('.wishlist-btn');
-    
-    for (const button of wishlistButtons) {
-        if (isAuthenticated && currentUser) {
-            button.style.display = 'block';
-            button.classList.add('authenticated');
-            // Don't check wishlist status on load - only when user clicks
-            updateWishlistButtonUI(button, false); // Start with empty heart
-        } else {
-            button.style.display = 'none';
-            button.classList.remove('authenticated');
-        }
     }
 }
 
@@ -2480,30 +2487,6 @@ function showProfile() {
 function showWishlist() {
     // TODO: Implement wishlist page
     console.log('Show wishlist');
-}
-
-// Update wishlist buttons based on user's wishlist (efficient)
-async function updateWishlistButtonsFromUserWishlist(userWishlist) {
-    const wishlistButtons = document.querySelectorAll('.wishlist-btn');
-    
-    for (const button of wishlistButtons) {
-        if (isAuthenticated && currentUser) {
-            button.style.display = 'block';
-            button.classList.add('authenticated');
-            
-            const bookCard = button.closest('.book-card');
-            const bookKey = bookCard ? bookCard.dataset.bookKey : null;
-            
-            if (bookKey && userWishlist.includes(bookKey)) {
-                updateWishlistButtonUI(button, true);
-            } else {
-                updateWishlistButtonUI(button, false);
-            }
-        } else {
-            button.style.display = 'none';
-            button.classList.remove('authenticated');
-        }
-    }
 }
 
 // Update global function assignments for book details page
