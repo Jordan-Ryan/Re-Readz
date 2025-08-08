@@ -3266,5 +3266,15 @@ a:focus {
     }
 }
 
+/* Hide wishlist buttons by default when not authenticated */
+.wishlist-btn {
+    display: none;
+}
+
+/* Show wishlist buttons when user is authenticated */
+.wishlist-btn.authenticated {
+    display: block;
+}
+
 
 

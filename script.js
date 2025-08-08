@@ -559,6 +559,9 @@ function displayBooks(books) {
     // Re-initialize wishlist buttons for new cards
     initializeWishlistButtons();
     
+    // Update wishlist buttons state based on authentication
+    updateWishlistButtonsState();
+    
     // Initialize animations for new cards
     initializeAnimations();
     
@@ -658,6 +661,9 @@ function appendBooks(books) {
     
     // Re-initialize wishlist buttons for new cards
     initializeWishlistButtons();
+    
+    // Update wishlist buttons state based on authentication
+    updateWishlistButtonsState();
     
     // Initialize animations for new cards
     initializeAnimations();
@@ -1025,38 +1031,148 @@ function initializeWishlistButtons() {
             e.preventDefault();
             e.stopPropagation();
             
+            // Check if user is authenticated
+            if (!isAuthenticated || !currentUser) {
+                // Show login modal if not authenticated
+                openLoginModal();
+                return;
+            }
+            
             const icon = this.querySelector('i');
+            const bookCard = this.closest('.book-card');
+            const bookKey = bookCard ? bookCard.dataset.bookKey : null;
             
             if (this.classList.contains('active')) {
                 // Remove from wishlist
-                this.classList.remove('active');
-                icon.classList.remove('fas');
-                icon.classList.add('far');
-                icon.style.color = '#A0AEC0';
-                
-                // Add animation
-                this.style.transform = 'scale(0.9)';
-                setTimeout(() => {
-                    this.style.transform = 'scale(1)';
-                }, 150);
-                
-                console.log('Removed from wishlist');
+                removeFromWishlist(bookKey, this);
             } else {
                 // Add to wishlist
-                this.classList.add('active');
-                icon.classList.remove('far');
-                icon.classList.add('fas');
-                icon.style.color = '#E53E3E';
-                
-                // Add animation
-                this.style.transform = 'scale(1.1)';
-                setTimeout(() => {
-                    this.style.transform = 'scale(1)';
-                }, 150);
-                
-                console.log('Added to wishlist');
+                addToWishlist(bookKey, this);
             }
         });
+    });
+}
+
+// Add to wishlist
+async function addToWishlist(bookKey, button) {
+    if (!isAuthenticated || !currentUser) {
+        openLoginModal();
+        return;
+    }
+    
+    try {
+        // Store in localStorage for now (could be moved to Supabase later)
+        const wishlist = JSON.parse(localStorage.getItem('wishlist') || '[]');
+        const bookData = {
+            bookKey: bookKey,
+            userId: currentUser.id,
+            addedAt: new Date().toISOString()
+        };
+        
+        // Check if already in wishlist
+        const existingIndex = wishlist.findIndex(item => 
+            item.bookKey === bookKey && item.userId === currentUser.id
+        );
+        
+        if (existingIndex === -1) {
+            wishlist.push(bookData);
+            localStorage.setItem('wishlist', JSON.stringify(wishlist));
+            
+            // Update UI
+            updateWishlistButtonUI(button, true);
+            console.log('Added to wishlist');
+        }
+    } catch (error) {
+        console.error('Error adding to wishlist:', error);
+    }
+}
+
+// Remove from wishlist
+async function removeFromWishlist(bookKey, button) {
+    if (!isAuthenticated || !currentUser) {
+        return;
+    }
+    
+    try {
+        const wishlist = JSON.parse(localStorage.getItem('wishlist') || '[]');
+        const updatedWishlist = wishlist.filter(item => 
+            !(item.bookKey === bookKey && item.userId === currentUser.id)
+        );
+        
+        localStorage.setItem('wishlist', JSON.stringify(updatedWishlist));
+        
+        // Update UI
+        updateWishlistButtonUI(button, false);
+        console.log('Removed from wishlist');
+    } catch (error) {
+        console.error('Error removing from wishlist:', error);
+    }
+}
+
+// Update wishlist button UI
+function updateWishlistButtonUI(button, isActive) {
+    const icon = button.querySelector('i');
+    
+    if (isActive) {
+        button.classList.add('active');
+        icon.classList.remove('far');
+        icon.classList.add('fas');
+        icon.style.color = '#E53E3E';
+    } else {
+        button.classList.remove('active');
+        icon.classList.remove('fas');
+        icon.classList.add('far');
+        icon.style.color = '#A0AEC0';
+    }
+    
+    // Add animation
+    button.style.transform = isActive ? 'scale(1.1)' : 'scale(0.9)';
+    setTimeout(() => {
+        button.style.transform = 'scale(1)';
+    }, 150);
+}
+
+// Check if book is in user's wishlist
+function isBookInWishlist(bookKey) {
+    if (!isAuthenticated || !currentUser) {
+        return false;
+    }
+    
+    try {
+        const wishlist = JSON.parse(localStorage.getItem('wishlist') || '[]');
+        return wishlist.some(item => 
+            item.bookKey === bookKey && item.userId === currentUser.id
+        );
+    } catch (error) {
+        console.error('Error checking wishlist:', error);
+        return false;
+    }
+}
+
+// Update all wishlist buttons based on authentication state
+function updateWishlistButtonsState() {
+    const wishlistButtons = document.querySelectorAll('.wishlist-btn');
+    
+    wishlistButtons.forEach(button => {
+        const bookCard = button.closest('.book-card');
+        const bookKey = bookCard ? bookCard.dataset.bookKey : null;
+        
+        if (isAuthenticated && currentUser) {
+            // Show wishlist buttons when authenticated
+            button.style.display = 'block';
+            button.classList.add('authenticated');
+            
+            // Set initial state based on wishlist
+            if (bookKey && isBookInWishlist(bookKey)) {
+                updateWishlistButtonUI(button, true);
+            } else {
+                updateWishlistButtonUI(button, false);
+            }
+        } else {
+            // Hide wishlist buttons when not authenticated
+            button.style.display = 'none';
+            button.classList.remove('authenticated');
+        }
     });
 }
 
@@ -2227,6 +2343,9 @@ function updateUIForAuthenticatedUser() {
                            'User';
         userName.textContent = displayName;
     }
+    
+    // Update wishlist buttons state
+    updateWishlistButtonsState();
 }
 
 function updateUIForUnauthenticatedUser() {
@@ -2238,6 +2357,9 @@ function updateUIForUnauthenticatedUser() {
     const mobileLogoutLink = document.getElementById('mobile-logout-link');
     if (mobileProfileLink) mobileProfileLink.classList.add('hidden');
     if (mobileLogoutLink) mobileLogoutLink.classList.add('hidden');
+    
+    // Update wishlist buttons state
+    updateWishlistButtonsState();
 }
 
 // User menu toggle
