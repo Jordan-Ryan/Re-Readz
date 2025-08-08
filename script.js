@@ -1776,6 +1776,74 @@ function setupAuthEventListeners() {
     // Signup form submission
     signupForm.addEventListener('submit', handleSignup);
     
+    // Login link click
+    const loginLink = document.getElementById('login-link');
+    if (loginLink) {
+        loginLink.addEventListener('click', (e) => {
+            e.preventDefault();
+            openLoginModal();
+        });
+    }
+    
+    // Modal close button
+    const modalCloseBtn = document.getElementById('modal-close-btn');
+    if (modalCloseBtn) {
+        modalCloseBtn.addEventListener('click', closeLoginModal);
+    }
+    
+    // Social login buttons
+    const googleBtn = document.getElementById('google-login-btn');
+    if (googleBtn) {
+        googleBtn.addEventListener('click', signInWithGoogle);
+    }
+    
+    const appleBtn = document.getElementById('apple-login-btn');
+    if (appleBtn) {
+        appleBtn.addEventListener('click', signInWithApple);
+    }
+    
+    const facebookBtn = document.getElementById('facebook-login-btn');
+    if (facebookBtn) {
+        facebookBtn.addEventListener('click', signInWithFacebook);
+    }
+    
+    // Form toggle button
+    const toggleBtn = document.getElementById('toggle-btn');
+    if (toggleBtn) {
+        toggleBtn.addEventListener('click', toggleAuthForm);
+    }
+    
+    // User menu toggle
+    const userMenuToggle = document.getElementById('user-menu-toggle');
+    if (userMenuToggle) {
+        userMenuToggle.addEventListener('click', toggleUserMenu);
+    }
+    
+    // User menu links
+    const profileLink = document.getElementById('profile-link');
+    if (profileLink) {
+        profileLink.addEventListener('click', (e) => {
+            e.preventDefault();
+            showProfile();
+        });
+    }
+    
+    const wishlistLink = document.getElementById('wishlist-link');
+    if (wishlistLink) {
+        wishlistLink.addEventListener('click', (e) => {
+            e.preventDefault();
+            showWishlist();
+        });
+    }
+    
+    const signoutLink = document.getElementById('signout-link');
+    if (signoutLink) {
+        signoutLink.addEventListener('click', (e) => {
+            e.preventDefault();
+            signOut();
+        });
+    }
+    
     // Close modal when clicking outside
     loginModal.addEventListener('click', (e) => {
         if (e.target === loginModal) {
