@@ -1727,6 +1727,12 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 function initializeSupabase() {
+    // Prevent multiple initializations
+    if (supabase) {
+        console.log('Supabase client already initialized');
+        return;
+    }
+    
     if (window.supabase) {
         // Only create client if we have valid URLs
         if (SUPABASE_URL && SUPABASE_URL !== 'YOUR_SUPABASE_URL' && 
@@ -2051,18 +2057,16 @@ async function signInWithGoogle() {
         const { data, error } = await supabase.auth.signInWithOAuth({
             provider: 'google',
             options: {
-                redirectTo: window.location.origin
+                redirectTo: window.location.origin + window.location.pathname
             }
         });
         
         if (error) {
-            if (error.message.includes('Invalid login credentials')) {
-                showFormError('login-form', 'Invalid email or password');
-            } else {
-                showFormError('login-form', 'Login failed. Please try again.');
-            }
+            console.error('Google OAuth error:', error);
+            showFormError('login-form', 'Google login failed. Please try again.');
         }
     } catch (error) {
+        console.error('Google OAuth exception:', error);
         showFormError('login-form', 'An unexpected error occurred');
     }
 }
@@ -2077,18 +2081,16 @@ async function signInWithApple() {
         const { data, error } = await supabase.auth.signInWithOAuth({
             provider: 'apple',
             options: {
-                redirectTo: window.location.origin
+                redirectTo: window.location.origin + window.location.pathname
             }
         });
         
         if (error) {
-            if (error.message.includes('Invalid login credentials')) {
-                showFormError('login-form', 'Invalid email or password');
-            } else {
-                showFormError('login-form', 'Login failed. Please try again.');
-            }
+            console.error('Apple OAuth error:', error);
+            showFormError('login-form', 'Apple login failed. Please try again.');
         }
     } catch (error) {
+        console.error('Apple OAuth exception:', error);
         showFormError('login-form', 'An unexpected error occurred');
     }
 }
@@ -2103,18 +2105,16 @@ async function signInWithFacebook() {
         const { data, error } = await supabase.auth.signInWithOAuth({
             provider: 'facebook',
             options: {
-                redirectTo: window.location.origin
+                redirectTo: window.location.origin + window.location.pathname
             }
         });
         
         if (error) {
-            if (error.message.includes('Invalid login credentials')) {
-                showFormError('login-form', 'Invalid email or password');
-            } else {
-                showFormError('login-form', 'Login failed. Please try again.');
-            }
+            console.error('Facebook OAuth error:', error);
+            showFormError('login-form', 'Facebook login failed. Please try again.');
         }
     } catch (error) {
+        console.error('Facebook OAuth exception:', error);
         showFormError('login-form', 'An unexpected error occurred');
     }
 }
