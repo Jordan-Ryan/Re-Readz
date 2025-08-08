@@ -207,10 +207,6 @@
                             <i class="fas fa-user-circle"></i>
                             Profile
                         </a>
-                        <a href="#" id="wishlist-link">
-                            <i class="fas fa-heart"></i>
-                            Wishlist
-                        </a>
                         <div class="dropdown-separator"></div>
                         <a href="#" id="signout-link">
                             <i class="fas fa-sign-out-alt"></i>
@@ -345,6 +341,40 @@
             <div class="form-toggle">
                 <span id="toggle-text">Don't have an account?</span>
                 <button type="button" id="toggle-btn">Sign Up</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Profile Modal -->
+    <div id="profile-modal" class="modal hidden">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Profile</h2>
+                <button class="modal-close" id="profile-modal-close-btn">&times;</button>
+            </div>
+            
+            <div class="profile-content">
+                <div class="profile-info">
+                    <div class="profile-avatar">
+                        <i class="fas fa-user-circle"></i>
+                    </div>
+                    <div class="profile-details">
+                        <h3 id="profile-name">User Name</h3>
+                        <p id="profile-email">user@example.com</p>
+                        <p id="profile-joined">Member since: Loading...</p>
+                    </div>
+                </div>
+                
+                <div class="profile-actions">
+                    <button class="btn btn-primary" id="edit-profile-btn">
+                        <i class="fas fa-edit"></i>
+                        Edit Profile
+                    </button>
+                    <button class="btn btn-secondary" id="change-password-btn">
+                        <i class="fas fa-key"></i>
+                        Change Password
+                    </button>
+                </div>
             </div>
         </div>
     </div>

@@ -3125,5 +3125,85 @@ a:focus {
     }
 }
 
+/* Profile Modal Styles */
+.profile-content {
+    padding: 20px 0;
+}
+
+.profile-info {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    margin-bottom: 30px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid #E2E8F0;
+}
+
+.profile-avatar {
+    font-size: 60px;
+    color: #4299E1;
+}
+
+.profile-details h3 {
+    margin: 0 0 8px 0;
+    font-size: 24px;
+    font-weight: 600;
+    color: #2D3748;
+}
+
+.profile-details p {
+    margin: 4px 0;
+    color: #718096;
+    font-size: 14px;
+}
+
+.profile-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.profile-actions .btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 12px 24px;
+    font-size: 16px;
+    font-weight: 500;
+}
+
+.btn-secondary {
+    background: #EDF2F7;
+    color: #2D3748;
+    border: 1px solid #E2E8F0;
+}
+
+.btn-secondary:hover {
+    background: #E2E8F0;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.btn-secondary:active {
+    transform: translateY(0);
+}
+
+@media (max-width: 480px) {
+    .profile-info {
+        flex-direction: column;
+        text-align: center;
+        gap: 16px;
+    }
+    
+    .profile-avatar {
+        font-size: 50px;
+    }
+    
+    .profile-details h3 {
+        font-size: 20px;
+    }
+}
+
 
 

@@ -1716,7 +1716,7 @@ let currentUser = null;
 let isAuthenticated = false;
 
 // DOM elements
-let loginNavItem, userMenu, loginModal, userName;
+let loginNavItem, userMenu, loginModal, profileModal, userName;
 
 // Initialize authentication
 document.addEventListener('DOMContentLoaded', function() {
@@ -1758,6 +1758,7 @@ function initializeDOMElements() {
     loginNavItem = document.getElementById('login-nav-item');
     userMenu = document.getElementById('user-menu');
     loginModal = document.getElementById('login-modal');
+    profileModal = document.getElementById('profile-modal');
     userName = document.getElementById('user-name');
 }
 
@@ -1866,14 +1867,6 @@ function setupAuthEventListeners() {
         });
     }
     
-    const wishlistLink = document.getElementById('wishlist-link');
-    if (wishlistLink) {
-        wishlistLink.addEventListener('click', (e) => {
-            e.preventDefault();
-            showWishlist();
-        });
-    }
-    
     const signoutLink = document.getElementById('signout-link');
     if (signoutLink) {
         signoutLink.addEventListener('click', (e) => {
@@ -1882,7 +1875,22 @@ function setupAuthEventListeners() {
         });
     }
     
-    // Close modal when clicking outside
+    // Profile modal close button
+    const profileModalCloseBtn = document.getElementById('profile-modal-close-btn');
+    if (profileModalCloseBtn) {
+        profileModalCloseBtn.addEventListener('click', closeProfileModal);
+    }
+    
+    // Close profile modal when clicking outside
+    if (profileModal) {
+        profileModal.addEventListener('click', (e) => {
+            if (e.target === profileModal) {
+                closeProfileModal();
+            }
+        });
+    }
+    
+    // Close login modal when clicking outside
     if (loginModal) {
         loginModal.addEventListener('click', (e) => {
             if (e.target === loginModal) {
@@ -1891,10 +1899,15 @@ function setupAuthEventListeners() {
         });
     }
     
-    // Close modal on escape key
+    // Close modals on escape key
     document.addEventListener('keydown', (e) => {
-        if (e.key === 'Escape' && loginModal && !loginModal.classList.contains('hidden')) {
-            closeLoginModal();
+        if (e.key === 'Escape') {
+            if (loginModal && !loginModal.classList.contains('hidden')) {
+                closeLoginModal();
+            }
+            if (profileModal && !profileModal.classList.contains('hidden')) {
+                closeProfileModal();
+            }
         }
     });
 }
@@ -1914,7 +1927,52 @@ function closeLoginModal() {
         loginModal.classList.add('hidden');
         document.body.style.overflow = '';
         resetForms();
-    }, 300);
+    }, 200);
+}
+
+// Profile modal management
+function openProfileModal() {
+    profileModal.classList.remove('hidden');
+    setTimeout(() => {
+        profileModal.classList.add('show');
+    }, 10);
+    document.body.style.overflow = 'hidden';
+    populateProfileData();
+}
+
+function closeProfileModal() {
+    profileModal.classList.remove('show');
+    setTimeout(() => {
+        profileModal.classList.add('hidden');
+        document.body.style.overflow = '';
+    }, 200);
+}
+
+function populateProfileData() {
+    if (currentUser) {
+        const profileName = document.getElementById('profile-name');
+        const profileEmail = document.getElementById('profile-email');
+        const profileJoined = document.getElementById('profile-joined');
+        
+        // Set user name
+        const displayName = currentUser.user_metadata?.full_name || 
+                           currentUser.user_metadata?.name || 
+                           currentUser.email?.split('@')[0] || 
+                           'User';
+        profileName.textContent = displayName;
+        
+        // Set email
+        profileEmail.textContent = currentUser.email || 'No email available';
+        
+        // Set join date
+        if (currentUser.created_at) {
+            const joinDate = new Date(currentUser.created_at);
+            const options = { year: 'numeric', month: 'long', day: 'numeric' };
+            profileJoined.textContent = `Member since: ${joinDate.toLocaleDateString('en-US', options)}`;
+        } else {
+            profileJoined.textContent = 'Member since: Unknown';
+        }
+    }
 }
 
 function toggleAuthForm() {
@@ -2173,8 +2231,7 @@ function showFormError(formId, message, type = 'error') {
 }
 
 function showProfile() {
-    // TODO: Implement profile page
-    console.log('Show profile');
+    openProfileModal();
 }
 
 function showWishlist() {
