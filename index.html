@@ -187,11 +187,36 @@
                     </a>
                 </div>
                 
+                <!-- Login/User Menu Container -->
                 <div class="nav-item" id="login-nav-item">
                     <a href="#" class="nav-link" id="login-link">
                         <i class="fas fa-user"></i>
                         <span class="nav-text">Login</span>
                     </a>
+                </div>
+                
+                <!-- User Menu (hidden by default, shown when logged in) -->
+                <div class="nav-item user-menu-container hidden" id="user-menu">
+                    <button class="nav-link user-menu-toggle" id="user-menu-toggle">
+                        <i class="fas fa-user"></i>
+                        <span class="nav-text" id="user-name">User</span>
+                        <i class="fas fa-chevron-down"></i>
+                    </button>
+                    <div class="user-dropdown">
+                        <a href="#" id="profile-link">
+                            <i class="fas fa-user-circle"></i>
+                            Profile
+                        </a>
+                        <a href="#" id="wishlist-link">
+                            <i class="fas fa-heart"></i>
+                            Wishlist
+                        </a>
+                        <div class="dropdown-separator"></div>
+                        <a href="#" id="signout-link">
+                            <i class="fas fa-sign-out-alt"></i>
+                            Sign Out
+                        </a>
+                    </div>
                 </div>
             </div>
         </div>
@@ -321,19 +346,6 @@
                 <span id="toggle-text">Don't have an account?</span>
                 <button type="button" id="toggle-btn">Sign Up</button>
             </div>
-        </div>
-    </div>
-
-    <!-- User Menu (when logged in) -->
-    <div id="user-menu" class="user-menu hidden">
-        <button class="user-menu-toggle" id="user-menu-toggle">
-            <span id="user-name">User</span>
-            <i class="fas fa-chevron-down"></i>
-        </button>
-        <div class="user-dropdown">
-            <a href="#" id="profile-link">Profile</a>
-            <a href="#" id="wishlist-link">Wishlist</a>
-            <a href="#" id="signout-link">Sign Out</a>
         </div>
     </div>
 

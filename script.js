@@ -1716,7 +1716,7 @@ let currentUser = null;
 let isAuthenticated = false;
 
 // DOM elements
-let loginModal, loginForm, signupForm, loginNavItem, userMenu, userName, modalTitle, toggleText, toggleBtn;
+let loginNavItem, userMenu, loginModal, userName;
 
 // Initialize authentication
 document.addEventListener('DOMContentLoaded', function() {
@@ -1755,15 +1755,10 @@ function initializeSupabase() {
 }
 
 function initializeDOMElements() {
-    loginModal = document.getElementById('login-modal');
-    loginForm = document.getElementById('login-form');
-    signupForm = document.getElementById('signup-form');
     loginNavItem = document.getElementById('login-nav-item');
     userMenu = document.getElementById('user-menu');
+    loginModal = document.getElementById('login-modal');
     userName = document.getElementById('user-name');
-    modalTitle = document.getElementById('modal-title');
-    toggleText = document.getElementById('toggle-text');
-    toggleBtn = document.getElementById('toggle-btn');
 }
 
 // Initialize authentication state
@@ -1808,10 +1803,16 @@ async function initializeAuth() {
 // Setup event listeners
 function setupAuthEventListeners() {
     // Login form submission
-    loginForm.addEventListener('submit', handleLogin);
+    const loginForm = document.getElementById('login-form');
+    if (loginForm) {
+        loginForm.addEventListener('submit', handleLogin);
+    }
     
     // Signup form submission
-    signupForm.addEventListener('submit', handleSignup);
+    const signupForm = document.getElementById('signup-form');
+    if (signupForm) {
+        signupForm.addEventListener('submit', handleSignup);
+    }
     
     // Login link click
     const loginLink = document.getElementById('login-link');
@@ -1882,15 +1883,17 @@ function setupAuthEventListeners() {
     }
     
     // Close modal when clicking outside
-    loginModal.addEventListener('click', (e) => {
-        if (e.target === loginModal) {
-            closeLoginModal();
-        }
-    });
+    if (loginModal) {
+        loginModal.addEventListener('click', (e) => {
+            if (e.target === loginModal) {
+                closeLoginModal();
+            }
+        });
+    }
     
     // Close modal on escape key
     document.addEventListener('keydown', (e) => {
-        if (e.key === 'Escape' && !loginModal.classList.contains('hidden')) {
+        if (e.key === 'Escape' && loginModal && !loginModal.classList.contains('hidden')) {
             closeLoginModal();
         }
     });
