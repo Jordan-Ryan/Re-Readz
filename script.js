@@ -17,6 +17,8 @@ if (!SUPABASE_ANON_KEY) {
 
 // Global variables for wishlist state
 let supabase = null;
+let isAuthenticated = false;
+let currentUser = null;
 
 // Make wishlist functions available globally for book details page
 // These will be properly assigned after the functions are defined
@@ -1926,9 +1928,7 @@ function validatePassword(password) {
     return passwordRegex.test(password);
 }
 
-// Authentication state
-let currentUser = null;
-let isAuthenticated = false;
+// Authentication state (variables already declared at top)
 
 // DOM elements
 let loginNavItem, userMenu, loginModal, profileModal, userName;
