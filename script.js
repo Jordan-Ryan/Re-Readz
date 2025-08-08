@@ -1,12 +1,12 @@
 // Supabase Configuration
-const SUPABASE_URL = 'YOUR_SUPABASE_URL'; // Replace with your Supabase URL
-const SUPABASE_ANON_KEY = 'YOUR_SUPABASE_ANON_KEY'; // Replace with your Supabase anon key
+const SUPABASE_URL = 'https://yyqpfpccrcvkbgtrsxmb.supabase.co';
+const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inl5cXBmcGNjcmN2a2JndHJzeG1iIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTQ2Mzg4NTksImV4cCI6MjA3MDIxNDg1OX0.AtZMs8YZQ3grqEVl-JaRQtVgyx2zYjc_xLJPs6DI_nw';
 
 // Security validation
-if (!SUPABASE_URL || SUPABASE_URL === 'YOUR_SUPABASE_URL') {
+if (!SUPABASE_URL) {
     console.error('SUPABASE_URL not configured');
 }
-if (!SUPABASE_ANON_KEY || SUPABASE_ANON_KEY === 'YOUR_SUPABASE_ANON_KEY') {
+if (!SUPABASE_ANON_KEY) {
     console.error('SUPABASE_ANON_KEY not configured');
 }
 
