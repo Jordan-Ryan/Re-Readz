@@ -1037,6 +1037,14 @@ function initializeFilters() {
     });
 }
 
+// Refresh wishlist state for all buttons
+async function refreshWishlistState() {
+    if (isAuthenticated && currentUser) {
+        const userWishlist = await getUserWishlist();
+        await updateWishlistButtonsFromUserWishlist(userWishlist);
+    }
+}
+
 // Initialize wishlist buttons
 function initializeWishlistButtons() {
     document.addEventListener('click', async function(e) {
@@ -1068,6 +1076,9 @@ function initializeWishlistButtons() {
                 // Add to wishlist
                 await addToWishlist(bookKey, button);
             }
+            
+            // Refresh the entire wishlist state to ensure consistency
+            await refreshWishlistState();
         }
     });
 }
@@ -1096,6 +1107,12 @@ async function addToWishlist(bookKey, button) {
             });
         
         if (error) {
+            // Handle duplicate key error (book already in wishlist)
+            if (error.code === '23505') {
+                console.log('Book already in wishlist');
+                updateWishlistButtonUI(button, true);
+                return;
+            }
             console.error('Error adding to wishlist:', error);
             // Don't update UI if there was an error
             return;
