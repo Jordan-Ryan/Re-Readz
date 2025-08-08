@@ -545,7 +545,7 @@ function generateRandomCondition() {
     return conditions[Math.floor(Math.random() * conditions.length)];
 }
 
-// Display books in the grid
+// Display books with efficient wishlist checking
 async function displayBooks(books) {
     const booksGrid = document.querySelector('.books-grid');
     
@@ -564,8 +564,13 @@ async function displayBooks(books) {
     // Re-initialize wishlist buttons for new cards
     initializeWishlistButtons();
     
-    // Update wishlist buttons state based on authentication
-    await updateWishlistButtonsState();
+    // Efficient wishlist checking - single database call
+    if (isAuthenticated && currentUser) {
+        const userWishlist = await getUserWishlist();
+        await updateWishlistButtonsFromUserWishlist(userWishlist);
+    } else {
+        await updateWishlistButtonsState();
+    }
     
     // Initialize animations for new cards
     initializeAnimations();
@@ -646,7 +651,7 @@ function createRatingStars(rating) {
     return starsHTML;
 }
 
-// Append books to the existing grid
+// Append books with efficient wishlist checking
 async function appendBooks(books) {
     const booksGrid = document.querySelector('.books-grid');
     
@@ -667,8 +672,13 @@ async function appendBooks(books) {
     // Re-initialize wishlist buttons for new cards
     initializeWishlistButtons();
     
-    // Update wishlist buttons state based on authentication
-    await updateWishlistButtonsState();
+    // Efficient wishlist checking - single database call
+    if (isAuthenticated && currentUser) {
+        const userWishlist = await getUserWishlist();
+        await updateWishlistButtonsFromUserWishlist(userWishlist);
+    } else {
+        await updateWishlistButtonsState();
+    }
     
     // Initialize animations for new cards
     initializeAnimations();
@@ -1172,25 +1182,24 @@ async function isBookInWishlist(bookKey) {
 
 // Get user's wishlist
 async function getUserWishlist() {
-    if (!isAuthenticated || !currentUser) {
+    if (!isAuthenticated || !currentUser || !supabase) {
         return [];
     }
     
     try {
         const { data, error } = await supabase
             .from('wishlist')
-            .select('*')
-            .eq('user_id', currentUser.id)
-            .order('added_at', { ascending: false });
+            .select('book_key')
+            .eq('user_id', currentUser.id);
         
         if (error) {
-            console.error('Error fetching wishlist:', error);
+            console.error('Error fetching user wishlist:', error);
             return [];
         }
         
-        return data || [];
+        return data.map(item => item.book_key);
     } catch (error) {
-        console.error('Error fetching wishlist:', error);
+        console.error('Error fetching user wishlist:', error);
         return [];
     }
 }
@@ -2424,4 +2433,28 @@ function showProfile() {
 function showWishlist() {
     // TODO: Implement wishlist page
     console.log('Show wishlist');
+}
+
+// Update wishlist buttons based on user's wishlist (efficient)
+async function updateWishlistButtonsFromUserWishlist(userWishlist) {
+    const wishlistButtons = document.querySelectorAll('.wishlist-btn');
+    
+    for (const button of wishlistButtons) {
+        if (isAuthenticated && currentUser) {
+            button.style.display = 'block';
+            button.classList.add('authenticated');
+            
+            const bookCard = button.closest('.book-card');
+            const bookKey = bookCard ? bookCard.dataset.bookKey : null;
+            
+            if (bookKey && userWishlist.includes(bookKey)) {
+                updateWishlistButtonUI(button, true);
+            } else {
+                updateWishlistButtonUI(button, false);
+            }
+        } else {
+            button.style.display = 'none';
+            button.classList.remove('authenticated');
+        }
+    }
 }
