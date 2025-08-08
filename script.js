@@ -1875,6 +1875,23 @@ function setupAuthEventListeners() {
         });
     }
     
+    // Mobile profile and logout buttons
+    const mobileProfileBtn = document.getElementById('mobile-profile-btn');
+    if (mobileProfileBtn) {
+        mobileProfileBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            showProfile();
+        });
+    }
+    
+    const mobileLogoutBtn = document.getElementById('mobile-logout-btn');
+    if (mobileLogoutBtn) {
+        mobileLogoutBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            signOut();
+        });
+    }
+    
     // Profile modal close button
     const profileModalCloseBtn = document.getElementById('profile-modal-close-btn');
     if (profileModalCloseBtn) {
@@ -2197,6 +2214,12 @@ function updateUIForAuthenticatedUser() {
     loginNavItem.classList.add('hidden');
     userMenu.classList.remove('hidden');
     
+    // Show mobile profile and logout links
+    const mobileProfileLink = document.getElementById('mobile-profile-link');
+    const mobileLogoutLink = document.getElementById('mobile-logout-link');
+    if (mobileProfileLink) mobileProfileLink.classList.remove('hidden');
+    if (mobileLogoutLink) mobileLogoutLink.classList.remove('hidden');
+    
     if (currentUser) {
         const displayName = currentUser.user_metadata?.full_name || 
                            currentUser.user_metadata?.name || 
@@ -2209,6 +2232,12 @@ function updateUIForAuthenticatedUser() {
 function updateUIForUnauthenticatedUser() {
     loginNavItem.classList.remove('hidden');
     userMenu.classList.add('hidden');
+    
+    // Hide mobile profile and logout links
+    const mobileProfileLink = document.getElementById('mobile-profile-link');
+    const mobileLogoutLink = document.getElementById('mobile-logout-link');
+    if (mobileProfileLink) mobileProfileLink.classList.add('hidden');
+    if (mobileLogoutLink) mobileLogoutLink.classList.add('hidden');
 }
 
 // User menu toggle

@@ -2898,6 +2898,22 @@ a:focus {
     .dropdown-separator {
         margin: 0;
     }
+    
+    /* Hide desktop user menu on mobile */
+    .user-menu-container {
+        display: none !important;
+    }
+    
+    /* Show mobile profile/logout links when authenticated */
+    .mobile-profile-link,
+    .mobile-logout-link {
+        display: block !important;
+    }
+    
+    /* Hide login nav item when authenticated */
+    .nav-menu.active .login-nav-item.hidden {
+        display: none !important;
+    }
 }
 
 /* Responsive Design */
