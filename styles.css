@@ -1310,8 +1310,8 @@ a:focus {
 }
 
 .filters-menu .filter-toggle.active .filter-chevron {
-    -webkit-transform: rotate(90deg);
-    transform: rotate(90deg);
+    -webkit-transform: rotate(180deg);
+    transform: rotate(180deg);
 }
 
 /* Filter Options within dropdown */
@@ -2997,7 +2997,7 @@ a:focus {
 }
 
 .mobile-filter-toggle.active .filter-chevron {
-    transform: rotate(90deg);
+    transform: rotate(180deg);
 }
 
 .mobile-filter-options {
