@@ -1667,3 +1667,343 @@ function disableDesktopDropdownsOnMobile() {
         console.log('🔍 DEBUG: Desktop dropdown functionality disabled on mobile');
     }
 }
+
+// Supabase Configuration
+const SUPABASE_URL = 'YOUR_SUPABASE_URL'; // Replace with your Supabase URL
+const SUPABASE_ANON_KEY = 'YOUR_SUPABASE_ANON_KEY'; // Replace with your Supabase anon key
+
+// Initialize Supabase client
+let supabase;
+
+// Authentication state
+let currentUser = null;
+let isAuthenticated = false;
+
+// DOM elements
+let loginModal, loginForm, signupForm, loginNavItem, userMenu, userName, modalTitle, toggleText, toggleBtn;
+
+// Initialize authentication
+document.addEventListener('DOMContentLoaded', function() {
+    initializeSupabase();
+    initializeDOMElements();
+    initializeAuth();
+    setupAuthEventListeners();
+});
+
+function initializeSupabase() {
+    if (window.supabase) {
+        supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+    } else {
+        console.error('Supabase not loaded');
+    }
+}
+
+function initializeDOMElements() {
+    loginModal = document.getElementById('login-modal');
+    loginForm = document.getElementById('login-form');
+    signupForm = document.getElementById('signup-form');
+    loginNavItem = document.getElementById('login-nav-item');
+    userMenu = document.getElementById('user-menu');
+    userName = document.getElementById('user-name');
+    modalTitle = document.getElementById('modal-title');
+    toggleText = document.getElementById('toggle-text');
+    toggleBtn = document.getElementById('toggle-btn');
+}
+
+// Initialize authentication state
+async function initializeAuth() {
+    try {
+        // Get current session
+        const { data: { session }, error } = await supabase.auth.getSession();
+        
+        if (session) {
+            currentUser = session.user;
+            isAuthenticated = true;
+            updateUIForAuthenticatedUser();
+        } else {
+            updateUIForUnauthenticatedUser();
+        }
+
+        // Listen for auth changes
+        supabase.auth.onAuthStateChange((event, session) => {
+            if (event === 'SIGNED_IN' && session) {
+                currentUser = session.user;
+                isAuthenticated = true;
+                updateUIForAuthenticatedUser();
+                closeLoginModal();
+            } else if (event === 'SIGNED_OUT') {
+                currentUser = null;
+                isAuthenticated = false;
+                updateUIForUnauthenticatedUser();
+            }
+        });
+    } catch (error) {
+        console.error('Error initializing auth:', error);
+    }
+}
+
+// Setup event listeners
+function setupAuthEventListeners() {
+    // Login form submission
+    loginForm.addEventListener('submit', handleLogin);
+    
+    // Signup form submission
+    signupForm.addEventListener('submit', handleSignup);
+    
+    // Close modal when clicking outside
+    loginModal.addEventListener('click', (e) => {
+        if (e.target === loginModal) {
+            closeLoginModal();
+        }
+    });
+    
+    // Close modal on escape key
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && !loginModal.classList.contains('hidden')) {
+            closeLoginModal();
+        }
+    });
+}
+
+// Modal management
+function openLoginModal() {
+    loginModal.classList.remove('hidden');
+    setTimeout(() => {
+        loginModal.classList.add('show');
+    }, 10);
+    document.body.style.overflow = 'hidden';
+}
+
+function closeLoginModal() {
+    loginModal.classList.remove('show');
+    setTimeout(() => {
+        loginModal.classList.add('hidden');
+        document.body.style.overflow = '';
+        resetForms();
+    }, 300);
+}
+
+function toggleAuthForm() {
+    const isLoginForm = !loginForm.classList.contains('hidden');
+    
+    if (isLoginForm) {
+        // Switch to signup
+        loginForm.classList.add('hidden');
+        signupForm.classList.remove('hidden');
+        modalTitle.textContent = 'Sign Up';
+        toggleText.textContent = 'Already have an account?';
+        toggleBtn.textContent = 'Sign In';
+    } else {
+        // Switch to login
+        signupForm.classList.add('hidden');
+        loginForm.classList.remove('hidden');
+        modalTitle.textContent = 'Sign In';
+        toggleText.textContent = 'Don\'t have an account?';
+        toggleBtn.textContent = 'Sign Up';
+    }
+}
+
+function resetForms() {
+    loginForm.reset();
+    signupForm.reset();
+    clearFormErrors();
+    
+    // Reset to login form
+    signupForm.classList.add('hidden');
+    loginForm.classList.remove('hidden');
+    modalTitle.textContent = 'Sign In';
+    toggleText.textContent = 'Don\'t have an account?';
+    toggleBtn.textContent = 'Sign Up';
+}
+
+function clearFormErrors() {
+    const errorMessages = document.querySelectorAll('.error-message');
+    errorMessages.forEach(msg => msg.remove());
+    
+    const errorInputs = document.querySelectorAll('.form-group input.error');
+    errorInputs.forEach(input => input.classList.remove('error'));
+}
+
+// Form handling
+async function handleLogin(e) {
+    e.preventDefault();
+    clearFormErrors();
+    
+    const email = document.getElementById('login-email').value;
+    const password = document.getElementById('login-password').value;
+    
+    if (!email || !password) {
+        showFormError('login-form', 'Please fill in all fields');
+        return;
+    }
+    
+    try {
+        const { data, error } = await supabase.auth.signInWithPassword({
+            email,
+            password
+        });
+        
+        if (error) {
+            showFormError('login-form', error.message);
+        }
+    } catch (error) {
+        showFormError('login-form', 'An unexpected error occurred');
+    }
+}
+
+async function handleSignup(e) {
+    e.preventDefault();
+    clearFormErrors();
+    
+    const name = document.getElementById('signup-name').value;
+    const email = document.getElementById('signup-email').value;
+    const password = document.getElementById('signup-password').value;
+    const confirmPassword = document.getElementById('signup-confirm-password').value;
+    
+    if (!name || !email || !password || !confirmPassword) {
+        showFormError('signup-form', 'Please fill in all fields');
+        return;
+    }
+    
+    if (password !== confirmPassword) {
+        showFormError('signup-form', 'Passwords do not match');
+        return;
+    }
+    
+    if (password.length < 6) {
+        showFormError('signup-form', 'Password must be at least 6 characters');
+        return;
+    }
+    
+    try {
+        const { data, error } = await supabase.auth.signUp({
+            email,
+            password,
+            options: {
+                data: {
+                    full_name: name
+                }
+            }
+        });
+        
+        if (error) {
+            showFormError('signup-form', error.message);
+        } else {
+            showFormError('signup-form', 'Check your email for a confirmation link!', 'success');
+        }
+    } catch (error) {
+        showFormError('signup-form', 'An unexpected error occurred');
+    }
+}
+
+// Social login functions
+async function signInWithGoogle() {
+    try {
+        const { data, error } = await supabase.auth.signInWithOAuth({
+            provider: 'google',
+            options: {
+                redirectTo: window.location.origin
+            }
+        });
+        
+        if (error) {
+            showFormError('login-form', error.message);
+        }
+    } catch (error) {
+        showFormError('login-form', 'An unexpected error occurred');
+    }
+}
+
+async function signInWithApple() {
+    try {
+        const { data, error } = await supabase.auth.signInWithOAuth({
+            provider: 'apple',
+            options: {
+                redirectTo: window.location.origin
+            }
+        });
+        
+        if (error) {
+            showFormError('login-form', error.message);
+        }
+    } catch (error) {
+        showFormError('login-form', 'An unexpected error occurred');
+    }
+}
+
+async function signInWithFacebook() {
+    try {
+        const { data, error } = await supabase.auth.signInWithOAuth({
+            provider: 'facebook',
+            options: {
+                redirectTo: window.location.origin
+            }
+        });
+        
+        if (error) {
+            showFormError('login-form', error.message);
+        }
+    } catch (error) {
+        showFormError('login-form', 'An unexpected error occurred');
+    }
+}
+
+// Sign out
+async function signOut() {
+    try {
+        const { error } = await supabase.auth.signOut();
+        if (error) {
+            console.error('Error signing out:', error);
+        }
+    } catch (error) {
+        console.error('Error signing out:', error);
+    }
+}
+
+// UI updates
+function updateUIForAuthenticatedUser() {
+    loginNavItem.classList.add('hidden');
+    userMenu.classList.remove('hidden');
+    
+    if (currentUser) {
+        const displayName = currentUser.user_metadata?.full_name || 
+                           currentUser.user_metadata?.name || 
+                           currentUser.email?.split('@')[0] || 
+                           'User';
+        userName.textContent = displayName;
+    }
+}
+
+function updateUIForUnauthenticatedUser() {
+    loginNavItem.classList.remove('hidden');
+    userMenu.classList.add('hidden');
+}
+
+// User menu toggle
+function toggleUserMenu() {
+    userMenu.classList.toggle('active');
+}
+
+// Utility functions
+function showFormError(formId, message, type = 'error') {
+    const form = document.getElementById(formId);
+    const errorDiv = document.createElement('div');
+    errorDiv.className = `error-message ${type}`;
+    errorDiv.textContent = message;
+    
+    form.appendChild(errorDiv);
+    
+    setTimeout(() => {
+        errorDiv.remove();
+    }, 5000);
+}
+
+function showProfile() {
+    // TODO: Implement profile page
+    console.log('Show profile');
+}
+
+function showWishlist() {
+    // TODO: Implement wishlist page
+    console.log('Show wishlist');
+}
