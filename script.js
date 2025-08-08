@@ -177,6 +177,78 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         }
     }
+    
+    // Floating action button functionality
+    const fabButtons = document.querySelectorAll('.fab-btn');
+    fabButtons.forEach(button => {
+        button.addEventListener('click', function(e) {
+            e.preventDefault();
+            
+            // Add click animation
+            this.style.transform = 'scale(0.95)';
+            setTimeout(() => {
+                this.style.transform = '';
+            }, 150);
+            
+            // Sell Your Book functionality
+            // In a real app, this would navigate to the sell book page
+            // window.location.href = '/sell-book';
+        });
+    });
+    
+    // Add touch support for mobile devices
+    // Add touch feedback for buttons
+    const buttons = document.querySelectorAll('button, .book-card');
+    buttons.forEach(button => {
+        button.addEventListener('touchstart', function(e) {
+            this.style.transform = 'scale(0.98)';
+        });
+        
+        button.addEventListener('touchend', function(e) {
+            this.style.transform = '';
+        });
+        
+        button.addEventListener('touchcancel', function(e) {
+            this.style.transform = '';
+        });
+    });
+    
+    // Prevent zoom on double tap for mobile
+    let lastTouchEnd = 0;
+    document.addEventListener('touchend', function(event) {
+        const now = (new Date()).getTime();
+        if (now - lastTouchEnd <= 300) {
+            event.preventDefault();
+        }
+        lastTouchEnd = now;
+    }, false);
+    
+    // Improve scroll performance on mobile
+    const scrollElements = document.querySelectorAll('.books-grid');
+    scrollElements.forEach(element => {
+        element.style.webkitOverflowScrolling = 'touch';
+    });
+    
+    // Add better touch handling for dropdowns on mobile
+    const dropdownToggles = document.querySelectorAll('.dropdown-toggle');
+    dropdownToggles.forEach(toggle => {
+        toggle.addEventListener('touchstart', function(e) {
+            // Prevent default to avoid double-tap zoom
+            e.preventDefault();
+            this.click();
+        });
+    });
+    
+    // Improve mobile search input
+    const searchInput = document.querySelector('.search-input');
+    if (searchInput) {
+        searchInput.addEventListener('focus', function() {
+            // Ensure the input is visible when focused on mobile
+            setTimeout(() => {
+                this.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }, 300);
+        });
+    }
 });
 
 // Open Library API configuration (Free, no API key required)
@@ -1202,7 +1274,6 @@ async function addToWishlist(bookKey, button) {
     if (button.dataset.processing === 'true') {
         return;
     }
-    
     button.dataset.processing = 'true';
     
     try {
@@ -1253,7 +1324,6 @@ async function removeFromWishlist(bookKey, button) {
     if (button.dataset.processing === 'true') {
         return;
     }
-    
     button.dataset.processing = 'true';
     
     try {
@@ -1481,26 +1551,7 @@ function initializeMobileMenu() {
     }
 }
 
-// Floating action button functionality
-document.addEventListener('DOMContentLoaded', function() {
-    const fabButtons = document.querySelectorAll('.fab-btn');
-    
-    fabButtons.forEach(button => {
-        button.addEventListener('click', function(e) {
-            e.preventDefault();
-            
-            // Add click animation
-            this.style.transform = 'scale(0.95)';
-            setTimeout(() => {
-                this.style.transform = '';
-            }, 150);
-            
-            // Sell Your Book functionality
-            // In a real app, this would navigate to the sell book page
-            // window.location.href = '/sell-book';
-        });
-    });
-});
+// Floating action button functionality (moved to main DOMContentLoaded)
 
 // Book card interactions are now handled by initializeBookCardClicks()
 // which is called after books are dynamically loaded
@@ -1593,62 +1644,7 @@ function debounce(func, wait) {
     };
 }
 
-// Add touch support for mobile devices
-document.addEventListener('DOMContentLoaded', function() {
-    // Add touch feedback for buttons
-    const buttons = document.querySelectorAll('button, .book-card');
-    
-    buttons.forEach(button => {
-        button.addEventListener('touchstart', function(e) {
-            this.style.transform = 'scale(0.98)';
-        });
-        
-        button.addEventListener('touchend', function(e) {
-            this.style.transform = '';
-        });
-        
-        button.addEventListener('touchcancel', function(e) {
-            this.style.transform = '';
-        });
-    });
-    
-    // Prevent zoom on double tap for mobile
-    let lastTouchEnd = 0;
-    document.addEventListener('touchend', function(event) {
-        const now = (new Date()).getTime();
-        if (now - lastTouchEnd <= 300) {
-            event.preventDefault();
-        }
-        lastTouchEnd = now;
-    }, false);
-    
-    // Improve scroll performance on mobile
-            const scrollElements = document.querySelectorAll('.books-grid');
-    scrollElements.forEach(element => {
-        element.style.webkitOverflowScrolling = 'touch';
-    });
-    
-    // Add better touch handling for dropdowns on mobile
-            const dropdownToggles = document.querySelectorAll('.dropdown-toggle');
-    dropdownToggles.forEach(toggle => {
-        toggle.addEventListener('touchstart', function(e) {
-            // Prevent default to avoid double-tap zoom
-            e.preventDefault();
-            this.click();
-        });
-    });
-    
-    // Improve mobile search input
-    const searchInput = document.querySelector('.search-input');
-    if (searchInput) {
-        searchInput.addEventListener('focus', function() {
-            // Ensure the input is visible when focused on mobile
-            setTimeout(() => {
-                this.scrollIntoView({ behavior: 'smooth', block: 'center' });
-            }, 300);
-        });
-    }
-});
+// Touch support for mobile devices (moved to main DOMContentLoaded)
 
 // Handle window resize for responsive behavior
 window.addEventListener('resize', debounce(function() {
@@ -1933,13 +1929,7 @@ function validatePassword(password) {
 // DOM elements
 let loginNavItem, userMenu, loginModal, profileModal, userName;
 
-// Initialize authentication
-document.addEventListener('DOMContentLoaded', function() {
-    initializeSupabase();
-    initializeDOMElements();
-    initializeAuth();
-    setupAuthEventListeners();
-});
+// Authentication initialization is now handled in the main DOMContentLoaded listener above
 
 function initializeSupabase() {
     // Prevent multiple initializations
@@ -2146,11 +2136,10 @@ function setupAuthEventListeners() {
 
 // Modal management
 function openLoginModal() {
-    loginModal.classList.remove('hidden');
-    setTimeout(() => {
-        loginModal.classList.add('show');
-    }, 10);
-    document.body.style.overflow = 'hidden';
+    if (loginModal) {
+        loginModal.style.display = 'flex';
+        resetForms();
+    }
 }
 
 function closeLoginModal() {
